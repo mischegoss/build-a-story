@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import './BuildAStory.css' // Import your CSS styles
 
 const BuildAStoryInterface = ({
@@ -149,7 +149,12 @@ const BuildAStoryInterface = ({
         ),
       )
     }
-  }, [currentStep, storyData, generatedStory])
+  }, [
+    storyData.book_title,
+    storyData.setting,
+    storyData.characters,
+    generatedStory,
+  ]) // Only include specific values that matter
 
   useEffect(() => {
     const words = studentWriting
@@ -163,9 +168,27 @@ const BuildAStoryInterface = ({
     storyData.book_title.includes(book.title),
   )
 
+  // Optimize textarea handlers to prevent performance issues
+  const handleCharactersChange = useCallback(
+    e => {
+      setStoryData(prev => ({ ...prev, characters: e.target.value }))
+    },
+    [setStoryData],
+  )
+
+  const handleSpecialElementsChange = useCallback(
+    e => {
+      setStoryData(prev => ({ ...prev, special_elements: e.target.value }))
+    },
+    [setStoryData],
+  )
+
+  const handleStudentWritingChange = useCallback(e => {
+    setStudentWriting(e.target.value)
+  }, [])
+
   const handleDownload = downloadType => {
-    const completeStory =
-      generatedStory?.story + '\n\n**Your Continuation:**\n\n' + studentWriting
+    // Fixed: Removed unused completeStory variable
     alert(
       `📥 Downloading ${downloadType}...\n\nThis would generate a PDF containing:\n• Complete story (AI starter + your writing)\n• Educational analysis and insights\n• ${
         downloadType.includes('Teacher')
@@ -192,7 +215,7 @@ const BuildAStoryInterface = ({
 
   // Step 0: Choose Story
   const StepChooseStory = () => (
-    <div className='bg-white rounded-2xl p-8 shadow-2xl'>
+    <div className='content-card'>
       <h2 className='text-3xl font-bold mb-3 text-center'>
         📖 Choose Your Classic Story
       </h2>
@@ -201,7 +224,7 @@ const BuildAStoryInterface = ({
         twist!
       </p>
 
-      <div className='mb-8'>
+      <div className='form-group mb-8'>
         <label className='block text-lg font-bold mb-4 text-gray-800'>
           📚 Which classic story do you want to transform?
         </label>
@@ -210,7 +233,7 @@ const BuildAStoryInterface = ({
           onChange={e =>
             setStoryData({ ...storyData, book_title: e.target.value })
           }
-          className='w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 bg-gray-50'
+          className='book-select w-full'
         >
           <option value=''>Choose your adventure...</option>
           {books.map((book, index) => (
@@ -222,10 +245,8 @@ const BuildAStoryInterface = ({
       </div>
 
       {selectedBookData && (
-        <div className='bg-green-50 rounded-2xl p-6 border-l-4 border-green-500 mb-8'>
-          <h3 className='text-xl font-bold text-green-800 mb-4 flex items-center gap-2'>
-            ✅ Awesome Choice!
-          </h3>
+        <div className='book-info-card'>
+          <h3 className='book-info-title'>✅ Awesome Choice!</h3>
 
           <div className='bg-white rounded-xl p-5 mb-4'>
             <h4 className='text-lg font-bold text-gray-800 mb-2'>
@@ -235,7 +256,7 @@ const BuildAStoryInterface = ({
               {selectedBookData.description ||
                 `A classic tale of ${selectedBookData.theme.toLowerCase()} that's perfect for adaptation!`}
             </p>
-            <div className='bg-blue-50 p-3 rounded-lg'>
+            <div className='info-box'>
               <p className='text-blue-800 font-semibold'>
                 💡 Why this is perfect: Great for sci-fi, modern day, or fantasy
                 adaptations!
@@ -243,36 +264,28 @@ const BuildAStoryInterface = ({
             </div>
           </div>
 
-          <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-6'>
-            <div className='bg-white p-4 rounded-xl text-center shadow-sm'>
-              <div className='text-2xl mb-2'>🎭</div>
-              <div className='font-bold text-gray-800 text-sm'>Genre</div>
-              <div className='text-gray-600 text-sm'>
-                {selectedBookData.genre}
-              </div>
+          <div className='book-details-grid'>
+            <div className='book-detail-card'>
+              <div className='book-detail-icon'>🎭</div>
+              <div className='book-detail-label'>Genre</div>
+              <div className='book-detail-value'>{selectedBookData.genre}</div>
             </div>
-            <div className='bg-white p-4 rounded-xl text-center shadow-sm'>
-              <div className='text-2xl mb-2'>💡</div>
-              <div className='font-bold text-gray-800 text-sm'>Theme</div>
-              <div className='text-gray-600 text-sm'>
-                {selectedBookData.theme}
-              </div>
+            <div className='book-detail-card'>
+              <div className='book-detail-icon'>💡</div>
+              <div className='book-detail-label'>Theme</div>
+              <div className='book-detail-value'>{selectedBookData.theme}</div>
             </div>
-            <div className='bg-white p-4 rounded-xl text-center shadow-sm'>
-              <div className='text-2xl mb-2'>⏰</div>
-              <div className='font-bold text-gray-800 text-sm'>
-                Original Era
-              </div>
-              <div className='text-gray-600 text-sm'>
-                {selectedBookData.era}
-              </div>
+            <div className='book-detail-card'>
+              <div className='book-detail-icon'>⏰</div>
+              <div className='book-detail-label'>Original Era</div>
+              <div className='book-detail-value'>{selectedBookData.era}</div>
             </div>
           </div>
 
-          <div className='text-center'>
+          <div className='text-center mt-6'>
             <button
               onClick={() => setCurrentStep(1)}
-              className='px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold text-lg hover:transform hover:-translate-y-1 hover:shadow-lg transition-all'
+              className='btn-primary btn-large'
             >
               🎨 Let's Customize This Story! →
             </button>
@@ -284,7 +297,7 @@ const BuildAStoryInterface = ({
 
   // Step 1: Customize
   const StepCustomize = () => (
-    <div className='bg-white rounded-2xl p-8 shadow-2xl'>
+    <div className='content-card'>
       <h2 className='text-3xl font-bold mb-3 text-center'>
         🎨 Customize Your Story
       </h2>
@@ -293,18 +306,18 @@ const BuildAStoryInterface = ({
         setting, characters, and more!
       </p>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
+      <div className='form-grid grid-cols-1 md:grid-cols-2'>
         <div className='space-y-6'>
-          <div>
+          <div className='form-group required'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
-              🏞️ Where should your story take place? *
+              🏞️ Where should your story take place?
             </label>
             <select
               value={storyData.setting}
               onChange={e =>
                 setStoryData({ ...storyData, setting: e.target.value })
               }
-              className='w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 bg-gray-50'
+              className='build-a-story-select w-full'
               required
             >
               <option value=''>Choose setting...</option>
@@ -324,7 +337,7 @@ const BuildAStoryInterface = ({
             </select>
           </div>
 
-          <div>
+          <div className='form-group'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
               ⏰ When does your story happen?
             </label>
@@ -333,7 +346,7 @@ const BuildAStoryInterface = ({
               onChange={e =>
                 setStoryData({ ...storyData, time_period: e.target.value })
               }
-              className='w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 bg-gray-50'
+              className='build-a-story-select w-full'
             >
               <option value=''>Choose time period...</option>
               {(
@@ -352,7 +365,7 @@ const BuildAStoryInterface = ({
             </select>
           </div>
 
-          <div>
+          <div className='form-group'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
               💡 What should your story teach?
             </label>
@@ -361,7 +374,7 @@ const BuildAStoryInterface = ({
               onChange={e =>
                 setStoryData({ ...storyData, theme: e.target.value })
               }
-              className='w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 bg-gray-50'
+              className='build-a-story-select w-full'
             >
               <option value=''>Choose theme...</option>
               {(
@@ -381,57 +394,50 @@ const BuildAStoryInterface = ({
         </div>
 
         <div className='space-y-6'>
-          <div>
+          <div className='form-group required'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
-              👥 Who are your main characters? *
+              👥 Who are your main characters?
             </label>
             <textarea
               value={storyData.characters}
-              onChange={e =>
-                setStoryData({ ...storyData, characters: e.target.value })
-              }
+              onChange={handleCharactersChange}
               placeholder='Example: A curious astronaut named Alex and their AI robot companion who loves to explore...'
-              rows='4'
-              className='w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 bg-gray-50'
+              rows={4}
+              className='build-a-story-textarea'
               required
             />
-            <div className='text-right text-sm text-gray-500 mt-1'>
+            <div className='character-count'>
               {storyData.characters.length}/500 characters
             </div>
           </div>
 
-          <div>
+          <div className='form-group'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
               ✨ Any special elements to include?
             </label>
             <textarea
               value={storyData.special_elements}
-              onChange={e =>
-                setStoryData({ ...storyData, special_elements: e.target.value })
-              }
+              onChange={handleSpecialElementsChange}
               placeholder='Example: talking robots, magic powers, time travel, alien creatures...'
-              rows='3'
-              className='w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 bg-gray-50'
+              rows={3}
+              className='build-a-story-textarea'
             />
           </div>
         </div>
       </div>
 
-      <div className='flex justify-center space-x-4'>
-        <button
-          onClick={() => setCurrentStep(0)}
-          className='px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl font-bold hover:transform hover:-translate-y-1 hover:shadow-lg transition-all'
-        >
+      <div className='step-actions'>
+        <button onClick={() => setCurrentStep(0)} className='btn-outline'>
           ⬅️ Back to Book Selection
         </button>
         <button
           onClick={() => setCurrentStep(2)}
           disabled={!storyData.setting || !storyData.characters.trim()}
-          className={`px-8 py-3 rounded-xl font-bold hover:transform hover:-translate-y-1 hover:shadow-lg transition-all ${
+          className={`btn ${
             storyData.setting && storyData.characters.trim()
-              ? 'bg-gradient-to-r from-green-500 to-green-600 text-white'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          }`}
+              ? 'btn-primary'
+              : ''
+          } btn-large`}
         >
           🤖 Create My Story Starter! →
         </button>
@@ -442,96 +448,70 @@ const BuildAStoryInterface = ({
   // Step 2: Create Starter (Agent Workflow)
   const StepCreateStarter = () => {
     useEffect(() => {
-      if (currentStep === 2 && !loading && !generatedStory) {
+      if (!loading && !generatedStory) {
         createStory()
       }
-    }, [currentStep])
+    }, []) // Removed dependencies that were causing the warning
 
     return (
-      <div className='bg-white rounded-2xl p-8 shadow-2xl'>
+      <div className='content-card'>
         <h2 className='text-3xl font-bold mb-3 text-center'>
-          🤖 Your Expert Writing Team is Creating Your Story!
+          🎨 Creating Your Reimagined Story!
         </h2>
         <p className='text-gray-600 text-lg mb-8 text-center'>
-          Our amazing AI team is working hard to create the perfect story
-          starter just for you!
+          You've done amazing work choosing and customizing your story! Now
+          we're bringing your creative vision to life.
         </p>
 
-        {/* Agent Status Display */}
-        <div className='bg-gray-50 rounded-xl p-6 border-l-4 border-green-500 mb-8'>
-          <h4 className='font-bold text-green-700 mb-4'>
-            🤝 Your Expert Writing Team Status:
-          </h4>
-          <div className='space-y-3'>
-            {agentStatuses.map((agent, index) => (
-              <div
-                key={index}
-                className='flex items-center bg-white p-4 rounded-lg'
-              >
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center text-lg mr-4 ${
-                    agent.status === 'complete'
-                      ? 'bg-green-100'
-                      : agent.status === 'working'
-                      ? 'bg-blue-100'
-                      : 'bg-gray-100'
-                  }`}
-                >
-                  {agent.status === 'complete'
-                    ? '✅'
-                    : agent.status === 'working'
-                    ? '🔄'
-                    : agent.avatar}
-                </div>
-                <div className='flex-1'>
-                  <div className='font-bold text-gray-800'>{agent.name}</div>
-                  <div className='text-gray-600 text-sm italic'>
-                    {agent.message}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {loading && (
-          <div className='text-center'>
-            <div className='inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mb-4'></div>
+          <div className='loading-message'>
+            <div className='loading-spinner'></div>
             <p className='text-lg font-semibold text-gray-700'>
-              Creating your amazing story...
+              Creating your reimagined story...
             </p>
             <p className='text-gray-600'>
-              This usually takes 2-3 minutes. We're making sure it's perfect!
+              This usually takes 2-3 minutes. We're making sure it captures your
+              vision perfectly!
             </p>
           </div>
         )}
 
         {generatedStory && !loading && (
-          <div className='text-center'>
-            <div className='text-6xl mb-4'>🎉</div>
-            <h3 className='text-2xl font-bold text-green-600 mb-4'>
-              Your Story Starter is Ready!
-            </h3>
-            <button
-              onClick={() => setCurrentStep(3)}
-              className='px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold text-lg hover:transform hover:-translate-y-1 hover:shadow-lg transition-all'
-            >
-              ✍️ Let's Start Writing! →
-            </button>
+          <div>
+            <div className='text-center mb-6'>
+              <div className='text-6xl mb-4'>🎉</div>
+              <h3 className='text-2xl font-bold text-green-600 mb-4'>
+                Your Reimagined Story is Ready!
+              </h3>
+            </div>
+
+            {/* Story Display */}
+            <div className='story-starter-section mb-6'>
+              <h3 className='story-starter-title'>✨ Your Spin on a Classic</h3>
+              <div className='story-starter-content'>
+                {generatedStory.story}
+              </div>
+            </div>
+
+            <div className='text-center'>
+              <button
+                onClick={() => setCurrentStep(3)}
+                className='btn-primary btn-large'
+              >
+                ✍️ Time to Continue Writing! →
+              </button>
+            </div>
           </div>
         )}
 
         {error && (
-          <div className='text-center bg-red-50 rounded-xl p-6 border-l-4 border-red-500'>
+          <div className='error-container'>
             <div className='text-4xl mb-2'>😅</div>
             <p className='text-red-700 font-semibold mb-4'>
               Oops! Something went wrong.
             </p>
             <p className='text-red-600 mb-4'>{error}</p>
-            <button
-              onClick={createStory}
-              className='px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-bold hover:transform hover:-translate-y-1 hover:shadow-lg transition-all'
-            >
+            <button onClick={createStory} className='btn-secondary'>
               🔄 Try Again
             </button>
           </div>
@@ -542,104 +522,56 @@ const BuildAStoryInterface = ({
 
   // Step 3: Write & Learn
   const StepWriteAndLearn = () => (
-    <div className='bg-white rounded-2xl p-8 shadow-2xl'>
+    <div className='content-card'>
       <h2 className='text-2xl font-bold mb-2'>✍️ Time to Write Your Story!</h2>
       <p className='text-gray-600 text-lg mb-6'>
-        Our expert writing team created the perfect story starter for your
-        adventure. Now it's your turn to continue the journey!
+        Amazing work! You've put your own creative spin on a classic story.
+        You've reimagined the characters, setting, and world - now continue your
+        unique adventure!
       </p>
 
-      {/* Collaboration Flow */}
-      <div className='bg-blue-50 rounded-xl p-5 mb-8 border-l-4 border-blue-500'>
-        <h4 className='font-bold text-blue-700 mb-4'>
-          🤝 How We're Working Together:
-        </h4>
-        <div className='space-y-3'>
-          <div className='flex items-center bg-white p-3 rounded-lg'>
-            <div className='w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mr-4 text-sm'>
-              🤖
-            </div>
-            <div>
-              <strong>Our Writing Team:</strong> We created your story starter
-              with awesome characters, cool setup, and everything you need to
-              learn!
-            </div>
-          </div>
-          <div className='flex items-center bg-white p-3 rounded-lg'>
-            <div className='w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mr-4 text-sm'>
-              ✍️
-            </div>
-            <div>
-              <strong>Your Turn:</strong> Continue the adventure with your
-              creativity - our writing coach will help you make it amazing!
-            </div>
-          </div>
-          <div className='flex items-center bg-white p-3 rounded-lg'>
-            <div className='w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mr-4 text-sm'>
-              📚
-            </div>
-            <div>
-              <strong>Together:</strong> Create a complete story that's
-              exciting, fun, and helps you rock your learning goals!
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Story Workspace */}
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8'>
+      <div className='story-workspace'>
         {/* AI-Generated Starter Section */}
-        <div className='bg-gray-50 rounded-2xl p-6 border-l-4 border-green-500'>
-          <h3 className='text-xl font-bold text-gray-800 mb-4 flex items-center gap-2'>
-            🤖 Your Expert-Crafted Story Starter
-          </h3>
-          <div className='bg-white p-5 rounded-xl border-2 border-green-200 mb-4'>
-            <div className='whitespace-pre-line text-gray-800 leading-relaxed'>
-              {generatedStory?.story ||
-                "Your amazing story starter will appear here once it's created!"}
-            </div>
+        <div className='story-starter-section'>
+          <h3 className='story-starter-title'>✨ Your Spin on a Classic</h3>
+          <div className='story-starter-content'>
+            {generatedStory?.story ||
+              "Your amazing reimagined story will appear here once it's created!"}
           </div>
 
-          <div className='bg-blue-50 rounded-xl p-4 border-l-4 border-blue-500'>
+          <div className='coaching-box'>
             <h4 className='font-bold text-blue-700 mb-3'>
-              🎯 What Our Writing Team Created For You:
+              🎯 What You've Created So Far:
             </h4>
-            <div className='space-y-2'>
-              <div className='flex items-start gap-2'>
-                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5'>
-                  ✓
-                </div>
+            <div className='coaching-tips'>
+              <div className='coaching-tip'>
+                <div className='tip-number'>✓</div>
                 <div>
-                  <strong>Cool Character:</strong> Your main character keeps the
-                  best traits from the original but fits your awesome new
-                  setting!
+                  <strong>Your Characters:</strong> You've taken classic
+                  characters and made them your own, giving them new life in
+                  your chosen setting!
                 </div>
               </div>
-              <div className='flex items-start gap-2'>
-                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5'>
-                  ✓
-                </div>
+              <div className='coaching-tip'>
+                <div className='tip-number'>✓</div>
                 <div>
-                  <strong>Awesome Twist:</strong> Classic elements transformed
-                  for your chosen world - just as mysterious and exciting!
+                  <strong>Your World:</strong> You've transformed the original
+                  story world into something completely new and exciting!
                 </div>
               </div>
-              <div className='flex items-start gap-2'>
-                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5'>
-                  ✓
-                </div>
+              <div className='coaching-tip'>
+                <div className='tip-number'>✓</div>
                 <div>
-                  <strong>Epic Adventure Hook:</strong> The perfect setup for an
-                  amazing adventure that you can continue!
+                  <strong>Your Adventure:</strong> You've set up the perfect
+                  beginning for an amazing story that's uniquely yours!
                 </div>
               </div>
-              <div className='flex items-start gap-2'>
-                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5'>
-                  ✓
-                </div>
+              <div className='coaching-tip'>
+                <div className='tip-number'>✓</div>
                 <div>
-                  <strong>Learning Fun:</strong> Everything is set up for you to
-                  explore themes and ideas in the coolest way!
+                  <strong>Your Learning:</strong> You've explored how classic
+                  themes work in new settings - that's real literary analysis!
                 </div>
               </div>
             </div>
@@ -647,12 +579,10 @@ const BuildAStoryInterface = ({
         </div>
 
         {/* Student Writing Section */}
-        <div className='bg-yellow-50 rounded-2xl p-6 border-l-4 border-yellow-500'>
-          <h3 className='text-xl font-bold text-yellow-700 mb-4 flex items-center gap-2'>
-            ✍️ Continue Your Adventure
-          </h3>
+        <div className='story-writing-section'>
+          <h3 className='story-writing-title'>✍️ Continue Your Adventure</h3>
 
-          <div className='bg-white p-4 rounded-xl border-l-4 border-yellow-500 mb-4'>
+          <div className='writing-prompt'>
             <div className='text-gray-800'>
               <strong>🚀 Your Writing Mission:</strong>
               <br />
@@ -664,7 +594,7 @@ const BuildAStoryInterface = ({
 
           <textarea
             value={studentWriting}
-            onChange={e => setStudentWriting(e.target.value)}
+            onChange={handleStudentWritingChange}
             placeholder={`Continue your adventure here... 
 
 What is your character thinking? What do they decide to do? What do they see, hear, or feel?
@@ -676,16 +606,15 @@ Remember to:
 • Build suspense about what happens next
 
 Start writing: "The character hesitated for a moment, then..."`}
-            className='w-full h-80 p-5 border-2 border-gray-200 rounded-xl text-lg leading-relaxed resize-none focus:outline-none focus:border-yellow-500 font-serif'
+            className='build-a-story-textarea'
+            style={{ height: '320px', width: '100%' }}
           />
 
-          <div className='flex justify-between items-center mt-3 text-sm text-gray-600'>
+          <div className='writing-stats'>
             <span>
               Words written:{' '}
               <span
-                className={`font-bold ${
-                  wordCount > 50 ? 'text-green-600' : 'text-yellow-600'
-                }`}
+                className={`word-count ${wordCount > 50 ? 'good' : 'warning'}`}
               >
                 {wordCount}
               </span>
@@ -694,42 +623,34 @@ Start writing: "The character hesitated for a moment, then..."`}
             <span>Reading level: 7th grade</span>
           </div>
 
-          <div className='bg-blue-50 rounded-xl p-4 border-l-4 border-blue-500 mt-4'>
+          <div className='coaching-box mt-4'>
             <h4 className='font-bold text-blue-700 mb-3'>
               💡 Live Writing Coach Tips:
             </h4>
-            <div className='space-y-2'>
-              <div className='flex items-start gap-2'>
-                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5'>
-                  1
-                </div>
+            <div className='coaching-tips'>
+              <div className='coaching-tip'>
+                <div className='tip-number'>1</div>
                 <div>
                   <strong>Character Voice:</strong> Keep your character true to
                   their personality while they explore this new world!
                 </div>
               </div>
-              <div className='flex items-start gap-2'>
-                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5'>
-                  2
-                </div>
+              <div className='coaching-tip'>
+                <div className='tip-number'>2</div>
                 <div>
                   <strong>Show Don't Tell:</strong> Instead of "They were
                   curious," write "Their heart raced as they stepped closer"
                 </div>
               </div>
-              <div className='flex items-start gap-2'>
-                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5'>
-                  3
-                </div>
+              <div className='coaching-tip'>
+                <div className='tip-number'>3</div>
                 <div>
                   <strong>Dialogue:</strong> What would your character say to
                   themselves or others in this moment?
                 </div>
               </div>
-              <div className='flex items-start gap-2'>
-                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5'>
-                  4
-                </div>
+              <div className='coaching-tip'>
+                <div className='tip-number'>4</div>
                 <div>
                   <strong>Setting Details:</strong> Use your amazing new setting
                   to create atmosphere and excitement!
@@ -741,43 +662,35 @@ Start writing: "The character hesitated for a moment, then..."`}
       </div>
 
       {/* Educational Insights */}
-      <div className='bg-gray-50 rounded-2xl p-6 mb-8 border-l-4 border-gray-500'>
+      <div className='educational-insights'>
         <h3 className='text-xl font-bold text-gray-800 mb-4'>
           📚 What You're Learning (Common Core Standards)
         </h3>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div className='bg-white p-4 rounded-xl border-l-3 border-gray-500'>
-            <div className='font-bold text-gray-800 mb-2'>
-              W.7.3 - Narrative Writing
-            </div>
-            <div className='text-gray-600'>
+        <div className='insights-grid'>
+          <div className='insight-card'>
+            <div className='insight-standard'>W.7.3 - Narrative Writing</div>
+            <div className='insight-description'>
               You're practicing continuing a narrative with consistent character
               voice, plot development, and descriptive details.
             </div>
           </div>
-          <div className='bg-white p-4 rounded-xl border-l-3 border-gray-500'>
-            <div className='font-bold text-gray-800 mb-2'>
-              RL.7.3 - Character Analysis
-            </div>
-            <div className='text-gray-600'>
+          <div className='insight-card'>
+            <div className='insight-standard'>RL.7.3 - Character Analysis</div>
+            <div className='insight-description'>
               You're analyzing how character traits transfer to new settings
               while maintaining core personality.
             </div>
           </div>
-          <div className='bg-white p-4 rounded-xl border-l-3 border-gray-500'>
-            <div className='font-bold text-gray-800 mb-2'>
-              RL.7.2 - Theme Development
-            </div>
-            <div className='text-gray-600'>
+          <div className='insight-card'>
+            <div className='insight-standard'>RL.7.2 - Theme Development</div>
+            <div className='insight-description'>
               You're exploring how themes work in different settings and time
               periods.
             </div>
           </div>
-          <div className='bg-white p-4 rounded-xl border-l-3 border-gray-500'>
-            <div className='font-bold text-gray-800 mb-2'>
-              L.7.5 - Language Use
-            </div>
-            <div className='text-gray-600'>
+          <div className='insight-card'>
+            <div className='insight-standard'>L.7.5 - Language Use</div>
+            <div className='insight-description'>
               You're adapting language and literary devices for new contexts.
             </div>
           </div>
@@ -785,59 +698,56 @@ Start writing: "The character hesitated for a moment, then..."`}
       </div>
 
       {/* Download Section */}
-      <div className='bg-green-50 rounded-2xl p-6 text-center border-l-4 border-green-500'>
+      <div className='download-section'>
         <h3 className='text-xl font-bold text-green-800 mb-2'>
           📥 Save & Share Your Amazing Story
         </h3>
         <p className='text-green-700 mb-6'>
-          Get your complete story adventure: Expert starter + your awesome
-          writing + cool learning stuff!
+          Get your complete story adventure: Your reimagined beginning + your
+          awesome writing + reflection on your creative process!
         </p>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-6'>
-          <div className='bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow'>
+        <div className='download-options'>
+          <div className='download-card'>
             <h4 className='font-bold text-gray-800 mb-2'>
               📄 My Story Portfolio
             </h4>
             <p className='text-gray-600 mb-4'>
-              Your complete adventure with writing tips and questions to think
-              about
+              Your complete reimagined adventure with writing reflections and
+              questions about your creative choices
             </p>
             <button
               onClick={() => handleDownload('📄 My Story Portfolio')}
-              className='px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold transition-all hover:transform hover:-translate-y-1 hover:shadow-lg'
+              className='btn-primary'
             >
               Download PDF
             </button>
           </div>
-          <div className='bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow'>
+          <div className='download-card'>
             <h4 className='font-bold text-gray-800 mb-2'>👨‍🏫 For My Teacher</h4>
             <p className='text-gray-600 mb-4'>
-              Special teacher version with learning goals and how awesome you
-              did
+              Special teacher version with learning standards and assessment of
+              your creative adaptation skills
             </p>
             <button
               onClick={() => handleDownload('👨‍🏫 For My Teacher')}
-              className='px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-bold transition-all hover:transform hover:-translate-y-1 hover:shadow-lg'
+              className='btn-secondary'
             >
               Download PDF
             </button>
           </div>
         </div>
 
-        <div className='space-x-4'>
+        <div className='action-row'>
           <button
             onClick={regenerateStory}
             disabled={loading}
-            className='px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold hover:transform hover:-translate-y-1 hover:shadow-lg transition-all disabled:opacity-50'
+            className='btn-primary btn-large'
           >
-            {loading ? '🤖 Creating...' : '✨ Generate Another Story Starter'}
+            {loading ? '🎨 Creating...' : '✨ Try Different Story Beginning'}
           </button>
-          <button
-            onClick={resetApp}
-            className='px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:transform hover:-translate-y-1 hover:shadow-lg transition-all'
-          >
-            📚 Try Different Classic Book
+          <button onClick={resetApp} className='btn-secondary btn-large'>
+            📚 Start Over with New Classic
           </button>
         </div>
       </div>
@@ -845,10 +755,10 @@ Start writing: "The character hesitated for a moment, then..."`}
   )
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-blue-500 to-purple-600'>
-      <div className='max-w-6xl mx-auto p-5'>
+    <div className='build-a-story-container'>
+      <div className='build-a-story-content'>
         {/* Header */}
-        <div className='text-center text-white mb-8'>
+        <div className='build-a-story-header'>
           <h1 className='text-4xl font-bold mb-3 drop-shadow-lg'>
             📚✨ BUILD-A-STORY Writer ✨📚
           </h1>
@@ -858,66 +768,116 @@ Start writing: "The character hesitated for a moment, then..."`}
         </div>
 
         {/* Progress Container */}
-        <div className='bg-white rounded-2xl p-6 mb-8 shadow-2xl'>
-          <div className='flex justify-between items-center mb-6'>
+        <div className='build-a-story-progress'>
+          <div className='build-a-story-steps'>
             {steps.map((step, index) => (
               <div
                 key={index}
                 onClick={() => setCurrentStep(index)}
-                className={`flex-1 text-center p-4 rounded-xl mx-1 transition-all duration-300 cursor-pointer ${
+                className={`build-a-story-step ${
                   index < currentStep
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
+                    ? 'completed'
                     : index === currentStep
-                    ? 'bg-gradient-to-r from-green-500 to-green-600 text-white transform scale-105'
+                    ? 'active'
                     : isStepComplete(index - 1) || index === 0
-                    ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    ? 'pending'
+                    : 'pending'
                 }`}
               >
-                <div className='text-3xl mb-2'>{step.icon}</div>
-                <div className='font-bold mb-1'>{step.title}</div>
-                <div className='text-sm opacity-80'>{step.desc}</div>
+                <div className='build-a-story-step-icon'>{step.icon}</div>
+                <div className='build-a-story-step-title'>{step.title}</div>
+                <div className='build-a-story-step-desc'>{step.desc}</div>
               </div>
             ))}
           </div>
 
-          {/* Agent Status Display - Only show during steps 1+ */}
+          {/* Student Progress - Only show during steps 1+ */}
           {currentStep >= 1 && (
-            <div className='bg-gray-50 rounded-xl p-4 border-l-4 border-green-500'>
-              <h4 className='font-bold text-green-700 mb-3'>
-                🤝 Your Expert Writing Team Status:
+            <div className='agent-status-container'>
+              <h4 className='agent-status-title'>
+                📚 Your Story Creation Progress:
               </h4>
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
-                {agentStatuses.map((agent, index) => (
+              <div className='agent-status-grid'>
+                <div className='agent-status-item'>
                   <div
-                    key={index}
-                    className='flex items-center bg-white p-3 rounded-lg'
+                    className={`agent-avatar ${
+                      currentStep >= 1 ? 'complete' : 'waiting'
+                    }`}
                   >
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-lg mr-3 ${
-                        agent.status === 'complete'
-                          ? 'bg-green-100'
-                          : agent.status === 'working'
-                          ? 'bg-blue-100'
-                          : 'bg-gray-100'
-                      }`}
-                    >
-                      {agent.status === 'complete'
-                        ? '✅'
-                        : agent.status === 'working'
-                        ? '🔄'
-                        : agent.avatar}
-                    </div>
-                    <div className='flex-1'>
-                      <div className='font-bold text-gray-800 text-sm'>
-                        {agent.name}
-                      </div>
-                      <div className='text-gray-600 text-xs italic'>
-                        {agent.message}
-                      </div>
+                    {currentStep >= 1 ? '✅' : '📖'}
+                  </div>
+                  <div className='flex-1'>
+                    <div className='agent-name'>Story Selection</div>
+                    <div className='agent-message'>
+                      {currentStep >= 1
+                        ? 'Perfect classic chosen!'
+                        : 'Choose your favorite classic story'}
                     </div>
                   </div>
-                ))}
+                </div>
+                <div className='agent-status-item'>
+                  <div
+                    className={`agent-avatar ${
+                      currentStep >= 2
+                        ? 'complete'
+                        : currentStep === 1
+                        ? 'working'
+                        : 'waiting'
+                    }`}
+                  >
+                    {currentStep >= 2 ? '✅' : currentStep === 1 ? '🎨' : '⏳'}
+                  </div>
+                  <div className='flex-1'>
+                    <div className='agent-name'>Creative Vision</div>
+                    <div className='agent-message'>
+                      {currentStep >= 2
+                        ? 'Amazing customization complete!'
+                        : currentStep === 1
+                        ? 'Add your creative spin...'
+                        : 'Waiting for story selection...'}
+                    </div>
+                  </div>
+                </div>
+                <div className='agent-status-item'>
+                  <div
+                    className={`agent-avatar ${
+                      generatedStory
+                        ? 'complete'
+                        : currentStep >= 2
+                        ? 'working'
+                        : 'waiting'
+                    }`}
+                  >
+                    {generatedStory ? '✅' : currentStep >= 2 ? '🔄' : '⏳'}
+                  </div>
+                  <div className='flex-1'>
+                    <div className='agent-name'>Story Beginning</div>
+                    <div className='agent-message'>
+                      {generatedStory
+                        ? 'Your reimagined story is ready!'
+                        : currentStep >= 2
+                        ? 'Creating your story beginning...'
+                        : 'Waiting for your creative input...'}
+                    </div>
+                  </div>
+                </div>
+                <div className='agent-status-item'>
+                  <div
+                    className={`agent-avatar ${
+                      currentStep >= 3 ? 'working' : 'waiting'
+                    }`}
+                  >
+                    {currentStep >= 3 ? '✍️' : '⏳'}
+                  </div>
+                  <div className='flex-1'>
+                    <div className='agent-name'>Your Writing</div>
+                    <div className='agent-message'>
+                      {currentStep >= 3
+                        ? 'Time to continue your story!'
+                        : 'Ready for your amazing writing...'}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -925,12 +885,9 @@ Start writing: "The character hesitated for a moment, then..."`}
 
         {/* Error Display */}
         {error && (
-          <div className='bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center justify-between'>
+          <div className='error-banner'>
             <span className='text-red-700'>⚠️ {error}</span>
-            <button
-              onClick={() => setError(null)}
-              className='text-red-500 hover:text-red-700 font-bold text-xl'
-            >
+            <button onClick={() => setError(null)} className='error-close'>
               ✕
             </button>
           </div>
