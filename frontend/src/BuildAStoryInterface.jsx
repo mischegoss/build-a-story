@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import './BuildAStory.css' // Import your CSS styles
 
 const BuildAStoryInterface = ({
@@ -16,45 +16,105 @@ const BuildAStoryInterface = ({
   resetApp,
   setError,
   isStepComplete,
+  // NEW: AI Education props
+  aiEducationMode,
+  agentWorkflow,
+  currentAgent,
+  aiCollaborationInsights,
+  showProcessLearning,
+  projectId,
+  setAiEducationMode,
+  setShowProcessLearning,
+  fetchAiInsights,
 }) => {
   const [studentWriting, setStudentWriting] = useState('')
   const [wordCount, setWordCount] = useState(0)
+  const [showAiInsights, setShowAiInsights] = useState(false)
+
+  // NEW: Enhanced agent statuses with educational focus
   const [agentStatuses, setAgentStatuses] = useState([
     {
       name: 'Project Manager',
+      technical_name: 'enterprise_intake_coordinator',
       avatar: '📋',
       status: 'waiting',
-      message: 'Ready to help you create an amazing story adventure!',
+      message:
+        'Ready to validate your creative request and ensure it meets educational standards!',
+      what_i_do:
+        'I check that your story idea is safe, educational, and technically possible to create.',
+      ai_specialty:
+        'Request validation, safety assessment, and project planning',
+      learning_moment:
+        'This is how AI systems validate inputs before processing - like a quality control checkpoint!',
     },
     {
       name: 'Book Expert',
+      technical_name: 'literature_research_intelligence',
       avatar: '📚',
       status: 'waiting',
-      message: 'Standing by to analyze your chosen classic story!',
+      message:
+        'Standing by to analyze your chosen classic and find the best ways to adapt it!',
+      what_i_do:
+        'I study the original book deeply to understand what makes it special and how to preserve that in your adaptation.',
+      ai_specialty:
+        'Literary analysis, theme identification, and adaptation strategy',
+      learning_moment:
+        'This shows how AI can analyze complex literature and understand storytelling patterns!',
     },
     {
       name: 'Learning Coach',
+      technical_name: 'compliance_standards_validator',
       avatar: '🎓',
       status: 'waiting',
-      message: 'Excited to make sure your story is fun AND educational!',
+      message:
+        'Excited to make sure your story meets all educational standards and learning goals!',
+      what_i_do:
+        'I verify that your adapted story will help you learn and meet important educational standards.',
+      ai_specialty:
+        'Educational standards compliance and learning objective alignment',
+      learning_moment:
+        'This demonstrates how AI can ensure content meets specific requirements and guidelines!',
     },
     {
       name: 'Story Writer',
+      technical_name: 'enterprise_content_creator',
       avatar: '✍️',
       status: 'waiting',
-      message: "Can't wait to create an epic story starter just for you!",
+      message:
+        "Can't wait to create an amazing story beginning that captures your vision perfectly!",
+      what_i_do:
+        'I take all the research and requirements and write a compelling story beginning just for you.',
+      ai_specialty:
+        'Creative writing, narrative development, and content generation',
+      learning_moment:
+        'This is where AI creativity shines - combining rules with imagination to create something new!',
+    },
+    {
+      name: 'Materials Creator',
+      technical_name: 'educational_materials_engineer',
+      avatar: '📖',
+      status: 'waiting',
+      message:
+        'Ready to design awesome learning activities and discussion questions for your story!',
+      what_i_do:
+        'I create educational materials like discussion questions and vocabulary activities to enhance your learning.',
+      ai_specialty:
+        'Educational content design, assessment creation, and learning support',
+      learning_moment:
+        'This shows how AI can create personalized learning experiences tailored to your needs!',
     },
     {
       name: 'Quality Checker',
+      technical_name: 'enterprise_quality_assurance',
       avatar: '🔍',
       status: 'waiting',
-      message: 'Ready to make sure your story is absolutely awesome!',
-    },
-    {
-      name: 'Package Creator',
-      avatar: '📄',
-      status: 'waiting',
-      message: 'Standing by to create amazing downloads for you!',
+      message:
+        'Standing by to make sure everything is perfect and ready for you to use!',
+      what_i_do:
+        'I review all the work from other agents to ensure quality, consistency, and educational value.',
+      ai_specialty: 'Quality assurance, final review, and package preparation',
+      learning_moment:
+        'This demonstrates how AI systems use multiple checkpoints to ensure high-quality results!',
     },
   ])
 
@@ -73,88 +133,33 @@ const BuildAStoryInterface = ({
     },
     {
       icon: '🤖',
-      title: 'AI Starter',
-      desc: generatedStory ? 'Story created!' : 'Expert beginning',
+      title: 'AI Collaboration',
+      desc: generatedStory ? 'Story created!' : 'Work with AI team',
     },
-    { icon: '✍️', title: 'Write & Learn', desc: 'Your creativity' },
+    {
+      icon: '✍️',
+      title: 'Write & Reflect',
+      desc: 'Your creativity + AI learning',
+    },
   ]
 
-  // Update agent statuses based on current step and story progress
+  // Update agent statuses based on workflow progress
   useEffect(() => {
-    if (currentStep >= 1 && storyData.book_title) {
+    if (agentWorkflow && agentWorkflow.length > 0) {
       setAgentStatuses(prev =>
-        prev.map((agent, index) =>
-          index === 0
-            ? {
-                ...agent,
-                status: 'complete',
-                message:
-                  'Awesome! Your story project is officially started - our team is SO excited to help you!',
-              }
-            : agent,
-        ),
+        prev.map(agent => {
+          const isCompleted = agentWorkflow.includes(agent.technical_name)
+          return {
+            ...agent,
+            status: isCompleted ? 'complete' : agent.status,
+            message: isCompleted
+              ? `✅ Completed! ${agent.what_i_do}`
+              : agent.message,
+          }
+        }),
       )
     }
-    if (currentStep >= 1 && storyData.book_title) {
-      setAgentStatuses(prev =>
-        prev.map((agent, index) =>
-          index === 1
-            ? {
-                ...agent,
-                status: 'complete',
-                message:
-                  'YES! Your book choice is PERFECT for adaptation - this is going to be amazing!',
-              }
-            : agent,
-        ),
-      )
-    }
-    if (currentStep >= 2 && storyData.setting && storyData.characters) {
-      setAgentStatuses(prev =>
-        prev.map((agent, index) =>
-          index === 2
-            ? {
-                ...agent,
-                status: 'complete',
-                message:
-                  "Your creative ideas are brilliant! They're fun AND help you learn - exactly what we love to see!",
-              }
-            : agent,
-        ),
-      )
-    }
-    if (generatedStory) {
-      setAgentStatuses(prev =>
-        prev.map((agent, index) =>
-          index === 3
-            ? {
-                ...agent,
-                status: 'complete',
-                message:
-                  "Your story starter is ready and it's EPIC! This is going to blow your mind! 🚀",
-              }
-            : agent,
-        ),
-      )
-      setAgentStatuses(prev =>
-        prev.map((agent, index) =>
-          index === 4
-            ? {
-                ...agent,
-                status: 'complete',
-                message:
-                  "This story rocks! It's exciting, educational, and totally awesome - you're going to love it!",
-              }
-            : agent,
-        ),
-      )
-    }
-  }, [
-    storyData.book_title,
-    storyData.setting,
-    storyData.characters,
-    generatedStory,
-  ]) // Only include specific values that matter
+  }, [agentWorkflow])
 
   useEffect(() => {
     const words = studentWriting
@@ -168,7 +173,6 @@ const BuildAStoryInterface = ({
     storyData.book_title.includes(book.title),
   )
 
-  // Optimize textarea handlers to prevent performance issues
   const handleCharactersChange = useCallback(
     e => {
       setStoryData(prev => ({ ...prev, characters: e.target.value }))
@@ -187,13 +191,63 @@ const BuildAStoryInterface = ({
     setStudentWriting(e.target.value)
   }, [])
 
+  // SIMPLE handlers - just like other form fields
+  const handleSpecialElementChange = (element, isChecked) => {
+    setStoryData(prev => {
+      let newElements = [...(prev.specialElementsList || [])]
+
+      if (isChecked && !newElements.includes(element)) {
+        if (newElements.length < 3) {
+          newElements.push(element)
+        }
+      } else if (!isChecked) {
+        newElements = newElements.filter(el => el !== element)
+      }
+
+      return {
+        ...prev,
+        specialElementsList: newElements,
+        special_elements: newElements.join(', '),
+      }
+    })
+  }
+
+  // Simple function to prepare character data for backend
+  const prepareForNextStep = () => {
+    // Create characters text from individual fields
+    const characters = []
+    if (storyData.character1_name?.trim()) {
+      characters.push(
+        `${storyData.character1_name.trim()}: ${
+          storyData.character1_description?.trim() || ''
+        }`,
+      )
+    }
+    if (storyData.character2_name?.trim()) {
+      characters.push(
+        `${storyData.character2_name.trim()}: ${
+          storyData.character2_description?.trim() || ''
+        }`,
+      )
+    }
+    if (storyData.character3_name?.trim()) {
+      characters.push(
+        `${storyData.character3_name.trim()}: ${
+          storyData.character3_description?.trim() || ''
+        }`,
+      )
+    }
+
+    setStoryData(prev => ({ ...prev, characters: characters.join('; ') }))
+    setCurrentStep(2)
+  }
+
   const handleDownload = downloadType => {
-    // Fixed: Removed unused completeStory variable
     alert(
-      `📥 Downloading ${downloadType}...\n\nThis would generate a PDF containing:\n• Complete story (AI starter + your writing)\n• Educational analysis and insights\n• ${
+      `📥 Downloading ${downloadType}...\n\nThis would generate a PDF containing:\n• Complete story (AI collaboration + your writing)\n• AI literacy learning insights\n• ${
         downloadType.includes('Teacher')
-          ? 'Assessment rubric and standards alignment'
-          : 'Reflection questions and portfolio format'
+          ? 'AI education assessment rubric and standards alignment'
+          : 'Reflection questions about AI collaboration and creative process'
       }`,
     )
   }
@@ -205,28 +259,76 @@ const BuildAStoryInterface = ({
       case 1:
         return <StepCustomize />
       case 2:
-        return <StepCreateStarter />
+        return <StepAiCollaboration />
       case 3:
-        return <StepWriteAndLearn />
+        return <StepWriteAndReflect />
       default:
         return <StepChooseStory />
     }
   }
 
-  // Step 0: Choose Story
+  // Step 0: Choose Story (Enhanced with AI learning preview)
   const StepChooseStory = () => (
     <div className='content-card'>
       <h2 className='text-3xl font-bold mb-3 text-center'>
-        📖 Choose Your Classic Story
+        📖 Choose Your Classic Story for AI Collaboration
       </h2>
-      <p className='text-gray-600 text-lg mb-8 text-center'>
-        Pick a classic book that you'd like to reimagine with your own awesome
-        twist!
+      <p className='text-gray-600 text-lg mb-4 text-center'>
+        Pick a classic book that you'd like to reimagine by working together
+        with our AI team of specialists!
       </p>
+
+      {/* NEW: AI Education Introduction */}
+      <div className='ai-education-intro'>
+        <h3 className='ai-intro-title'>
+          🤖 What You'll Learn About AI Collaboration
+        </h3>
+        <div className='ai-intro-content'>
+          <div className='ai-intro-point'>
+            <div className='ai-intro-icon'>🧠</div>
+            <div>
+              <strong>How AI Teams Work:</strong> You'll see 6 different AI
+              specialists collaborate to help create your story, just like
+              humans work in teams!
+            </div>
+          </div>
+          <div className='ai-intro-point'>
+            <div className='ai-intro-icon'>🔍</div>
+            <div>
+              <strong>AI Decision Making:</strong> Watch how each AI agent makes
+              different types of decisions and see their reasoning process.
+            </div>
+          </div>
+          <div className='ai-intro-point'>
+            <div className='ai-intro-icon'>💡</div>
+            <div>
+              <strong>Human-AI Partnership:</strong> Learn how to direct AI
+              effectively while keeping your creativity central to the process.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Education Mode Toggle */}
+      <div className='ai-education-toggle'>
+        <label className='toggle-label'>
+          <input
+            type='checkbox'
+            checked={aiEducationMode}
+            onChange={setAiEducationMode}
+            className='toggle-checkbox'
+          />
+          <span className='toggle-slider'></span>
+          <span className='toggle-text'>
+            🎓 Show AI Learning Process (Recommended for understanding how AI
+            works!)
+          </span>
+        </label>
+      </div>
 
       <div className='form-group mb-8'>
         <label className='block text-lg font-bold mb-4 text-gray-800'>
-          📚 Which classic story do you want to transform?
+          📚 Which classic story do you want to transform with AI collaboration?
         </label>
         <select
           value={storyData.book_title}
@@ -246,7 +348,9 @@ const BuildAStoryInterface = ({
 
       {selectedBookData && (
         <div className='book-info-card'>
-          <h3 className='book-info-title'>✅ Awesome Choice!</h3>
+          <h3 className='book-info-title'>
+            ✅ Perfect Choice for AI Collaboration!
+          </h3>
 
           <div className='bg-white rounded-xl p-5 mb-4'>
             <h4 className='text-lg font-bold text-gray-800 mb-2'>
@@ -254,12 +358,13 @@ const BuildAStoryInterface = ({
             </h4>
             <p className='text-gray-700 mb-4 leading-relaxed'>
               {selectedBookData.description ||
-                `A classic tale of ${selectedBookData.theme.toLowerCase()} that's perfect for adaptation!`}
+                `A classic tale of ${selectedBookData.theme.toLowerCase()} that's perfect for creative adaptation with AI!`}
             </p>
             <div className='info-box'>
               <p className='text-blue-800 font-semibold'>
-                💡 Why this is perfect: Great for sci-fi, modern day, or fantasy
-                adaptations!
+                🤖 Why our AI team loves this book: Rich characters and themes
+                that can be brilliantly adapted to any setting while preserving
+                the story's heart!
               </p>
             </div>
           </div>
@@ -287,7 +392,7 @@ const BuildAStoryInterface = ({
               onClick={() => setCurrentStep(1)}
               className='btn-primary btn-large'
             >
-              🎨 Let's Customize This Story! →
+              🎨 Let's Design This with AI! →
             </button>
           </div>
         </div>
@@ -295,22 +400,64 @@ const BuildAStoryInterface = ({
     </div>
   )
 
-  // Step 1: Customize
+  // Step 1: Customize (Enhanced with AI collaboration preview)
   const StepCustomize = () => (
     <div className='content-card'>
       <h2 className='text-3xl font-bold mb-3 text-center'>
-        🎨 Customize Your Story
+        🎨 Design Your Story with AI Guidance
       </h2>
-      <p className='text-gray-600 text-lg mb-8 text-center'>
-        Make {storyData.book_title.split(' by ')[0]} your own by changing the
-        setting, characters, and more!
+      <p className='text-gray-600 text-lg mb-6 text-center'>
+        Tell our AI team your creative vision for{' '}
+        {storyData.book_title.split(' by ')[0]} and they'll help bring it to
+        life!
       </p>
+
+      {/* NEW: AI Collaboration Preview */}
+      {aiEducationMode && (
+        <div className='ai-collaboration-preview'>
+          <h3 className='ai-preview-title'>
+            🤖 Meet Your AI Collaboration Team
+          </h3>
+          <p className='ai-preview-desc'>
+            These AI specialists will work together to create your story. Each
+            has a different job to ensure quality and educational value!
+          </p>
+          <div className='ai-team-preview'>
+            {agentStatuses.slice(0, 3).map((agent, index) => (
+              <div key={index} className='ai-agent-preview'>
+                <div className='agent-preview-avatar'>{agent.avatar}</div>
+                <div className='agent-preview-info'>
+                  <div className='agent-preview-name'>{agent.name}</div>
+                  <div className='agent-preview-specialty'>
+                    {agent.ai_specialty}
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className='ai-agent-preview'>
+              <div className='agent-preview-avatar'>➕</div>
+              <div className='agent-preview-info'>
+                <div className='agent-preview-name'>And 3 More!</div>
+                <div className='agent-preview-specialty'>
+                  Working together as a team
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className='form-grid grid-cols-1 md:grid-cols-2'>
         <div className='space-y-6'>
           <div className='form-group required'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
               🏞️ Where should your story take place?
+              {aiEducationMode && (
+                <span className='ai-hint'>
+                  (Our Book Expert will analyze how this setting affects the
+                  story!)
+                </span>
+              )}
             </label>
             <select
               value={storyData.setting}
@@ -340,6 +487,12 @@ const BuildAStoryInterface = ({
           <div className='form-group'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
               ⏰ When does your story happen?
+              {aiEducationMode && (
+                <span className='ai-hint'>
+                  (Time period affects character motivations and story
+                  possibilities!)
+                </span>
+              )}
             </label>
             <select
               value={storyData.time_period}
@@ -368,6 +521,11 @@ const BuildAStoryInterface = ({
           <div className='form-group'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
               💡 What should your story teach?
+              {aiEducationMode && (
+                <span className='ai-hint'>
+                  (Our Learning Coach ensures educational value!)
+                </span>
+              )}
             </label>
             <select
               value={storyData.theme}
@@ -397,31 +555,133 @@ const BuildAStoryInterface = ({
           <div className='form-group required'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
               👥 Who are your main characters?
+              {aiEducationMode && (
+                <span className='ai-hint'>
+                  (Our Story Writer will preserve their personalities while
+                  adapting them!)
+                </span>
+              )}
             </label>
-            <textarea
-              value={storyData.characters}
-              onChange={handleCharactersChange}
-              placeholder='Example: A curious astronaut named Alex and their AI robot companion who loves to explore...'
-              rows={4}
-              className='build-a-story-textarea'
-              required
-            />
-            <div className='character-count'>
-              {storyData.characters.length}/500 characters
+
+            {/* Character Input Fields */}
+            <div className='character-inputs'>
+              {(
+                storyData.charactersList || [{ name: '', description: '' }]
+              ).map((character, index) => (
+                <div key={index} className='character-input-group'>
+                  <div className='character-input-header'>
+                    <h5>Character {index + 1}</h5>
+                    {index > 0 && (
+                      <button
+                        type='button'
+                        onClick={e => {
+                          e.preventDefault()
+                          removeCharacter(index)
+                        }}
+                        className='remove-character-btn'
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                  <div className='character-input-fields'>
+                    <input
+                      type='text'
+                      placeholder='Character name'
+                      value={character.name || ''}
+                      onChange={e =>
+                        handleCharacterChange(index, 'name', e.target.value)
+                      }
+                      className='character-name-input'
+                    />
+                    <input
+                      type='text'
+                      placeholder='Brief description (curious astronaut, brave knight, etc.)'
+                      value={character.description || ''}
+                      onChange={e =>
+                        handleCharacterChange(
+                          index,
+                          'description',
+                          e.target.value,
+                        )
+                      }
+                      className='character-description-input'
+                    />
+                  </div>
+                </div>
+              ))}
+
+              {(storyData.charactersList || []).length < 4 && (
+                <button
+                  type='button'
+                  onClick={e => {
+                    e.preventDefault()
+                    addCharacter()
+                  }}
+                  className='add-character-btn'
+                >
+                  + Add Another Character
+                </button>
+              )}
             </div>
           </div>
 
           <div className='form-group'>
             <label className='block text-lg font-bold mb-3 text-gray-800'>
-              ✨ Any special elements to include?
+              ✨ Special elements to include? (Choose up to 3)
+              {aiEducationMode && (
+                <span className='ai-hint'>
+                  (Our Quality Checker ensures everything fits together
+                  perfectly!)
+                </span>
+              )}
             </label>
-            <textarea
-              value={storyData.special_elements}
-              onChange={handleSpecialElementsChange}
-              placeholder='Example: talking robots, magic powers, time travel, alien creatures...'
-              rows={3}
-              className='build-a-story-textarea'
-            />
+
+            {/* Special Elements Checkboxes */}
+            <div className='special-elements-grid'>
+              {[
+                'Talking Animals',
+                'Magic Powers',
+                'Time Travel',
+                'Robots/AI Companions',
+                'Flying Vehicles',
+                'Underwater Exploration',
+                'Space Adventure',
+                'Ancient Mysteries',
+                'Invisible Objects',
+                'Shape-shifting',
+                'Telepathy/Mind Reading',
+                'Magical Creatures',
+              ].map((element, index) => (
+                <label key={index} className='special-element-checkbox'>
+                  <input
+                    type='checkbox'
+                    checked={(storyData.specialElementsList || []).includes(
+                      element,
+                    )}
+                    onChange={e =>
+                      handleSpecialElementChange(element, e.target.checked)
+                    }
+                    disabled={
+                      (storyData.specialElementsList || []).length >= 3 &&
+                      !(storyData.specialElementsList || []).includes(element)
+                    }
+                  />
+                  <span className='checkbox-label'>{element}</span>
+                </label>
+              ))}
+            </div>
+
+            {storyData.specialElementsList &&
+              storyData.specialElementsList.length > 0 && (
+                <div className='selected-elements'>
+                  <strong>Selected:</strong>{' '}
+                  {storyData.specialElementsList.join(', ')}
+                  {storyData.specialElementsList.length >= 3 && (
+                    <span className='max-reached'> (Maximum reached)</span>
+                  )}
+                </div>
+              )}
           </div>
         </div>
       </div>
@@ -432,46 +692,131 @@ const BuildAStoryInterface = ({
         </button>
         <button
           onClick={() => setCurrentStep(2)}
-          disabled={!storyData.setting || !storyData.characters.trim()}
+          disabled={
+            !storyData.setting ||
+            !(
+              storyData.charactersList &&
+              storyData.charactersList.some(char => char.name.trim() !== '')
+            )
+          }
           className={`btn ${
-            storyData.setting && storyData.characters.trim()
+            storyData.setting &&
+            storyData.charactersList &&
+            storyData.charactersList.some(char => char.name.trim() !== '')
               ? 'btn-primary'
               : ''
           } btn-large`}
         >
-          🤖 Create My Story Starter! →
+          🤖 Start AI Collaboration! →
         </button>
       </div>
     </div>
   )
 
-  // Step 2: Create Starter (Agent Workflow)
-  const StepCreateStarter = () => {
+  // Step 2: AI Collaboration (NEW - Shows the multi-agent process)
+  const StepAiCollaboration = () => {
     useEffect(() => {
       if (!loading && !generatedStory) {
         createStory()
       }
-    }, []) // Removed dependencies that were causing the warning
+    }, [])
 
     return (
       <div className='content-card'>
         <h2 className='text-3xl font-bold mb-3 text-center'>
-          🎨 Creating Your Reimagined Story!
+          🤖 AI Team Collaboration in Action!
         </h2>
-        <p className='text-gray-600 text-lg mb-8 text-center'>
-          You've done amazing work choosing and customizing your story! Now
-          we're bringing your creative vision to life.
+        <p className='text-gray-600 text-lg mb-6 text-center'>
+          Watch our AI specialists work together to bring your creative vision
+          to life. Each agent has a special job to ensure your story is amazing!
         </p>
+
+        {/* Real-time Agent Status Display */}
+        {aiEducationMode && (
+          <div className='ai-collaboration-live'>
+            <h3 className='collaboration-title'>
+              👥 Your AI Collaboration Team
+            </h3>
+            <div className='ai-agents-grid'>
+              {agentStatuses.map((agent, index) => (
+                <div key={index} className={`ai-agent-card ${agent.status}`}>
+                  <div className='ai-agent-header'>
+                    <div className='ai-agent-avatar'>{agent.avatar}</div>
+                    <div className='ai-agent-info'>
+                      <div className='ai-agent-name'>{agent.name}</div>
+                      <div className='ai-agent-status'>
+                        {agent.status === 'complete'
+                          ? '✅ Complete'
+                          : agent.status === 'working'
+                          ? '⚡ Working'
+                          : '⏳ Waiting'}
+                      </div>
+                    </div>
+                  </div>
+                  <div className='ai-agent-description'>
+                    <strong>What I do:</strong> {agent.what_i_do}
+                  </div>
+                  {agent.status === 'complete' && (
+                    <div className='ai-agent-learning'>
+                      <strong>💡 Learning moment:</strong>{' '}
+                      {agent.learning_moment}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Process Learning Section */}
+            <div className='process-learning-section'>
+              <button
+                onClick={() => setShowProcessLearning(!showProcessLearning)}
+                className='process-learning-toggle'
+              >
+                {showProcessLearning ? '📚 Hide' : '🔍 Show'} How AI
+                Collaboration Works
+              </button>
+
+              {showProcessLearning && (
+                <div className='process-learning-content'>
+                  <h4>🧠 Understanding AI Teamwork</h4>
+                  <div className='learning-points'>
+                    <div className='learning-point'>
+                      <strong>🔄 Sequential Processing:</strong> Each AI agent
+                      waits for the previous one to finish, just like a relay
+                      race! This ensures quality and consistency.
+                    </div>
+                    <div className='learning-point'>
+                      <strong>🎯 Specialization:</strong> Each agent is trained
+                      for specific tasks - the Book Expert knows literature, the
+                      Learning Coach knows education standards.
+                    </div>
+                    <div className='learning-point'>
+                      <strong>🤝 Collaboration:</strong> Agents share
+                      information through a common "state" - like passing notes
+                      in a group project!
+                    </div>
+                    <div className='learning-point'>
+                      <strong>✅ Quality Control:</strong> Multiple agents check
+                      the work for different criteria - safety, education value,
+                      and creative quality.
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {loading && (
           <div className='loading-message'>
             <div className='loading-spinner'></div>
             <p className='text-lg font-semibold text-gray-700'>
-              Creating your reimagined story...
+              🤖 AI Team Collaborating on Your Story...
             </p>
             <p className='text-gray-600'>
-              This usually takes 2-3 minutes. We're making sure it captures your
-              vision perfectly!
+              {aiEducationMode
+                ? 'Watch the agents work together! Each specialist contributes their expertise to create something amazing.'
+                : "This usually takes 2-3 minutes. We're making sure it captures your vision perfectly!"}
             </p>
           </div>
         )}
@@ -481,15 +826,66 @@ const BuildAStoryInterface = ({
             <div className='text-center mb-6'>
               <div className='text-6xl mb-4'>🎉</div>
               <h3 className='text-2xl font-bold text-green-600 mb-4'>
-                Your Reimagined Story is Ready!
+                AI Collaboration Complete - Your Story is Ready!
               </h3>
             </div>
 
-            {/* Story Display */}
-            <div className='story-starter-section mb-6'>
-              <h3 className='story-starter-title'>✨ Your Spin on a Classic</h3>
-              <div className='story-starter-content'>
-                {generatedStory.story}
+            {/* Story Display with AI Insights */}
+            <div className='ai-story-result'>
+              <div className='story-starter-section mb-6'>
+                <h3 className='story-starter-title'>
+                  ✨ Your AI-Collaborative Story Beginning
+                </h3>
+                <div className='story-starter-content'>
+                  {generatedStory.content_metrics?.story_content
+                    ?.narrative_text ||
+                    generatedStory.story ||
+                    'Your amazing AI-collaborative story will appear here!'}
+                </div>
+
+                {aiEducationMode && aiCollaborationInsights && (
+                  <div className='ai-insights-summary'>
+                    <button
+                      onClick={() => setShowAiInsights(!showAiInsights)}
+                      className='ai-insights-toggle'
+                    >
+                      {showAiInsights ? '🔽' : '▶️'} See How the AI Team Created
+                      This
+                    </button>
+
+                    {showAiInsights && (
+                      <div className='ai-insights-content'>
+                        <h4>🔍 AI Collaboration Breakdown:</h4>
+                        <div className='collaboration-breakdown'>
+                          <div className='breakdown-item'>
+                            <strong>📋 Project Manager:</strong> Validated your
+                            request met safety and educational standards
+                          </div>
+                          <div className='breakdown-item'>
+                            <strong>📚 Book Expert:</strong> Analyzed themes and
+                            characters from the original story
+                          </div>
+                          <div className='breakdown-item'>
+                            <strong>🎓 Learning Coach:</strong> Ensured
+                            alignment with 7th grade learning objectives
+                          </div>
+                          <div className='breakdown-item'>
+                            <strong>✍️ Story Writer:</strong> Crafted narrative
+                            that blends your vision with story structure
+                          </div>
+                          <div className='breakdown-item'>
+                            <strong>📖 Materials Creator:</strong> Prepared
+                            discussion questions and learning activities
+                          </div>
+                          <div className='breakdown-item'>
+                            <strong>🔍 Quality Checker:</strong> Verified
+                            everything meets high standards for publication
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -498,7 +894,7 @@ const BuildAStoryInterface = ({
                 onClick={() => setCurrentStep(3)}
                 className='btn-primary btn-large'
               >
-                ✍️ Time to Continue Writing! →
+                ✍️ Now Add Your Writing & Reflect on AI! →
               </button>
             </div>
           </div>
@@ -508,11 +904,11 @@ const BuildAStoryInterface = ({
           <div className='error-container'>
             <div className='text-4xl mb-2'>😅</div>
             <p className='text-red-700 font-semibold mb-4'>
-              Oops! Something went wrong.
+              Oops! The AI team hit a snag.
             </p>
             <p className='text-red-600 mb-4'>{error}</p>
             <button onClick={createStory} className='btn-secondary'>
-              🔄 Try Again
+              🔄 Restart AI Collaboration
             </button>
           </div>
         )}
@@ -520,58 +916,97 @@ const BuildAStoryInterface = ({
     )
   }
 
-  // Step 3: Write & Learn
-  const StepWriteAndLearn = () => (
+  // Step 3: Write & Reflect (Enhanced with AI education reflection)
+  const StepWriteAndReflect = () => (
     <div className='content-card'>
-      <h2 className='text-2xl font-bold mb-2'>✍️ Time to Write Your Story!</h2>
+      <h2 className='text-2xl font-bold mb-2'>
+        ✍️ Continue Your Story & Reflect on AI Collaboration!
+      </h2>
       <p className='text-gray-600 text-lg mb-6'>
-        Amazing work! You've put your own creative spin on a classic story.
-        You've reimagined the characters, setting, and world - now continue your
-        unique adventure!
+        Amazing work! You've successfully collaborated with an AI team to create
+        a story beginning. Now continue the story yourself and reflect on what
+        you learned about working with AI!
       </p>
+
+      {/* AI Collaboration Reflection */}
+      {aiEducationMode && (
+        <div className='ai-collaboration-reflection'>
+          <h3 className='reflection-title'>
+            🤔 Critical Thinking: Reflect on Your AI Collaboration
+          </h3>
+          <div className='reflection-questions'>
+            <div className='reflection-question'>
+              <strong>🎯 Quality Assessment:</strong> How well did the AI team
+              capture your creative vision? What did they understand perfectly,
+              and what might you adjust?
+            </div>
+            <div className='reflection-question'>
+              <strong>🔍 Process Observation:</strong> Which AI agent's
+              contribution was most important to the final result? Why do you
+              think having multiple specialists was better than one general AI?
+            </div>
+            <div className='reflection-question'>
+              <strong>🤝 Collaboration Skills:</strong> How did you learn to
+              communicate your ideas effectively to the AI team? What would you
+              do differently next time?
+            </div>
+            <div className='reflection-question'>
+              <strong>🚀 Creative Control:</strong> How did working with AI
+              enhance your creativity rather than replace it? What parts of the
+              story creation process do you think humans should always control?
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Story Workspace */}
       <div className='story-workspace'>
         {/* AI-Generated Starter Section */}
         <div className='story-starter-section'>
-          <h3 className='story-starter-title'>✨ Your Spin on a Classic</h3>
+          <h3 className='story-starter-title'>
+            🤖 AI Team's Collaborative Beginning
+          </h3>
           <div className='story-starter-content'>
-            {generatedStory?.story ||
-              "Your amazing reimagined story will appear here once it's created!"}
+            {generatedStory?.content_metrics?.story_content?.narrative_text ||
+              generatedStory?.story ||
+              "Your amazing AI-collaborative story will appear here once it's created!"}
           </div>
 
           <div className='coaching-box'>
             <h4 className='font-bold text-blue-700 mb-3'>
-              🎯 What You've Created So Far:
+              🎯 What You & the AI Team Created Together:
             </h4>
             <div className='coaching-tips'>
               <div className='coaching-tip'>
                 <div className='tip-number'>✓</div>
                 <div>
-                  <strong>Your Characters:</strong> You've taken classic
-                  characters and made them your own, giving them new life in
-                  your chosen setting!
+                  <strong>Human Creativity:</strong> YOU provided the original
+                  vision, character ideas, and creative direction that made this
+                  story unique!
                 </div>
               </div>
               <div className='coaching-tip'>
                 <div className='tip-number'>✓</div>
                 <div>
-                  <strong>Your World:</strong> You've transformed the original
-                  story world into something completely new and exciting!
+                  <strong>AI Expertise:</strong> The AI team provided literary
+                  analysis, educational alignment, and professional writing
+                  techniques!
                 </div>
               </div>
               <div className='coaching-tip'>
                 <div className='tip-number'>✓</div>
                 <div>
-                  <strong>Your Adventure:</strong> You've set up the perfect
-                  beginning for an amazing story that's uniquely yours!
+                  <strong>Collaborative Result:</strong> Together you created
+                  something neither human nor AI could have made alone - that's
+                  the power of collaboration!
                 </div>
               </div>
               <div className='coaching-tip'>
                 <div className='tip-number'>✓</div>
                 <div>
-                  <strong>Your Learning:</strong> You've explored how classic
-                  themes work in new settings - that's real literary analysis!
+                  <strong>Learning Achievement:</strong> You've experienced
+                  authentic AI collaboration while developing your own
+                  storytelling skills!
                 </div>
               </div>
             </div>
@@ -580,15 +1015,15 @@ const BuildAStoryInterface = ({
 
         {/* Student Writing Section */}
         <div className='story-writing-section'>
-          <h3 className='story-writing-title'>✍️ Continue Your Adventure</h3>
+          <h3 className='story-writing-title'>✍️ Your Creative Continuation</h3>
 
           <div className='writing-prompt'>
             <div className='text-gray-800'>
               <strong>🚀 Your Writing Mission:</strong>
               <br />
-              What happens next? How does your character react to this
-              situation? What discoveries await? Remember: the best stories come
-              from curiosity and brave choices!
+              Now it's your turn! Continue the story in your own voice. What
+              happens next? Remember: the AI gave you a great beginning, but the
+              rest is YOUR creativity!
             </div>
           </div>
 
@@ -597,15 +1032,15 @@ const BuildAStoryInterface = ({
             onChange={handleStudentWritingChange}
             placeholder={`Continue your adventure here... 
 
-What is your character thinking? What do they decide to do? What do they see, hear, or feel?
+What happens next in YOUR version of the story? How does your character react? What do they discover?
 
 Remember to:
-• Show your character's emotions and thoughts
-• Describe the amazing setting you created
-• Create exciting dialogue
-• Build suspense about what happens next
+• Keep your character's personality consistent with the AI's beginning
+• Add your own creative ideas and plot twists
+• Show what YOU think should happen next
+• Use your own writing style and voice
 
-Start writing: "The character hesitated for a moment, then..."`}
+Start writing: "The character paused, considering what to do next..."`}
             className='build-a-story-textarea'
             style={{ height: '320px', width: '100%' }}
           />
@@ -620,40 +1055,44 @@ Start writing: "The character hesitated for a moment, then..."`}
               </span>
             </span>
             <span>Target: 200-400 words</span>
-            <span>Reading level: 7th grade</span>
+            <span>Your voice + AI collaboration</span>
           </div>
 
+          {/* AI Collaboration Writing Coach */}
           <div className='coaching-box mt-4'>
             <h4 className='font-bold text-blue-700 mb-3'>
-              💡 Live Writing Coach Tips:
+              💡 Human-AI Writing Collaboration Tips:
             </h4>
             <div className='coaching-tips'>
               <div className='coaching-tip'>
                 <div className='tip-number'>1</div>
                 <div>
-                  <strong>Character Voice:</strong> Keep your character true to
-                  their personality while they explore this new world!
+                  <strong>Build on AI Strengths:</strong> The AI provided good
+                  structure and educational elements - use that foundation to
+                  launch your creativity!
                 </div>
               </div>
               <div className='coaching-tip'>
                 <div className='tip-number'>2</div>
                 <div>
-                  <strong>Show Don't Tell:</strong> Instead of "They were
-                  curious," write "Their heart raced as they stepped closer"
+                  <strong>Add Human Emotion:</strong> AI is good at plot, but
+                  YOU bring the emotional depth and personal connection to
+                  characters!
                 </div>
               </div>
               <div className='coaching-tip'>
                 <div className='tip-number'>3</div>
                 <div>
-                  <strong>Dialogue:</strong> What would your character say to
-                  themselves or others in this moment?
+                  <strong>Question AI Choices:</strong> If the AI made a
+                  decision you'd change, go ahead and change it! You're the
+                  creative director.
                 </div>
               </div>
               <div className='coaching-tip'>
                 <div className='tip-number'>4</div>
                 <div>
-                  <strong>Setting Details:</strong> Use your amazing new setting
-                  to create atmosphere and excitement!
+                  <strong>Keep Learning:</strong> Notice what the AI did well
+                  that you can learn from, and what you do better than AI!
                 </div>
               </div>
             </div>
@@ -661,63 +1100,64 @@ Start writing: "The character hesitated for a moment, then..."`}
         </div>
       </div>
 
-      {/* Educational Insights */}
-      <div className='educational-insights'>
+      {/* AI Literacy Learning Outcomes */}
+      <div className='ai-literacy-outcomes'>
         <h3 className='text-xl font-bold text-gray-800 mb-4'>
-          📚 What You're Learning (Common Core Standards)
+          🎓 AI Literacy Skills You're Developing
         </h3>
         <div className='insights-grid'>
           <div className='insight-card'>
-            <div className='insight-standard'>W.7.3 - Narrative Writing</div>
+            <div className='insight-standard'>AI Collaboration</div>
             <div className='insight-description'>
-              You're practicing continuing a narrative with consistent character
-              voice, plot development, and descriptive details.
+              Learning to work WITH AI systems as creative partners while
+              maintaining human agency and creativity.
             </div>
           </div>
           <div className='insight-card'>
-            <div className='insight-standard'>RL.7.3 - Character Analysis</div>
+            <div className='insight-standard'>Critical AI Evaluation</div>
             <div className='insight-description'>
-              You're analyzing how character traits transfer to new settings
-              while maintaining core personality.
+              Developing skills to assess AI outputs, understand AI capabilities
+              and limitations, and make informed decisions about AI suggestions.
             </div>
           </div>
           <div className='insight-card'>
-            <div className='insight-standard'>RL.7.2 - Theme Development</div>
+            <div className='insight-standard'>AI Communication</div>
             <div className='insight-description'>
-              You're exploring how themes work in different settings and time
-              periods.
+              Learning how to communicate effectively with AI systems through
+              clear instructions and iterative feedback.
             </div>
           </div>
           <div className='insight-card'>
-            <div className='insight-standard'>L.7.5 - Language Use</div>
+            <div className='insight-standard'>Ethical AI Use</div>
             <div className='insight-description'>
-              You're adapting language and literary devices for new contexts.
+              Understanding responsible AI collaboration, giving proper credit,
+              and maintaining human creativity in AI-assisted work.
             </div>
           </div>
         </div>
       </div>
 
-      {/* Download Section */}
+      {/* Enhanced Download Section */}
       <div className='download-section'>
         <h3 className='text-xl font-bold text-green-800 mb-2'>
-          📥 Save & Share Your Amazing Story
+          📥 Save Your AI Collaboration Journey
         </h3>
         <p className='text-green-700 mb-6'>
-          Get your complete story adventure: Your reimagined beginning + your
-          awesome writing + reflection on your creative process!
+          Get your complete AI collaboration experience: AI team beginning +
+          your writing + reflection on AI literacy learning!
         </p>
 
         <div className='download-options'>
           <div className='download-card'>
             <h4 className='font-bold text-gray-800 mb-2'>
-              📄 My Story Portfolio
+              📄 My AI Collaboration Portfolio
             </h4>
             <p className='text-gray-600 mb-4'>
-              Your complete reimagined adventure with writing reflections and
-              questions about your creative choices
+              Your complete story with AI collaboration insights, reflection
+              questions about working with AI, and AI literacy self-assessment
             </p>
             <button
-              onClick={() => handleDownload('📄 My Story Portfolio')}
+              onClick={() => handleDownload('📄 My AI Collaboration Portfolio')}
               className='btn-primary'
             >
               Download PDF
@@ -726,8 +1166,9 @@ Start writing: "The character hesitated for a moment, then..."`}
           <div className='download-card'>
             <h4 className='font-bold text-gray-800 mb-2'>👨‍🏫 For My Teacher</h4>
             <p className='text-gray-600 mb-4'>
-              Special teacher version with learning standards and assessment of
-              your creative adaptation skills
+              Special educator version with AI literacy standards assessment,
+              collaboration skills rubric, and curriculum alignment
+              documentation
             </p>
             <button
               onClick={() => handleDownload('👨‍🏫 For My Teacher')}
@@ -744,10 +1185,12 @@ Start writing: "The character hesitated for a moment, then..."`}
             disabled={loading}
             className='btn-primary btn-large'
           >
-            {loading ? '🎨 Creating...' : '✨ Try Different Story Beginning'}
+            {loading
+              ? '🤖 AI Team Working...'
+              : '✨ Try Different AI Collaboration'}
           </button>
           <button onClick={resetApp} className='btn-secondary btn-large'>
-            📚 Start Over with New Classic
+            📚 Start New AI Project
           </button>
         </div>
       </div>
@@ -757,13 +1200,14 @@ Start writing: "The character hesitated for a moment, then..."`}
   return (
     <div className='build-a-story-container'>
       <div className='build-a-story-content'>
-        {/* Header */}
+        {/* Enhanced Header with AI Education Focus */}
         <div className='build-a-story-header'>
           <h1 className='text-4xl font-bold mb-3 drop-shadow-lg'>
-            📚✨ BUILD-A-STORY Writer ✨📚
+            📚🤖 BUILD-A-STORY: AI Collaboration Lab 🤖📚
           </h1>
           <p className='text-xl opacity-90'>
-            Get the perfect story starter, then make it yours!
+            Learn AI literacy by collaborating with an AI team to create amazing
+            stories!
           </p>
         </div>
 
@@ -791,93 +1235,34 @@ Start writing: "The character hesitated for a moment, then..."`}
             ))}
           </div>
 
-          {/* Student Progress - Only show during steps 1+ */}
-          {currentStep >= 1 && (
-            <div className='agent-status-container'>
-              <h4 className='agent-status-title'>
-                📚 Your Story Creation Progress:
+          {/* AI Collaboration Progress - Show during steps 1+ */}
+          {currentStep >= 1 && aiEducationMode && (
+            <div className='ai-collaboration-progress'>
+              <h4 className='ai-progress-title'>
+                🤖 AI Team Collaboration Progress:
               </h4>
-              <div className='agent-status-grid'>
-                <div className='agent-status-item'>
-                  <div
-                    className={`agent-avatar ${
-                      currentStep >= 1 ? 'complete' : 'waiting'
-                    }`}
-                  >
-                    {currentStep >= 1 ? '✅' : '📖'}
-                  </div>
-                  <div className='flex-1'>
-                    <div className='agent-name'>Story Selection</div>
-                    <div className='agent-message'>
-                      {currentStep >= 1
-                        ? 'Perfect classic chosen!'
-                        : 'Choose your favorite classic story'}
+              <div className='ai-progress-grid'>
+                {agentStatuses.slice(0, 4).map((agent, index) => (
+                  <div key={index} className='ai-progress-item'>
+                    <div className={`ai-progress-avatar ${agent.status}`}>
+                      {agent.status === 'complete'
+                        ? '✅'
+                        : agent.status === 'working'
+                        ? '⚡'
+                        : agent.avatar}
+                    </div>
+                    <div className='flex-1'>
+                      <div className='ai-progress-name'>{agent.name}</div>
+                      <div className='ai-progress-message'>
+                        {agent.status === 'complete'
+                          ? '✅ Contribution complete!'
+                          : agent.status === 'working'
+                          ? '⚡ Working on your story...'
+                          : 'Standing by for collaboration...'}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className='agent-status-item'>
-                  <div
-                    className={`agent-avatar ${
-                      currentStep >= 2
-                        ? 'complete'
-                        : currentStep === 1
-                        ? 'working'
-                        : 'waiting'
-                    }`}
-                  >
-                    {currentStep >= 2 ? '✅' : currentStep === 1 ? '🎨' : '⏳'}
-                  </div>
-                  <div className='flex-1'>
-                    <div className='agent-name'>Creative Vision</div>
-                    <div className='agent-message'>
-                      {currentStep >= 2
-                        ? 'Amazing customization complete!'
-                        : currentStep === 1
-                        ? 'Add your creative spin...'
-                        : 'Waiting for story selection...'}
-                    </div>
-                  </div>
-                </div>
-                <div className='agent-status-item'>
-                  <div
-                    className={`agent-avatar ${
-                      generatedStory
-                        ? 'complete'
-                        : currentStep >= 2
-                        ? 'working'
-                        : 'waiting'
-                    }`}
-                  >
-                    {generatedStory ? '✅' : currentStep >= 2 ? '🔄' : '⏳'}
-                  </div>
-                  <div className='flex-1'>
-                    <div className='agent-name'>Story Beginning</div>
-                    <div className='agent-message'>
-                      {generatedStory
-                        ? 'Your reimagined story is ready!'
-                        : currentStep >= 2
-                        ? 'Creating your story beginning...'
-                        : 'Waiting for your creative input...'}
-                    </div>
-                  </div>
-                </div>
-                <div className='agent-status-item'>
-                  <div
-                    className={`agent-avatar ${
-                      currentStep >= 3 ? 'working' : 'waiting'
-                    }`}
-                  >
-                    {currentStep >= 3 ? '✍️' : '⏳'}
-                  </div>
-                  <div className='flex-1'>
-                    <div className='agent-name'>Your Writing</div>
-                    <div className='agent-message'>
-                      {currentStep >= 3
-                        ? 'Time to continue your story!'
-                        : 'Ready for your amazing writing...'}
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           )}
