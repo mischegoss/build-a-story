@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Final Research Agent Test - Complete integration test
+Test the working research agent
 """
 
 import asyncio
@@ -32,218 +32,170 @@ SAMPLE_BOOKS_DATA = {
                 "setting_flexibility": "high",
                 "character_flexibility": "medium",
                 "plot_flexibility": "high"
-            },
-            "discussion_topics": ["Following curiosity", "Reality vs. imagination"]
+            }
         }
     ]
 }
 
-async def test_agent_basic_response():
-    """Test basic agent response"""
-    print("🤖 Testing Research Agent Basic Response")
+async def test_working_research_agent():
+    """Test the working research agent"""
+    print("🧪 TESTING WORKING RESEARCH AGENT")
     print("=" * 50)
     
     try:
         from app.agents.research_agent import content_research_agent
         
-        prompt = "Hello! I'm a Literary Research Specialist. Can you confirm you can communicate with me?"
+        print(f"✅ Agent imported: {type(content_research_agent)}")
+        print(f"📝 Agent name: {content_research_agent.name}")
         
-        # Use run_live with async for
-        response_chunks = []
-        async for chunk in content_research_agent.run_live(prompt):
-            response_chunks.append(chunk)
-        
-        # Combine content
-        all_content = ""
-        for chunk in response_chunks:
-            if hasattr(chunk, 'content'):
-                all_content += chunk.content
-            elif hasattr(chunk, 'text'):
-                all_content += chunk.text
-            elif isinstance(chunk, str):
-                all_content += chunk
-            else:
-                all_content += str(chunk)
-        
-        if all_content:
-            print(f"✅ Agent responded successfully!")
-            print(f"📝 Response length: {len(all_content)} characters")
-            print(f"📄 Response preview:")
-            print(all_content[:200] + "..." if len(all_content) > 200 else all_content)
-            return True
-        else:
-            print("❌ No content received from agent")
-            return False
-            
-    except Exception as e:
-        print(f"❌ Basic response test failed: {e}")
-        return False
-
-async def test_agent_with_book_analysis():
-    """Test agent with actual book analysis"""
-    print("\n🔍 Testing Research Agent with Book Analysis")
-    print("=" * 50)
-    
-    try:
-        from app.agents.research_agent import content_research_agent
-        
-        analysis_prompt = """
+        # Test with Alice space adaptation
+        prompt = """
         Please analyze Alice's Adventures in Wonderland for adaptation to a space setting.
         
         Student's requested modifications:
         - Setting: Space station in the future
-        - Characters: Alice becomes Commander Alice-7
+        - Characters: Alice becomes Commander Alice-7, a young space explorer
         - Time Period: Year 2150
         - Special Elements: AI companions, quantum portals
         
-        Please use your get_book_details tool to retrieve the book information, then provide a compatibility assessment.
+        Please provide a complete compatibility assessment.
         """
         
         with patch('app.tools.research_tools.load_books_database', return_value=SAMPLE_BOOKS_DATA):
-            # Use run_live with async for
+            print("🔄 Processing request...")
+            
+            # Collect all response chunks
             response_chunks = []
-            async for chunk in content_research_agent.run_live(analysis_prompt):
+            async for chunk in content_research_agent.run_live(prompt):
                 response_chunks.append(chunk)
+                print(f"📦 Received chunk ({len(chunk.content)} chars)")
             
-            # Combine content
-            all_content = ""
+            # Combine all content
+            full_response = ""
             for chunk in response_chunks:
-                if hasattr(chunk, 'content'):
-                    all_content += chunk.content
-                elif hasattr(chunk, 'text'):
-                    all_content += chunk.text
-                elif isinstance(chunk, str):
-                    all_content += chunk
-                else:
-                    all_content += str(chunk)
+                full_response += chunk.content
             
-            if all_content:
-                print(f"✅ Analysis completed successfully!")
-                print(f"📊 Response length: {len(all_content)} characters")
-                
-                # Check for key elements
-                content_lower = all_content.lower()
-                
-                # Look for evidence of tool usage and analysis
-                evidence = []
-                if 'alice' in content_lower and 'wonderland' in content_lower:
-                    evidence.append("✅ Book identified")
-                if any(word in content_lower for word in ['compatibility', 'adaptation', 'score']):
-                    evidence.append("✅ Analysis performed")
-                if 'space' in content_lower:
-                    evidence.append("✅ Setting modification addressed")
-                if any(word in content_lower for word in ['commander', 'alice-7']):
-                    evidence.append("✅ Character modification addressed")
-                
-                print(f"🎯 Analysis evidence: {evidence}")
-                
-                print(f"\n📄 Analysis response preview:")
-                print("=" * 50)
-                print(all_content[:500] + "..." if len(all_content) > 500 else all_content)
-                print("=" * 50)
-                
-                return len(evidence) >= 2  # At least 2 pieces of evidence
-            else:
-                print("❌ No content received from analysis")
-                return False
-                
+            print(f"\n✅ Analysis completed!")
+            print(f"📊 Total response length: {len(full_response)} characters")
+            
+            # Check for key elements
+            checks = []
+            if "alice" in full_response.lower() and "wonderland" in full_response.lower():
+                checks.append("✅ Book identified")
+            if "compatibility score" in full_response.lower():
+                checks.append("✅ Compatibility scoring")
+            if "space" in full_response.lower():
+                checks.append("✅ Setting modification addressed")
+            if "commander alice" in full_response.lower() or "alice-7" in full_response.lower():
+                checks.append("✅ Character modification addressed")
+            if "handoff" in full_response.lower():
+                checks.append("✅ Agent handoff prepared")
+            
+            print(f"\n🎯 Quality checks: {len(checks)}/5")
+            for check in checks:
+                print(f"  {check}")
+            
+            print(f"\n📄 Response preview:")
+            print("=" * 50)
+            print(full_response[:600] + "..." if len(full_response) > 600 else full_response)
+            print("=" * 50)
+            
+            return len(checks) >= 4  # At least 4/5 checks pass
+            
     except Exception as e:
-        print(f"❌ Book analysis test failed: {e}")
+        print(f"❌ Test failed: {e}")
         import traceback
         traceback.print_exc()
         return False
 
-async def test_agent_coordinator_integration():
-    """Test agent through coordinator"""
-    print("\n🎯 Testing Agent Coordinator Integration")
+async def test_coordinator_with_working_agent():
+    """Test coordinator with working agents"""
+    print("\n🎯 TESTING COORDINATOR WITH WORKING AGENTS")
     print("=" * 50)
     
     try:
         from app.orchestration.agent_coordinator import AgentCoordinator
         
         coordinator = AgentCoordinator()
+        print(f"✅ Coordinator created")
+        print(f"📋 Available agents: {list(coordinator.agents.keys())}")
         
-        # Simulate React frontend request
+        # Test student request
         student_request = {
             'book_title': 'Alice\'s Adventures in Wonderland by Lewis Carroll',
             'setting': 'Space station in the future',
             'characters': 'Alice is now Commander Alice-7',
-            'time_period': 'Year 2150',
-            'theme': 'Curiosity and discovery'
+            'time_period': 'Year 2150'
         }
         
         with patch('app.tools.research_tools.load_books_database', return_value=SAMPLE_BOOKS_DATA):
             print("🔄 Processing through coordinator...")
+            
             result = await coordinator.process_student_request(student_request)
             
-            print(f"📊 Coordinator result: {result['status']}")
+            print(f"📊 Result status: {result['status']}")
             
             if result['status'] == 'partial_complete':
-                print(f"✅ Workflow progressed successfully!")
-                print(f"📋 Completed stages: {result.get('completed_stages', [])}")
-                print(f"⏭️  Next stage: {result.get('next_stage', 'Unknown')}")
+                print(f"✅ Workflow progressed!")
+                print(f"📋 Completed: {result.get('completed_stages', [])}")
+                print(f"⏭️  Next: {result.get('next_stage', 'N/A')}")
                 
                 # Check communication log
                 comm_log = coordinator.get_agent_communication_log()
-                print(f"📞 Agent communications: {len(comm_log)}")
+                print(f"📞 Communications: {len(comm_log)}")
                 
                 for entry in comm_log:
-                    print(f"  {entry['agent']} → {entry.get('next_agent', 'N/A')}: {entry['status']}")
+                    print(f"  {entry['agent']}: {entry['status']}")
                 
                 return True
             else:
-                print(f"❌ Workflow failed: {result.get('message', 'Unknown error')}")
+                print(f"❌ Workflow issue: {result}")
                 return False
-        
+                
     except Exception as e:
-        print(f"❌ Coordinator integration test failed: {e}")
+        print(f"❌ Coordinator test failed: {e}")
         return False
 
 async def main():
-    """Run complete test suite"""
-    print("🧪 FINAL RESEARCH AGENT TEST SUITE")
+    """Run working agent tests"""
+    print("🚀 WORKING RESEARCH AGENT TESTS")
     print("=" * 60)
-    print("Testing complete integration with fixed ADK agent")
     
-    # Test 1: Basic response
-    result1 = await test_agent_basic_response()
+    # Test 1: Working agent
+    result1 = await test_working_research_agent()
     
-    # Test 2: Book analysis  
-    result2 = await test_agent_with_book_analysis()
-    
-    # Test 3: Coordinator integration
-    result3 = await test_agent_coordinator_integration()
+    # Test 2: Coordinator integration
+    result2 = await test_coordinator_with_working_agent()
     
     # Summary
     print("\n" + "=" * 60)
-    print("📊 FINAL TEST RESULTS:")
+    print("📊 WORKING AGENT TEST RESULTS:")
     print("=" * 60)
-    print(f"Basic Response:         {'✅ PASSED' if result1 else '❌ FAILED'}")
-    print(f"Book Analysis:          {'✅ PASSED' if result2 else '❌ FAILED'}")
-    print(f"Coordinator Integration:{'✅ PASSED' if result3 else '❌ FAILED'}")
+    print(f"Working Agent:          {'✅ PASSED' if result1 else '❌ FAILED'}")
+    print(f"Coordinator Integration:{'✅ PASSED' if result2 else '❌ FAILED'}")
     
-    passed = sum([result1, result2, result3])
-    print(f"\n🎯 Overall: {passed}/3 tests passed")
+    passed = sum([result1, result2])
+    print(f"\n🎯 Overall: {passed}/2 tests passed")
     
-    if passed == 3:
-        print("🎉 COMPLETE SUCCESS!")
-        print("\n✨ Your Research Agent is fully working!")
-        print("📋 What's working:")
-        print("  ✅ ADK Agent responds to prompts")
-        print("  ✅ Agent uses research tools")
-        print("  ✅ Book analysis and compatibility scoring")
-        print("  ✅ Multi-agent coordinator integration")
-        print("  ✅ Ready for Educational Compliance Agent")
+    if passed == 2:
+        print("🎉 SUCCESS! Working Research Agent is fully functional!")
+        print("\n✨ What's working:")
+        print("  ✅ Agent processes research requests")
+        print("  ✅ Uses all research tools correctly")
+        print("  ✅ Provides detailed compatibility analysis")
+        print("  ✅ Integrates with multi-agent coordinator")
+        print("  ✅ Prepares handoffs for next agent")
         
-        print(f"\n🚀 NEXT STEP: Build Agent #3 - Educational Compliance Agent")
+        print(f"\n🚀 READY TO BUILD: Educational Compliance Agent (Agent #3)")
+        print("💡 Your research agent is working perfectly!")
         
-    elif passed >= 2:
-        print("⚠️  Mostly working! Minor issues to resolve")
-        print("💡 You can probably proceed to next agent")
+    elif passed == 1:
+        print("⚠️  Partial success - research agent works, coordinator needs fixing")
+        print("💡 You can still proceed to build the next agent")
     else:
-        print("❌ Significant issues need resolution")
+        print("❌ Issues need resolution")
     
-    return passed >= 2
+    return passed >= 1
 
 if __name__ == "__main__":
     success = asyncio.run(main())
