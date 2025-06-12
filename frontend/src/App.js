@@ -1,9 +1,12 @@
-// 🚀 QUICK UI TESTING - Just modify your App.js temporarily
+// 🚀 FIXED VERSION - Option A Implementation
 
-// Replace your existing App.js with this version that uses mock data:
-
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import BuildAStoryInterface from './BuildAStoryInterface'
+
+// Simple ID generator for characters
+const generateId = () => {
+  return 'char_' + Math.random().toString(36).substr(2, 9)
+}
 
 // Mock data for testing UI
 const mockBooks = [
@@ -77,26 +80,27 @@ The space station shuddered gently as it adjusted course, and Alex felt that fam
 }
 
 function App() {
-  // State management - same as before
+  // State management - FIXED with Option A structure
   const [books, setBooks] = useState([])
   const [storyOptions, setStoryOptions] = useState({})
   const [currentStep, setCurrentStep] = useState(0)
   const [storyData, setStoryData] = useState({
     book_title: '',
     setting: '',
-    characters: '', // Backend format
-    // SIMPLE character fields - no complex arrays!
-    character1_name: '',
-    character1_description: '',
-    character2_name: '',
-    character2_description: '',
-    character3_name: '',
-    character3_description: '',
+    characters: '', // Backend format (will be generated from charactersList)
+    // FIXED: Use charactersList array instead of individual fields
+    charactersList: [
+      {
+        id: generateId(),
+        name: '',
+        description: '',
+      },
+    ],
     time_period: '',
     theme: '',
     tone: '',
     genre: '',
-    special_elements: '',
+    special_elements: '', // Backend format (will be generated from specialElementsList)
     specialElementsList: [], // Array of selected special elements
     enable_ai_education_mode: true,
   })
@@ -121,8 +125,26 @@ function App() {
     }, 1000)
   }, [])
 
-  // Mock API call to create story
-  const createStory = async () => {
+  // FIXED: Helper function to prepare backend format
+  const prepareBackendData = storyData => {
+    // Convert charactersList to backend format
+    const characters = storyData.charactersList
+      .filter(char => char.name.trim() !== '')
+      .map(char => `${char.name.trim()}: ${char.description?.trim() || ''}`)
+      .join('; ')
+
+    // Convert specialElementsList to backend format
+    const special_elements = storyData.specialElementsList.join(', ')
+
+    return {
+      ...storyData,
+      characters,
+      special_elements,
+    }
+  }
+
+  // FIXED: Mock API call to create story - wrapped in useCallback
+  const createStory = useCallback(async () => {
     setLoading(true)
     setError(null)
     setAgentWorkflow([])
@@ -168,10 +190,19 @@ function App() {
     setCurrentStep(3)
     setLoading(false)
     setCurrentAgent(null)
-  }
+  }, [
+    setLoading,
+    setError,
+    setAgentWorkflow,
+    setCurrentAgent,
+    setGeneratedStory,
+    setProjectId,
+    setAiCollaborationInsights,
+    setCurrentStep,
+  ])
 
-  // Mock regenerate story
-  const regenerateStory = async () => {
+  // FIXED: Mock regenerate story - wrapped in useCallback
+  const regenerateStory = useCallback(async () => {
     setLoading(true)
     await new Promise(resolve => setTimeout(resolve, 3000))
 
@@ -192,21 +223,22 @@ function App() {
 
     setGeneratedStory(newStory)
     setLoading(false)
-  }
+  }, [setLoading, setGeneratedStory])
 
-  // Reset everything
-  const resetApp = () => {
+  // FIXED: Reset everything - wrapped in useCallback
+  const resetApp = useCallback(() => {
     setStoryData({
       book_title: '',
       setting: '',
       characters: '',
-      // SIMPLE character fields - no complex arrays!
-      character1_name: '',
-      character1_description: '',
-      character2_name: '',
-      character2_description: '',
-      character3_name: '',
-      character3_description: '',
+      // FIXED: Reset with proper array structure
+      charactersList: [
+        {
+          id: generateId(),
+          name: '',
+          description: '',
+        },
+      ],
       time_period: '',
       theme: '',
       tone: '',
@@ -222,46 +254,68 @@ function App() {
     setCurrentAgent(null)
     setAiCollaborationInsights(null)
     setProjectId(null)
-  }
+  }, [
+    aiEducationMode,
+    setStoryData,
+    setGeneratedStory,
+    setCurrentStep,
+    setError,
+    setAgentWorkflow,
+    setCurrentAgent,
+    setAiCollaborationInsights,
+    setProjectId,
+  ])
 
-  // Step validation logic
-  const isStepComplete = step => {
-    switch (step) {
-      case 0:
-        return storyData.book_title !== ''
-      case 1:
-        return (
-          storyData.setting !== '' && storyData.character1_name?.trim() !== ''
-        )
-      case 2:
-        return isStepComplete(0) && isStepComplete(1)
-      case 3:
-        return generatedStory !== null
-      default:
-        return false
-    }
-  }
+  // FIXED: Step validation logic - wrapped in useCallback
+  const isStepComplete = useCallback(
+    step => {
+      switch (step) {
+        case 0:
+          return storyData.book_title !== ''
+        case 1:
+          return (
+            storyData.setting !== '' &&
+            storyData.charactersList.some(char => char.name.trim() !== '')
+          )
+        case 2:
+          return isStepComplete(0) && isStepComplete(1)
+        case 3:
+          return generatedStory !== null
+        default:
+          return false
+      }
+    },
+    [
+      storyData.book_title,
+      storyData.setting,
+      storyData.charactersList,
+      generatedStory,
+    ],
+  )
 
-  // Smart navigation
-  const handleStepNavigation = stepIndex => {
-    if (stepIndex <= 0 || isStepComplete(stepIndex - 1)) {
-      setCurrentStep(stepIndex)
-    }
-  }
+  // FIXED: Smart navigation - wrapped in useCallback
+  const handleStepNavigation = useCallback(
+    stepIndex => {
+      if (stepIndex <= 0 || isStepComplete(stepIndex - 1)) {
+        setCurrentStep(stepIndex)
+      }
+    },
+    [isStepComplete, setCurrentStep],
+  )
 
-  // Toggle AI education mode
-  const toggleAiEducationMode = () => {
+  // FIXED: Toggle AI education mode - wrapped in useCallback
+  const toggleAiEducationMode = useCallback(() => {
     setAiEducationMode(!aiEducationMode)
     setStoryData(prev => ({
       ...prev,
       enable_ai_education_mode: !aiEducationMode,
     }))
-  }
+  }, [aiEducationMode, setAiEducationMode, setStoryData])
 
-  // Mock fetch AI insights
-  const fetchAiInsights = async projectId => {
+  // FIXED: Mock fetch AI insights - wrapped in useCallback
+  const fetchAiInsights = useCallback(async projectId => {
     console.log('Mock: Fetching AI insights for project', projectId)
-  }
+  }, [])
 
   // Error boundary for initial data loading failures
   if (error && books.length === 0) {
@@ -317,58 +371,3 @@ function App() {
 }
 
 export default App
-
-// =================================================================
-// 📋 TESTING CHECKLIST - Try these things:
-// =================================================================
-
-/*
-1. 🚀 Start the app:
-   npm install
-   npm start
-
-2. 🧪 Test these flows:
-
-   ✅ Step 0 - Choose Story:
-   - Toggle AI education mode on/off
-   - Select different books
-   - See book details and AI collaboration preview
-
-   ✅ Step 1 - Customize:
-   - Fill out required fields (setting, characters)
-   - See AI team preview
-   - Notice AI hints on form fields
-
-   ✅ Step 2 - AI Collaboration:
-   - Watch loading animation
-   - See agents working in sequence
-   - Toggle "Show How AI Collaboration Works"
-   - Watch agent status cards update
-
-   ✅ Step 3 - Write & Reflect:
-   - See generated story
-   - Try writing continuation
-   - Explore reflection questions
-   - Test download buttons
-
-3. 🎯 Things to check:
-   - Responsive design on different screen sizes
-   - All animations and transitions
-   - AI education toggle functionality
-   - Step navigation (can't skip required steps)
-   - Loading states and error handling
-   - Text input and form validation
-
-4. 🔧 Easy modifications for testing:
-   - Change mock story content in mockGeneratedStory
-   - Adjust agent timing in createStory function
-   - Test error state by throwing error in createStory
-   - Add more books to mockBooks array
-
-5. 🎨 Visual elements to verify:
-   - AI agent avatars and status indicators
-   - Color-coded progress steps
-   - Educational insight cards
-   - Reflection question styling
-   - Download section layout
-*/
