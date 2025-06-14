@@ -1,0 +1,568 @@
+{
+  "process_complexity_levels": {
+    "basic_automation": {
+      "level": "Level 1: Basic Automation",
+      "salesforce_context": "Screen Flows, Simple Record-Triggered Flows, Basic field updates",
+      "enterprise_context": "Single-system integrations, File transfers, Simple notifications",
+      "volume_monthly": "100-1000",
+      "decision_points": "1-3",
+      "systems_involved": "1-2",
+      "people_involved": "1-3",
+      "manual_percentage_range": "0-30%",
+      "implementation_timeline_weeks": "4-8",
+      "success_rate": "85-95%",
+      "automation_efficiency": 0.8,
+      "roi_expectation": "200-400% within 12 months",
+      "typical_time_savings": "60-80%",
+      "salesforce_constraints": {
+        "soql_queries_limit": "20 per transaction",
+        "dml_statements_limit": "50 per transaction",
+        "cpu_time_limit": "2000 milliseconds",
+        "complexity": "Simple conditional logic"
+      },
+      "characteristics": [
+        "Well-documented, stable processes",
+        "Rule-based decision making with minimal exceptions",
+        "Standardized inputs and outputs",
+        "Single system or minimal integration",
+        "High volume, routine tasks"
+      ],
+      "examples": [
+        "Password reset automation",
+        "Basic data entry validation",
+        "Simple approval workflows",
+        "Standard email notifications",
+        "File upload processing"
+      ]
+    },
+    "process_automation": {
+      "level": "Level 2: Process Automation",
+      "salesforce_context": "Schedule-Triggered Flows, Multi-object operations, Platform Events",
+      "enterprise_context": "Cross-system workflows, Multi-step approvals, ITSM integration",
+      "volume_monthly": "1000-10000",
+      "decision_points": "4-10",
+      "systems_involved": "3-5",
+      "people_involved": "4-8",
+      "manual_percentage_range": "30-60%",
+      "implementation_timeline_weeks": "8-16",
+      "success_rate": "70-85%",
+      "automation_efficiency": 0.7,
+      "roi_expectation": "300-600% within 18 months",
+      "typical_time_savings": "50-75%",
+      "salesforce_constraints": {
+        "soql_queries_limit": "80 per transaction",
+        "dml_statements_limit": "120 per transaction",
+        "cpu_time_limit": "8000 milliseconds",
+        "complexity": "Conditional branching with exception handling"
+      },
+      "characteristics": [
+        "Moderately complex business logic",
+        "Multiple system integration points",
+        "Some process variation and exceptions",
+        "Cross-departmental coordination required",
+        "Structured decision making with conditions"
+      ],
+      "examples": [
+        "Invoice processing with approvals",
+        "Customer onboarding workflows",
+        "Multi-step quote generation",
+        "Inventory management automation",
+        "Compliance reporting processes"
+      ]
+    },
+    "integration_automation": {
+      "level": "Level 3: Integration Automation",
+      "salesforce_context": "Complex Platform Events, External APIs, Advanced Flow orchestration",
+      "enterprise_context": "Enterprise-wide coordination, Real-time sync, Event-driven architecture",
+      "volume_monthly": "10000-100000",
+      "decision_points": "10-25",
+      "systems_involved": "5-10",
+      "people_involved": "8-15",
+      "manual_percentage_range": "60-80%",
+      "implementation_timeline_weeks": "16-24",
+      "success_rate": "60-75%",
+      "automation_efficiency": 0.6,
+      "roi_expectation": "400-800% within 24 months",
+      "typical_time_savings": "40-65%",
+      "salesforce_constraints": {
+        "soql_queries_limit": "100 per transaction",
+        "dml_statements_limit": "150 per transaction",
+        "cpu_time_limit": "10000 milliseconds",
+        "complexity": "Complex orchestration with external dependencies"
+      },
+      "characteristics": [
+        "Enterprise-wide process coordination",
+        "Real-time data synchronization requirements",
+        "Complex integration patterns",
+        "Multiple approval layers and stakeholders",
+        "High business impact and visibility"
+      ],
+      "examples": [
+        "End-to-end order fulfillment",
+        "Complex contract management",
+        "Multi-vendor procurement workflows",
+        "Enterprise resource planning sync",
+        "Regulatory compliance automation"
+      ]
+    },
+    "intelligent_automation": {
+      "level": "Level 4: Intelligent Automation",
+      "salesforce_context": "Einstein Platform Services, AI-powered decisions, ML model integration",
+      "enterprise_context": "AI/ML decision making, Unstructured data processing, Predictive analytics",
+      "volume_monthly": "100000+",
+      "decision_points": "25+",
+      "systems_involved": "10+",
+      "people_involved": "15+",
+      "manual_percentage_range": "80-100%",
+      "implementation_timeline_weeks": "24-36",
+      "success_rate": "45-65%",
+      "automation_efficiency": 0.5,
+      "roi_expectation": "500-1000% within 36 months",
+      "typical_time_savings": "30-55%",
+      "salesforce_constraints": {
+        "soql_queries_limit": "100 per transaction",
+        "dml_statements_limit": "150 per transaction",
+        "cpu_time_limit": "10000 milliseconds",
+        "complexity": "AI/ML integration with adaptive learning"
+      },
+      "characteristics": [
+        "AI/ML-powered decision making",
+        "Unstructured data processing capabilities",
+        "Adaptive learning and optimization",
+        "Predictive analytics integration",
+        "Complex cognitive tasks automation"
+      ],
+      "examples": [
+        "Intelligent document processing",
+        "Predictive maintenance automation",
+        "AI-powered customer service",
+        "Dynamic pricing optimization",
+        "Fraud detection and prevention"
+      ]
+    }
+  },
+  "automation_readiness_assessment": {
+    "technical_readiness": {
+      "weight": 0.3,
+      "factors": {
+        "data_quality": {
+          "description": "Clean, structured data availability",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Poor data quality, significant cleansing required",
+            "4-6": "Moderate data quality, some cleansing needed",
+            "7-8": "Good data quality, minimal cleansing required",
+            "9-10": "Excellent data quality, automation-ready"
+          }
+        },
+        "system_integration": {
+          "description": "API availability and integration maturity",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Limited APIs, manual integration required",
+            "4-6": "Some APIs available, moderate integration complexity",
+            "7-8": "Well-documented APIs, straightforward integration",
+            "9-10": "Comprehensive API ecosystem, seamless integration"
+          }
+        },
+        "infrastructure_stability": {
+          "description": "Platform reliability and performance",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Frequent outages, poor performance",
+            "4-6": "Occasional issues, acceptable performance",
+            "7-8": "Stable platform, good performance",
+            "9-10": "Highly reliable, excellent performance"
+          }
+        },
+        "security_framework": {
+          "description": "Compliance and governance capabilities",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Basic security, compliance gaps",
+            "4-6": "Standard security, some compliance coverage",
+            "7-8": "Strong security, good compliance framework",
+            "9-10": "Enterprise security, comprehensive compliance"
+          }
+        }
+      }
+    },
+    "process_readiness": {
+      "weight": 0.35,
+      "factors": {
+        "process_standardization": {
+          "description": "Documented, consistent procedures",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Ad-hoc processes, minimal documentation",
+            "4-6": "Some standardization, basic documentation",
+            "7-8": "Well-standardized, comprehensive documentation",
+            "9-10": "Fully standardized, automation-ready procedures"
+          }
+        },
+        "volume_frequency": {
+          "description": "Transaction volume and regularity",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Low volume, irregular frequency",
+            "4-6": "Moderate volume, somewhat regular",
+            "7-8": "High volume, regular frequency",
+            "9-10": "Very high volume, consistent frequency"
+          }
+        },
+        "rule_based_nature": {
+          "description": "Degree of structured decision making",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Primarily judgment-based decisions",
+            "4-6": "Mix of rules and judgment",
+            "7-8": "Mostly rule-based with some exceptions",
+            "9-10": "Completely rule-based, clear logic"
+          }
+        },
+        "exception_handling": {
+          "description": "Frequency and complexity of edge cases",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Frequent, complex exceptions",
+            "4-6": "Moderate exceptions, manageable complexity",
+            "7-8": "Few exceptions, well-defined handling",
+            "9-10": "Minimal exceptions, automated handling possible"
+          }
+        }
+      }
+    },
+    "organizational_readiness": {
+      "weight": 0.35,
+      "factors": {
+        "executive_sponsorship": {
+          "description": "C-suite commitment and strategic priority",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Minimal executive support",
+            "4-6": "Some executive interest",
+            "7-8": "Strong executive sponsorship",
+            "9-10": "Full C-suite commitment and strategic priority"
+          }
+        },
+        "change_management": {
+          "description": "Cultural readiness and staff buy-in",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Resistance to change, poor culture",
+            "4-6": "Some resistance, moderate culture",
+            "7-8": "Generally positive, good change culture",
+            "9-10": "Embraces change, excellent culture"
+          }
+        },
+        "skills_resources": {
+          "description": "Technical capabilities and training readiness",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Limited technical skills, major training needed",
+            "4-6": "Basic technical skills, moderate training needed",
+            "7-8": "Good technical skills, minimal training needed",
+            "9-10": "Excellent technical skills, ready to implement"
+          }
+        },
+        "budget_timeline": {
+          "description": "Adequate resource allocation",
+          "score_range": "1-10",
+          "benchmarks": {
+            "1-3": "Insufficient budget and unrealistic timeline",
+            "4-6": "Constrained budget, tight timeline",
+            "7-8": "Adequate budget, reasonable timeline",
+            "9-10": "Generous budget, flexible timeline"
+          }
+        }
+      }
+    }
+  },
+  "roi_calculation_framework": {
+    "implementation_costs": {
+      "software_licensing": {
+        "salesforce_native": {
+          "screen_flows": "Included in Salesforce license",
+          "process_builder": "Included in Salesforce license",
+          "platform_events": "Included in Enterprise+ licenses"
+        },
+        "external_tools": {
+          "rpa_platforms": "$500-2000 per bot per month",
+          "integration_platforms": "$200-1000 per connection per month",
+          "ai_ml_services": "$100-500 per model per month"
+        }
+      },
+      "infrastructure_costs": {
+        "cloud_compute": "$200-2000 per month",
+        "storage": "$50-500 per month",
+        "network_bandwidth": "$100-1000 per month"
+      },
+      "development_resources": {
+        "salesforce_developer": "$80-150 per hour",
+        "integration_specialist": "$100-180 per hour",
+        "business_analyst": "$60-120 per hour",
+        "project_manager": "$70-140 per hour"
+      },
+      "training_change_management": {
+        "user_training": "$1000-5000 per session",
+        "admin_training": "$2000-10000 per person",
+        "change_management": "10-20% of total project cost"
+      }
+    },
+    "benefit_calculations": {
+      "labor_cost_savings": {
+        "formula": "(hours_saved_monthly * hourly_rate * 12)",
+        "factors": {
+          "customer_service": "$45-65 per hour",
+          "finance_operations": "$65-85 per hour",
+          "sales_operations": "$75-95 per hour",
+          "it_operations": "$80-120 per hour"
+        }
+      },
+      "process_efficiency_gains": {
+        "faster_processing": "Time reduction × transaction volume × cost per hour",
+        "increased_throughput": "Additional capacity × revenue per transaction",
+        "24x7_availability": "Off-hours processing × premium rate"
+      },
+      "error_reduction_value": {
+        "rework_elimination": "Error rate reduction × cost per error × volume",
+        "compliance_improvement": "Avoided penalties and audit costs",
+        "customer_satisfaction": "Retention improvement × customer lifetime value"
+      },
+      "strategic_value_creation": {
+        "innovation_time": "Hours freed for strategic work × strategic hourly value",
+        "scalability": "Growth enablement without proportional staff increase",
+        "competitive_advantage": "Market differentiation value"
+      }
+    },
+    "real_world_benchmarks": {
+      "salesforce_roi_examples": {
+        "sequoia_financial": {
+          "roi_percentage": "361%",
+          "timeframe": "5 months",
+          "industry": "Financial Services"
+        },
+        "city_of_chicago": {
+          "improvement": "82-94% case closure rate",
+          "industry": "Public Sector"
+        },
+        "azizi_developments": {
+          "improvement": "50% lead conversion increase",
+          "industry": "Real Estate"
+        }
+      },
+      "enterprise_automation_benchmarks": {
+        "red_hat_study": {
+          "roi_percentage": "667%",
+          "timeframe": "3 years",
+          "additional_revenue": "$8.54 million annually",
+          "productivity_improvement": "68% IT infrastructure management",
+          "downtime_reduction": "61% unplanned downtime"
+        }
+      }
+    }
+  },
+  "automation_process_templates": {
+    "customer_service": {
+      "password_reset": {
+        "complexity_level": "basic_automation",
+        "salesforce_implementation": "Screen Flow with Identity Verification",
+        "volume_monthly": "200-1000",
+        "current_time_minutes": 15,
+        "automated_time_minutes": 2,
+        "labor_cost_hourly": 50,
+        "error_rate_reduction": "90%",
+        "roi_benchmark": "300% within 6 months",
+        "implementation_steps": [
+          "Design Screen Flow for password reset request",
+          "Integrate with Identity Provider API",
+          "Configure automated email notifications",
+          "Implement audit logging",
+          "Deploy with user training"
+        ],
+        "success_metrics": [
+          "Average resolution time under 3 minutes",
+          "User satisfaction score > 4.5/5",
+          "Zero manual intervention required",
+          "100% audit trail compliance"
+        ]
+      },
+      "ticket_routing": {
+        "complexity_level": "process_automation",
+        "salesforce_implementation": "Record-Triggered Flow with AI Classification",
+        "volume_monthly": "500-2000",
+        "current_time_minutes": 8,
+        "automated_time_minutes": 1,
+        "labor_cost_hourly": 45,
+        "error_rate_reduction": "80%",
+        "roi_benchmark": "450% within 12 months",
+        "implementation_steps": [
+          "Configure Case object with custom fields",
+          "Implement Einstein Case Classification",
+          "Build routing logic in Process Builder",
+          "Set up escalation rules",
+          "Create performance dashboards"
+        ],
+        "success_metrics": [
+          "First-contact resolution rate > 70%",
+          "Average routing time < 2 minutes",
+          "Mis-routing rate < 5%",
+          "Agent utilization improvement > 25%"
+        ]
+      }
+    },
+    "finance_operations": {
+      "invoice_processing": {
+        "complexity_level": "integration_automation",
+        "salesforce_implementation": "Platform Events with External Document AI",
+        "volume_monthly": "100-500",
+        "current_time_hours": 2,
+        "automated_time_minutes": 15,
+        "labor_cost_hourly": 65,
+        "error_rate_reduction": "85%",
+        "roi_benchmark": "600% within 18 months",
+        "implementation_steps": [
+          "Integrate with document AI service",
+          "Configure Platform Events for real-time processing",
+          "Build approval workflow in Flow",
+          "Set up ERP system integration",
+          "Implement exception handling"
+        ],
+        "success_metrics": [
+          "Straight-through processing rate > 80%",
+          "Average processing time < 30 minutes",
+          "Data accuracy > 99%",
+          "Vendor satisfaction improvement > 30%"
+        ]
+      }
+    },
+    "sales_operations": {
+      "lead_qualification": {
+        "complexity_level": "intelligent_automation",
+        "salesforce_implementation": "Einstein Lead Scoring with Automated Workflows",
+        "volume_monthly": "100-500",
+        "current_time_hours": 2,
+        "automated_time_minutes": 30,
+        "labor_cost_hourly": 75,
+        "error_rate_reduction": "60%",
+        "roi_benchmark": "750% within 24 months",
+        "implementation_steps": [
+          "Configure Einstein Lead Scoring",
+          "Implement data enrichment APIs",
+          "Build qualification Flow with AI decisions",
+          "Set up automated nurture campaigns",
+          "Create performance analytics"
+        ],
+        "success_metrics": [
+          "Lead conversion rate improvement > 40%",
+          "Sales cycle reduction > 25%",
+          "Lead quality score > 8/10",
+          "Sales rep productivity increase > 35%"
+        ]
+      }
+    }
+  },
+  "risk_mitigation_strategies": {
+    "technical_risks": {
+      "salesforce_governor_limits": {
+        "risk": "Hitting platform limits during high-volume processing",
+        "probability": "Medium",
+        "impact": "High",
+        "mitigation": [
+          "Implement bulkification patterns",
+          "Use asynchronous processing for large data sets",
+          "Monitor limit consumption with alerts",
+          "Design with batch processing capabilities"
+        ]
+      },
+      "integration_failures": {
+        "risk": "External system connectivity issues",
+        "probability": "Medium",
+        "impact": "Medium",
+        "mitigation": [
+          "Implement retry logic with exponential backoff",
+          "Design circuit breaker patterns",
+          "Create fallback procedures",
+          "Monitor integration health continuously"
+        ]
+      },
+      "data_quality_issues": {
+        "risk": "Poor data quality affecting automation accuracy",
+        "probability": "High",
+        "impact": "High",
+        "mitigation": [
+          "Implement data validation at entry points",
+          "Create data cleansing workflows",
+          "Monitor data quality metrics",
+          "Establish data governance procedures"
+        ]
+      }
+    },
+    "organizational_risks": {
+      "user_adoption": {
+        "risk": "Low user adoption of automated processes",
+        "probability": "Medium",
+        "impact": "High",
+        "mitigation": [
+          "Involve users in design process",
+          "Provide comprehensive training",
+          "Implement gradual rollout approach",
+          "Create user feedback mechanisms"
+        ]
+      },
+      "change_resistance": {
+        "risk": "Staff resistance to process changes",
+        "probability": "Medium",
+        "impact": "Medium",
+        "mitigation": [
+          "Communicate benefits clearly",
+          "Address job security concerns",
+          "Provide retraining opportunities",
+          "Celebrate early wins publicly"
+        ]
+      }
+    }
+  },
+  "success_measurement_kpis": {
+    "executive_dashboard": {
+      "financial_performance": [
+        "ROI achievement vs. targets",
+        "Cost savings realization",
+        "Payback period tracking",
+        "Budget variance analysis"
+      ],
+      "strategic_impact": [
+        "Digital transformation advancement",
+        "Process automation coverage",
+        "Innovation time freed up",
+        "Competitive advantage metrics"
+      ],
+      "risk_management": [
+        "Compliance adherence rate",
+        "Security incident reduction",
+        "Audit finding improvements",
+        "Risk mitigation effectiveness"
+      ]
+    },
+    "operational_dashboard": {
+      "process_performance": [
+        "Average processing time",
+        "Throughput volume increases",
+        "Cycle time improvements",
+        "Bottleneck elimination"
+      ],
+      "quality_metrics": [
+        "Error rate reductions",
+        "Accuracy improvements",
+        "Rework elimination",
+        "First-pass yield increases"
+      ],
+      "system_health": [
+        "Automation uptime percentage",
+        "System availability metrics",
+        "Performance benchmarks",
+        "Capacity utilization"
+      ]
+    }
+  }
+}
