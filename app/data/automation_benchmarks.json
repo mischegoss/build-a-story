@@ -98,86 +98,86 @@
         ]
       }
     },
-    "salesforce_automation_capabilities": {
-      "record_triggered_flows": {
+    "automation_platform_capabilities": {
+      "workflow_automation": {
         "complexity_level": "basic_automation",
         "use_cases": [
-          "When a record is created",
-          "When a record is updated",
           "When a record is created or updated",
-          "When a record is deleted",
-          "After a certain amount of time"
+          "Scheduled time-based triggers",
+          "User-initiated workflow processes",
+          "System event responses"
         ],
         "automation_potential": "high",
         "implementation_complexity": "low-medium",
         "typical_time_savings": "80-95%",
-        "governor_limit_considerations": [
-          "Maximum 100 SOQL queries per transaction",
-          "150 DML statements per transaction limit",
-          "10,000 millisecond CPU time limit"
+        "platform_limit_considerations": [
+          "Standard transaction processing limits",
+          "API rate limiting restrictions",
+          "Processing timeout constraints"
         ]
       },
-      "schedule_triggered_flows": {
+      "scheduled_automation": {
         "complexity_level": "basic_automation",
         "use_cases": [
-          "At a specified time and frequency",
-          "Batch processing",
+          "Time-based batch processing",
           "Regular maintenance tasks",
-          "Periodic data updates"
+          "Periodic data updates",
+          "Scheduled report generation"
         ],
         "automation_potential": "high",
         "implementation_complexity": "low",
         "typical_time_savings": "90-100%",
-        "governor_limit_considerations": [
+        "platform_limit_considerations": [
           "Batch size limitations for large data sets",
           "Scheduling frequency restrictions"
         ]
       },
-      "screen_flows": {
+      "user_interface_automation": {
         "complexity_level": "process_automation",
         "use_cases": [
-          "When a user clicks a button on a form",
-          "When a user clicks a quick action button",
           "Guided user experiences",
-          "Data collection workflows"
+          "Interactive data collection",
+          "Step-by-step workflows",
+          "Form automation processes"
         ],
         "automation_potential": "medium-high",
         "implementation_complexity": "medium",
         "typical_time_savings": "60-80%",
-        "governor_limit_considerations": [
+        "platform_limit_considerations": [
           "User interface design complexity",
           "Data validation requirements"
         ]
       },
-      "platform_event_triggered": {
+      "event_driven_automation": {
         "complexity_level": "integration_automation",
         "use_cases": [
-          "When a platform event message is received",
+          "Real-time event processing",
           "Integration with external systems",
-          "Real-time data processing"
+          "Message-based automation",
+          "Cross-system coordination"
         ],
         "automation_potential": "high",
         "implementation_complexity": "high",
         "typical_time_savings": "85-95%",
-        "governor_limit_considerations": [
+        "platform_limit_considerations": [
           "Event message size limitations",
-          "Platform event delivery guarantees",
+          "Event delivery guarantees",
           "External system API rate limits"
         ]
       },
-      "flow_orchestration": {
+      "workflow_orchestration": {
         "complexity_level": "intelligent_automation",
         "capabilities": [
-          "Coordinate multiple flows",
+          "Coordinate multiple workflows",
           "Assign tasks to multiple teams",
           "Complex multi-stage processes",
-          "Cross-functional workflows"
+          "Cross-functional automation"
         ],
         "best_for": "processes involving 3+ departments",
         "implementation_complexity": "high",
         "typical_time_savings": "70-90%",
-        "governor_limit_considerations": [
-          "Interview timeout limitations",
+        "platform_limit_considerations": [
+          "Workflow timeout limitations",
           "Complex variable management",
           "Multi-user coordination challenges"
         ]
@@ -302,30 +302,30 @@
     ]
   },
   "implementation_costs": {
-    "salesforce_native": {
-      "flow_builder": {
-        "licensing_cost": "included_in_salesforce_license",
+    "platform_native": {
+      "workflow_builder": {
+        "licensing_cost": "included_in_platform_license",
         "development_time_weeks": "1-4",
         "training_hours": "8-16",
         "maintenance_effort": "low",
         "complexity_suitability": ["basic_automation", "process_automation"]
       },
-      "process_builder": {
-        "licensing_cost": "included_in_salesforce_license",
+      "automation_engine": {
+        "licensing_cost": "included_in_platform_license",
         "development_time_weeks": "0.5-2",
         "training_hours": "4-8",
         "maintenance_effort": "low",
         "complexity_suitability": ["basic_automation"]
       },
-      "approval_processes": {
-        "licensing_cost": "included_in_salesforce_license",
+      "approval_workflows": {
+        "licensing_cost": "included_in_platform_license",
         "development_time_weeks": "1-2",
         "training_hours": "4-8",
         "maintenance_effort": "low",
         "complexity_suitability": ["basic_automation", "process_automation"]
       },
-      "platform_events": {
-        "licensing_cost": "included_in_enterprise_plus_licenses",
+      "event_processing": {
+        "licensing_cost": "included_in_enterprise_licenses",
         "development_time_weeks": "2-6",
         "training_hours": "16-32",
         "maintenance_effort": "medium",
@@ -452,26 +452,26 @@
     }
   },
   "real_world_benchmarks": {
-    "salesforce_customer_results": {
-      "sequoia_financial": {
+    "automation_customer_results": {
+      "financial_services_firm": {
         "roi_percentage": "361%",
         "timeframe": "5 months",
         "industry": "Financial Services",
         "automation_type": "process_automation"
       },
-      "city_of_chicago": {
+      "public_sector_agency": {
         "improvement": "82-94% case closure rate",
         "industry": "Public Sector",
         "automation_type": "basic_automation"
       },
-      "azizi_developments": {
+      "real_estate_company": {
         "improvement": "50% lead conversion increase",
         "industry": "Real Estate",
         "automation_type": "process_automation"
       }
     },
     "enterprise_automation_benchmarks": {
-      "red_hat_study": {
+      "enterprise_automation_study": {
         "roi_percentage": "667%",
         "timeframe": "3 years",
         "additional_revenue": "$8.54 million annually",
@@ -495,7 +495,7 @@
       "complexity_multiplier": 1.3,
       "timeline_extension": "25%",
       "additional_considerations": [
-        "HIPAA compliance",
+        "Privacy compliance requirements",
         "Patient safety protocols",
         "Clinical workflow integration"
       ]

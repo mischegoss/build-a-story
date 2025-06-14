@@ -2,7 +2,7 @@
   "process_complexity_levels": {
     "basic_automation": {
       "level": "Level 1: Basic Automation",
-      "salesforce_context": "Screen Flows, Simple Record-Triggered Flows, Basic field updates",
+      "platform_context": "Workflow builders, Simple triggered processes, Basic field updates",
       "enterprise_context": "Single-system integrations, File transfers, Simple notifications",
       "volume_monthly": "100-1000",
       "decision_points": "1-3",
@@ -14,10 +14,10 @@
       "automation_efficiency": 0.8,
       "roi_expectation": "200-400% within 12 months",
       "typical_time_savings": "60-80%",
-      "salesforce_constraints": {
-        "soql_queries_limit": "20 per transaction",
-        "dml_statements_limit": "50 per transaction",
-        "cpu_time_limit": "2000 milliseconds",
+      "platform_constraints": {
+        "transaction_limits": "Standard platform processing limits",
+        "api_call_limits": "Basic API rate limiting",
+        "processing_time_limit": "Standard timeout restrictions",
         "complexity": "Simple conditional logic"
       },
       "characteristics": [
@@ -37,7 +37,7 @@
     },
     "process_automation": {
       "level": "Level 2: Process Automation",
-      "salesforce_context": "Schedule-Triggered Flows, Multi-object operations, Platform Events",
+      "platform_context": "Scheduled processes, Multi-object operations, Event processing",
       "enterprise_context": "Cross-system workflows, Multi-step approvals, ITSM integration",
       "volume_monthly": "1000-10000",
       "decision_points": "4-10",
@@ -49,10 +49,10 @@
       "automation_efficiency": 0.7,
       "roi_expectation": "300-600% within 18 months",
       "typical_time_savings": "50-75%",
-      "salesforce_constraints": {
-        "soql_queries_limit": "80 per transaction",
-        "dml_statements_limit": "120 per transaction",
-        "cpu_time_limit": "8000 milliseconds",
+      "platform_constraints": {
+        "transaction_limits": "Enhanced processing capacity",
+        "api_call_limits": "Moderate API rate limits",
+        "processing_time_limit": "Extended timeout allowances",
         "complexity": "Conditional branching with exception handling"
       },
       "characteristics": [
@@ -72,7 +72,7 @@
     },
     "integration_automation": {
       "level": "Level 3: Integration Automation",
-      "salesforce_context": "Complex Platform Events, External APIs, Advanced Flow orchestration",
+      "platform_context": "Complex event processing, External APIs, Advanced orchestration",
       "enterprise_context": "Enterprise-wide coordination, Real-time sync, Event-driven architecture",
       "volume_monthly": "10000-100000",
       "decision_points": "10-25",
@@ -84,10 +84,10 @@
       "automation_efficiency": 0.6,
       "roi_expectation": "400-800% within 24 months",
       "typical_time_savings": "40-65%",
-      "salesforce_constraints": {
-        "soql_queries_limit": "100 per transaction",
-        "dml_statements_limit": "150 per transaction",
-        "cpu_time_limit": "10000 milliseconds",
+      "platform_constraints": {
+        "transaction_limits": "High-volume processing capabilities",
+        "api_call_limits": "Enterprise API rate limits",
+        "processing_time_limit": "Extended processing windows",
         "complexity": "Complex orchestration with external dependencies"
       },
       "characteristics": [
@@ -107,7 +107,7 @@
     },
     "intelligent_automation": {
       "level": "Level 4: Intelligent Automation",
-      "salesforce_context": "Einstein Platform Services, AI-powered decisions, ML model integration",
+      "platform_context": "AI/ML services, Intelligent decisions, Machine learning integration",
       "enterprise_context": "AI/ML decision making, Unstructured data processing, Predictive analytics",
       "volume_monthly": "100000+",
       "decision_points": "25+",
@@ -119,10 +119,10 @@
       "automation_efficiency": 0.5,
       "roi_expectation": "500-1000% within 36 months",
       "typical_time_savings": "30-55%",
-      "salesforce_constraints": {
-        "soql_queries_limit": "100 per transaction",
-        "dml_statements_limit": "150 per transaction",
-        "cpu_time_limit": "10000 milliseconds",
+      "platform_constraints": {
+        "transaction_limits": "AI/ML processing requirements",
+        "api_call_limits": "Machine learning API quotas",
+        "processing_time_limit": "Model inference timeouts",
         "complexity": "AI/ML integration with adaptive learning"
       },
       "characteristics": [
@@ -281,10 +281,10 @@
   "roi_calculation_framework": {
     "implementation_costs": {
       "software_licensing": {
-        "salesforce_native": {
-          "screen_flows": "Included in Salesforce license",
-          "process_builder": "Included in Salesforce license",
-          "platform_events": "Included in Enterprise+ licenses"
+        "platform_native": {
+          "workflow_builders": "Included in platform license",
+          "process_automation": "Included in platform license",
+          "event_processing": "Included in enterprise licenses"
         },
         "external_tools": {
           "rpa_platforms": "$500-2000 per bot per month",
@@ -298,7 +298,7 @@
         "network_bandwidth": "$100-1000 per month"
       },
       "development_resources": {
-        "salesforce_developer": "$80-150 per hour",
+        "automation_developer": "$80-150 per hour",
         "integration_specialist": "$100-180 per hour",
         "business_analyst": "$60-120 per hour",
         "project_manager": "$70-140 per hour"
@@ -336,23 +336,23 @@
       }
     },
     "real_world_benchmarks": {
-      "salesforce_roi_examples": {
-        "sequoia_financial": {
+      "automation_roi_examples": {
+        "financial_services_firm": {
           "roi_percentage": "361%",
           "timeframe": "5 months",
           "industry": "Financial Services"
         },
-        "city_of_chicago": {
+        "public_sector_agency": {
           "improvement": "82-94% case closure rate",
           "industry": "Public Sector"
         },
-        "azizi_developments": {
+        "real_estate_company": {
           "improvement": "50% lead conversion increase",
           "industry": "Real Estate"
         }
       },
       "enterprise_automation_benchmarks": {
-        "red_hat_study": {
+        "enterprise_study": {
           "roi_percentage": "667%",
           "timeframe": "3 years",
           "additional_revenue": "$8.54 million annually",
@@ -366,7 +366,7 @@
     "customer_service": {
       "password_reset": {
         "complexity_level": "basic_automation",
-        "salesforce_implementation": "Screen Flow with Identity Verification",
+        "automation_implementation": "Workflow automation with identity verification",
         "volume_monthly": "200-1000",
         "current_time_minutes": 15,
         "automated_time_minutes": 2,
@@ -374,8 +374,8 @@
         "error_rate_reduction": "90%",
         "roi_benchmark": "300% within 6 months",
         "implementation_steps": [
-          "Design Screen Flow for password reset request",
-          "Integrate with Identity Provider API",
+          "Design automated workflow for password reset request",
+          "Integrate with identity provider API",
           "Configure automated email notifications",
           "Implement audit logging",
           "Deploy with user training"
@@ -389,7 +389,7 @@
       },
       "ticket_routing": {
         "complexity_level": "process_automation",
-        "salesforce_implementation": "Record-Triggered Flow with AI Classification",
+        "automation_implementation": "Triggered automation with AI classification",
         "volume_monthly": "500-2000",
         "current_time_minutes": 8,
         "automated_time_minutes": 1,
@@ -397,9 +397,9 @@
         "error_rate_reduction": "80%",
         "roi_benchmark": "450% within 12 months",
         "implementation_steps": [
-          "Configure Case object with custom fields",
-          "Implement Einstein Case Classification",
-          "Build routing logic in Process Builder",
+          "Configure case management with custom fields",
+          "Implement AI-powered case classification",
+          "Build routing logic in automation platform",
           "Set up escalation rules",
           "Create performance dashboards"
         ],
@@ -414,7 +414,7 @@
     "finance_operations": {
       "invoice_processing": {
         "complexity_level": "integration_automation",
-        "salesforce_implementation": "Platform Events with External Document AI",
+        "automation_implementation": "Event processing with external document AI",
         "volume_monthly": "100-500",
         "current_time_hours": 2,
         "automated_time_minutes": 15,
@@ -423,8 +423,8 @@
         "roi_benchmark": "600% within 18 months",
         "implementation_steps": [
           "Integrate with document AI service",
-          "Configure Platform Events for real-time processing",
-          "Build approval workflow in Flow",
+          "Configure event processing for real-time handling",
+          "Build approval workflow in automation platform",
           "Set up ERP system integration",
           "Implement exception handling"
         ],
@@ -439,7 +439,7 @@
     "sales_operations": {
       "lead_qualification": {
         "complexity_level": "intelligent_automation",
-        "salesforce_implementation": "Einstein Lead Scoring with Automated Workflows",
+        "automation_implementation": "AI lead scoring with automated workflows",
         "volume_monthly": "100-500",
         "current_time_hours": 2,
         "automated_time_minutes": 30,
@@ -447,9 +447,9 @@
         "error_rate_reduction": "60%",
         "roi_benchmark": "750% within 24 months",
         "implementation_steps": [
-          "Configure Einstein Lead Scoring",
+          "Configure AI-powered lead scoring",
           "Implement data enrichment APIs",
-          "Build qualification Flow with AI decisions",
+          "Build qualification workflow with AI decisions",
           "Set up automated nurture campaigns",
           "Create performance analytics"
         ],
@@ -464,14 +464,14 @@
   },
   "risk_mitigation_strategies": {
     "technical_risks": {
-      "salesforce_governor_limits": {
+      "platform_performance_limits": {
         "risk": "Hitting platform limits during high-volume processing",
         "probability": "Medium",
         "impact": "High",
         "mitigation": [
-          "Implement bulkification patterns",
+          "Implement efficient processing patterns",
           "Use asynchronous processing for large data sets",
-          "Monitor limit consumption with alerts",
+          "Monitor resource consumption with alerts",
           "Design with batch processing capabilities"
         ]
       },
