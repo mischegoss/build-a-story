@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import './BuildACX.css'
+import './styles/common.css'
 
 // Import modular components
 import ProgressBarHeader from './components/ProgressBarHeader'
@@ -7,11 +7,6 @@ import Step1ScenarioSelection from './components/Step1ScenarioSelection'
 import Step2TeamSetup from './components/Step2TeamSetup'
 import Step3AnalysisInProgress from './components/Step3AnalysisinProgress'
 import Step4ResultsAndRefinement from './components/Step4ResultsandRefinement'
-
-// Simple ID generator for new personas
-const generateId = () => {
-  return 'persona_' + Math.random().toString(36).substr(2, 9)
-}
 
 const BuildACXInterface = ({
   currentStep,
@@ -146,53 +141,16 @@ const BuildACXInterface = ({
     }
   }, [currentStep])
 
-  // Persona management functions
-  const handlePersonaChange = useCallback(
-    (index, field, value) => {
+  const handleDataSourceChange = useCallback(
+    (dataSource, isChecked) => {
       setCxProjectData(prev => {
-        const updatedPersonas = [...(prev.personasList || [])]
-        updatedPersonas[index] = {
-          ...updatedPersonas[index],
-          [field]: value,
-        }
-        return { ...prev, personasList: updatedPersonas }
-      })
-    },
-    [setCxProjectData],
-  )
-
-  const addPersona = useCallback(() => {
-    setCxProjectData(prev => ({
-      ...prev,
-      personasList: [
-        ...(prev.personasList || []),
-        { id: generateId(), name: '', description: '' },
-      ],
-    }))
-  }, [setCxProjectData])
-
-  const removePersona = useCallback(
-    index => {
-      setCxProjectData(prev => ({
-        ...prev,
-        personasList: prev.personasList.filter((_, i) => i !== index),
-      }))
-    },
-    [setCxProjectData],
-  )
-
-  const handleCXToolChange = useCallback(
-    (tool, isChecked) => {
-      setCxProjectData(prev => {
-        let newTools = [...(prev.cxToolsList || [])]
-        if (isChecked && !newTools.includes(tool)) {
-          if (newTools.length < 4) {
-            newTools.push(tool)
-          }
+        let newSources = [...(prev.dataSourcesList || [])]
+        if (isChecked && !newSources.includes(dataSource)) {
+          newSources.push(dataSource)
         } else if (!isChecked) {
-          newTools = newTools.filter(t => t !== tool)
+          newSources = newSources.filter(s => s !== dataSource)
         }
-        return { ...prev, cxToolsList: newTools }
+        return { ...prev, dataSourcesList: newSources }
       })
     },
     [setCxProjectData],
@@ -223,10 +181,7 @@ const BuildACXInterface = ({
             setCxProjectData={setCxProjectData}
             setCurrentStep={setCurrentStep}
             agentStatuses={agentStatuses}
-            handlePersonaChange={handlePersonaChange}
-            addPersona={addPersona}
-            removePersona={removePersona}
-            handleCXToolChange={handleCXToolChange}
+            handleDataSourceChange={handleDataSourceChange}
           />
         )
       case 2:

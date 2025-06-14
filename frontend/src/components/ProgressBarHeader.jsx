@@ -1,4 +1,6 @@
 import React from 'react'
+import '../styles/progress-bar.css'
+
 
 const ProgressBarHeader = ({ currentStep, error, setError }) => {
   const businessSteps = [

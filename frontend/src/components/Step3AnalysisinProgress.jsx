@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import '../styles/step3.css'
 
 const Step3AnalysisInProgress = ({
   loading,

@@ -1,4 +1,5 @@
 import React from 'react'
+import '../styles/step2.css'
 
 const Step2TeamSetup = ({
   cxProjectData,
@@ -6,10 +7,7 @@ const Step2TeamSetup = ({
   setCxProjectData,
   setCurrentStep,
   agentStatuses,
-  handlePersonaChange,
-  addPersona,
-  removePersona,
-  handleCXToolChange,
+  handleDataSourceChange,
 }) => {
   return (
     <div className='learning-module'>
@@ -78,182 +76,211 @@ const Step2TeamSetup = ({
         </p>
 
         <div className='input-grid'>
-          <div className='input-group'>
-            <label className='input-label required'>
-              Primary touchpoint to optimize?
-            </label>
-            <select
-              value={cxProjectData.touchpoint}
-              onChange={e =>
-                setCxProjectData({
-                  ...cxProjectData,
-                  touchpoint: e.target.value,
-                })
-              }
-              className='business-input'
-              required
-            >
-              <option value=''>Choose touchpoint...</option>
-              {(cxOptions.touchpoints || []).map((touchpoint, index) => (
-                <option key={index} value={touchpoint}>
-                  {touchpoint}
+          {/* 🧑‍💼 Audience & Goal Section */}
+          <div className='form-section'>
+            <h4 className='section-title'>🧑‍💼 Audience & Goal</h4>
+
+            <div className='input-group'>
+              <label className='input-label required'>
+                Who is the intended audience for this report?
+              </label>
+              <select
+                value={cxProjectData.report_audience}
+                onChange={e =>
+                  setCxProjectData({
+                    ...cxProjectData,
+                    report_audience: e.target.value,
+                  })
+                }
+                className='business-input'
+                required
+              >
+                <option value=''>Choose audience...</option>
+                <option value='Executive leadership'>
+                  Executive leadership
                 </option>
-              ))}
-            </select>
-            <div className='agent-use-note'>
-              <strong>AI agents will use this:</strong> Customer Journey Analyst
-              will map all interactions through this touchpoint
+                <option value='Product team'>Product team</option>
+                <option value='Marketing team'>Marketing team</option>
+                <option value='Customer support'>Customer support</option>
+                <option value='Cross-functional stakeholders'>
+                  Cross-functional stakeholders
+                </option>
+              </select>
+              <div className='agent-use-note'>
+                <strong>AI agents will use this:</strong> Report tone and depth
+                will be tailored to your audience
+              </div>
+            </div>
+
+            <div className='input-group'>
+              <label className='input-label required'>
+                What is the primary goal of this report?
+              </label>
+              <select
+                value={cxProjectData.report_goal}
+                onChange={e =>
+                  setCxProjectData({
+                    ...cxProjectData,
+                    report_goal: e.target.value,
+                  })
+                }
+                className='business-input'
+                required
+              >
+                <option value=''>Choose goal...</option>
+                <option value='Identify and fix pain points'>
+                  Identify and fix pain points
+                </option>
+                <option value='Justify a product or CX investment'>
+                  Justify a product or CX investment
+                </option>
+                <option value='Track progress toward a CX goal'>
+                  Track progress toward a CX goal
+                </option>
+                <option value='Inform design/feature changes'>
+                  Inform design/feature changes
+                </option>
+                <option value='Demonstrate AI reporting capability'>
+                  Demonstrate AI reporting capability (demo/test)
+                </option>
+              </select>
+              <div className='agent-use-note'>
+                <strong>AI agents will use this:</strong> Analysis approach and
+                recommendations will align with your goal
+              </div>
+            </div>
+
+            <div className='input-group'>
+              <label className='input-label'>
+                Is the report focused on a specific customer segment?
+              </label>
+              <select
+                value={cxProjectData.customer_segment}
+                onChange={e =>
+                  setCxProjectData({
+                    ...cxProjectData,
+                    customer_segment: e.target.value,
+                  })
+                }
+                className='business-input'
+              >
+                <option value=''>Choose segment...</option>
+                <option value='Parents'>Parents</option>
+                <option value='New users'>New users</option>
+                <option value='Returning customers'>Returning customers</option>
+                <option value='High-value users'>High-value users</option>
+                <option value='No specific segment'>No specific segment</option>
+              </select>
             </div>
           </div>
 
-          <div className='input-group'>
-            <label className='input-label'>Customer segment focus?</label>
-            <select
-              value={cxProjectData.business_context}
-              onChange={e =>
-                setCxProjectData({
-                  ...cxProjectData,
-                  business_context: e.target.value,
-                })
-              }
-              className='business-input'
-            >
-              <option value=''>Choose segment...</option>
-              <option value='New Customers'>New Customers</option>
-              <option value='Returning Customers'>Returning Customers</option>
-              <option value='VIP/Premium'>VIP/Premium</option>
-              <option value='At-Risk'>At-Risk</option>
-            </select>
-          </div>
+          {/* 🎯 KPI Target Section */}
+          <div className='form-section'>
+            <h4 className='section-title'>🎯 KPI Target</h4>
 
-          <div className='input-group'>
-            <label className='input-label'>Main improvement goal?</label>
-            <select
-              value={cxProjectData.cx_objective}
-              onChange={e =>
-                setCxProjectData({
-                  ...cxProjectData,
-                  cx_objective: e.target.value,
-                })
-              }
-              className='business-input'
-            >
-              <option value=''>Choose goal...</option>
-              <option value='Reduce Friction'>Reduce Friction</option>
-              <option value='Increase Satisfaction'>
-                Increase Satisfaction
-              </option>
-              <option value='Boost Efficiency'>Boost Efficiency</option>
-              <option value='Improve Retention'>Improve Retention</option>
-            </select>
-            <div className='agent-use-note'>
-              <strong>AI agents will use this:</strong> Solution Designer will
-              create recommendations specifically targeting this objective
+            <div className='input-group'>
+              <label className='input-label required'>
+                What KPI are you trying to move?
+              </label>
+              <input
+                type='text'
+                placeholder='e.g., Task Abandonment Rate, NPS, App Rating, Conversion Rate'
+                value={cxProjectData.target_kpi}
+                onChange={e =>
+                  setCxProjectData({
+                    ...cxProjectData,
+                    target_kpi: e.target.value,
+                  })
+                }
+                className='business-input'
+                required
+              />
+              <div className='agent-use-note'>
+                <strong>AI agents will use this:</strong> Success Metrics
+                Specialist will focus on this KPI
+              </div>
+            </div>
+
+            <div className='input-group'>
+              <label className='input-label required'>
+                Describe what success looks like.
+              </label>
+              <input
+                type='text'
+                placeholder='e.g., Reduce abandonment by 15% in 3 months, Increase NPS from 7.2 to 8.0'
+                value={cxProjectData.success_definition}
+                onChange={e =>
+                  setCxProjectData({
+                    ...cxProjectData,
+                    success_definition: e.target.value,
+                  })
+                }
+                className='business-input'
+                required
+              />
+              <div className='agent-use-note'>
+                <strong>AI agents will use this:</strong> Implementation roadmap
+                will target this specific outcome
+              </div>
             </div>
           </div>
 
-          <div className='input-group'>
-            <label className='input-label required'>
-              Customer personas (Who are your key customer segments?)
-            </label>
-            <div className='personas-input'>
-              {(cxProjectData.personasList || []).map((persona, index) => (
-                <div
-                  key={persona.id || `persona_${index}`}
-                  className='persona-card'
-                >
-                  <div className='persona-card-header'>
-                    <h5 className='persona-number'>Persona {index + 1}</h5>
-                    {index > 0 && (
-                      <button
-                        onClick={() => removePersona(index)}
-                        className='remove-persona-btn'
-                      >
-                        ✕ Remove
-                      </button>
-                    )}
-                  </div>
-                  <div className='persona-card-content'>
-                    <div className='persona-field'>
-                      <label className='persona-field-label'>
-                        Customer Type:
-                      </label>
-                      <input
-                        type='text'
-                        placeholder='e.g., Busy Parent, Business Professional, Price-Conscious Shopper'
-                        value={persona.name || ''}
-                        onChange={e =>
-                          handlePersonaChange(index, 'name', e.target.value)
-                        }
-                        className='persona-input-field'
-                      />
-                    </div>
-                    <div className='persona-field'>
-                      <label className='persona-field-label'>
-                        Key Characteristics:
-                      </label>
-                      <input
-                        type='text'
-                        placeholder='e.g., time-sensitive, tech-savvy, budget-focused, quality-driven'
-                        value={persona.description || ''}
-                        onChange={e =>
-                          handlePersonaChange(
-                            index,
-                            'description',
-                            e.target.value,
-                          )
-                        }
-                        className='persona-input-field'
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {(cxProjectData.personasList || []).length < 4 && (
-                <button onClick={addPersona} className='add-persona-btn'>
-                  + Add Another Persona (
-                  {(cxProjectData.personasList || []).length}/4)
-                </button>
-              )}
-            </div>
-            <div className='agent-use-note'>
-              <strong>AI agents will use this:</strong> Data Analytics
-              Specialist will analyze behavior patterns for each persona type
-            </div>
-          </div>
+          {/* 📊 Data Sources Section */}
+          <div className='form-section'>
+            <h4 className='section-title'>📊 Data Sources</h4>
 
-          <div className='input-group'>
-            <label className='input-label'>
-              Preferred analysis methods (Choose up to 4)
-            </label>
-            <div className='cx-tools'>
-              {[
-                'Customer Surveys',
-                'Analytics Review',
-                'Process Mapping',
-                'A/B Testing',
-                'User Interviews',
-                'Journey Mapping',
-                'Sentiment Analysis',
-                'Behavioral Tracking',
-              ].map((tool, index) => (
-                <label key={index} className='tool-checkbox'>
+            <div className='input-group'>
+              <label className='input-label required'>
+                Select which data types to use in this report:
+              </label>
+              <div className='data-sources'>
+                <label className='data-source-checkbox'>
                   <input
                     type='checkbox'
-                    checked={(cxProjectData.cxToolsList || []).includes(tool)}
-                    onChange={e => handleCXToolChange(tool, e.target.checked)}
-                    disabled={
-                      (cxProjectData.cxToolsList || []).length >= 4 &&
-                      !(cxProjectData.cxToolsList || []).includes(tool)
+                    checked={(cxProjectData.dataSourcesList || []).includes(
+                      'Customer Behavior Data',
+                    )}
+                    onChange={e =>
+                      handleDataSourceChange(
+                        'Customer Behavior Data',
+                        e.target.checked,
+                      )
                     }
                   />
-                  <span>{tool}</span>
+                  <div className='data-source-option'>
+                    <strong>Customer Behavior Data</strong>
+                    <p>
+                      Usage analytics, drop-off rates, feature adoption, funnel
+                      metrics
+                    </p>
+                  </div>
                 </label>
-              ))}
-            </div>
-            <div className='agent-use-note'>
-              <strong>AI agents will use this:</strong> Each agent will leverage
-              relevant tools for their specialized analysis tasks
+                <label className='data-source-checkbox'>
+                  <input
+                    type='checkbox'
+                    checked={(cxProjectData.dataSourcesList || []).includes(
+                      'Voice of Customer Data',
+                    )}
+                    onChange={e =>
+                      handleDataSourceChange(
+                        'Voice of Customer Data',
+                        e.target.checked,
+                      )
+                    }
+                  />
+                  <div className='data-source-option'>
+                    <strong>Voice of Customer / Feedback Data</strong>
+                    <p>
+                      Reviews, survey quotes, support ticket themes, user
+                      feedback
+                    </p>
+                  </div>
+                </label>
+              </div>
+              <div className='agent-use-note'>
+                <strong>AI agents will use this:</strong> Data Analytics
+                Specialist will focus on your selected data types
+              </div>
             </div>
           </div>
         </div>
@@ -266,12 +293,13 @@ const Step2TeamSetup = ({
         <button
           onClick={() => setCurrentStep(2)}
           disabled={
-            !cxProjectData.touchpoint ||
+            !cxProjectData.report_audience ||
+            !cxProjectData.report_goal ||
+            !cxProjectData.target_kpi ||
+            !cxProjectData.success_definition ||
             !(
-              cxProjectData.personasList &&
-              cxProjectData.personasList.some(
-                persona => persona.name.trim() !== '',
-              )
+              cxProjectData.dataSourcesList &&
+              cxProjectData.dataSourcesList.length > 0
             )
           }
           className='continue-button primary'

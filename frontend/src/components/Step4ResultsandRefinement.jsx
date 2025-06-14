@@ -1,4 +1,5 @@
 import React from 'react'
+import '../styles/step4.css'
 
 const Step4ResultsAndRefinement = ({
   generatedReport,

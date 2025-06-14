@@ -1,4 +1,5 @@
 import React from 'react'
+import '../styles/step1.css'
 
 const Step1ScenarioSelection = ({
   cxProjectData,

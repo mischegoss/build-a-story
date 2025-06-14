@@ -1,0 +1,141 @@
+/* Step 1: Scenario Selection Component Styles */
+
+/* Concept Explanations */
+.concept-explanation {
+    background: var(--background-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    border-left: 4px solid var(--primary-blue);
+  }
+  
+  .concept-title {
+    font-size: var(--font-lg);
+    color: var(--accent-blue);
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+  }
+  
+  .concept-content p {
+    font-size: var(--font-md);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.7;
+  }
+  
+  .concept-highlight {
+    background: var(--pale-blue);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-md);
+    font-size: var(--font-md);
+    color: var(--accent-blue);
+  }
+  
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+  }
+  
+  .concept-card {
+    background: var(--background);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+  }
+  
+  .concept-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .concept-card h4 {
+    font-size: var(--font-lg);
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+  }
+  
+  .concept-card p {
+    font-size: var(--font-md);
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  
+  /* Project Setup */
+  .project-setup {
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .setup-title {
+    font-size: var(--font-lg);
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+  }
+  
+  .setup-description {
+    font-size: var(--font-md);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.7;
+  }
+  
+  .scenario-selection {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  /* Selection Confirmation */
+  .selection-confirmation {
+    background: var(--pale-blue);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin-top: var(--spacing-lg);
+  }
+  
+  .confirmation-header h4 {
+    font-size: var(--font-lg);
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+  }
+  
+  .next-preview h5 {
+    font-size: var(--font-md);
+    color: var(--accent-blue);
+    margin: var(--spacing-lg) 0 var(--spacing-sm);
+    font-weight: 600;
+  }
+  
+  .preview-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .preview-list li {
+    padding: var(--spacing-xs) 0;
+    font-size: var(--font-md);
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: var(--spacing-lg);
+  }
+  
+  .preview-list li::before {
+    content: '→';
+    color: var(--primary-blue);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+  
+  /* Responsive Design for Step 1 */
+  @media (max-width: 768px) {
+    .concept-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  

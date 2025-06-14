@@ -3,7 +3,7 @@ import BuildACXInterface from './BuildACXInterface'
 
 // Import mock data and services
 import { mockBusinessScenarios } from './mockdata/mockBusinessScenarios'
-import { mockCXOptions } from './mockdata/mockCXData.js'
+import { mockCXOptions } from './mockdata/mockCXData'
 import { mockAIBusinessInsights } from './mockdata/aiBusinessInsights.js'
 import {
   generateMockCXReport,
@@ -20,22 +20,17 @@ function App() {
   const [currentStep, setCurrentStep] = useState(0)
   const [cxProjectData, setCxProjectData] = useState({
     business_scenario: '',
-    touchpoint: '',
-    customer_personas: '',
-    business_context: '',
-    cx_objective: '',
+    // New business-focused fields
+    report_audience: '',
+    report_goal: '',
+    customer_segment: '',
+    target_kpi: '',
+    success_definition: '',
+    dataSourcesList: [],
+    // Legacy fields (may be used by other parts)
     tone: '',
     industry: '',
     special_requirements: '',
-    // Frontend-specific arrays
-    personasList: [
-      {
-        id: 'persona_' + Math.random().toString(36).substr(2, 9),
-        name: '',
-        description: '',
-      },
-    ],
-    cxToolsList: [],
     enable_ai_business_mode: true, // Always enabled for business lab
   })
 
@@ -307,21 +302,15 @@ Confidence Score: ${reportToDownload.cx_analysis_details.confidence_score}
 
     setCxProjectData({
       business_scenario: '',
-      touchpoint: '',
-      customer_personas: '',
-      business_context: '',
-      cx_objective: '',
+      report_audience: '',
+      report_goal: '',
+      customer_segment: '',
+      target_kpi: '',
+      success_definition: '',
+      dataSourcesList: [],
       tone: '',
       industry: '',
       special_requirements: '',
-      personasList: [
-        {
-          id: 'persona_' + Math.random().toString(36).substr(2, 9),
-          name: '',
-          description: '',
-        },
-      ],
-      cxToolsList: [],
       enable_ai_business_mode: true,
     })
 
@@ -347,8 +336,12 @@ Confidence Score: ${reportToDownload.cx_analysis_details.confidence_score}
         return cxProjectData.business_scenario !== ''
       case 1:
         return (
-          cxProjectData.touchpoint !== '' &&
-          cxProjectData.personasList.some(persona => persona.name.trim() !== '')
+          cxProjectData.report_audience !== '' &&
+          cxProjectData.report_goal !== '' &&
+          cxProjectData.target_kpi !== '' &&
+          cxProjectData.success_definition !== '' &&
+          cxProjectData.dataSourcesList &&
+          cxProjectData.dataSourcesList.length > 0
         )
       case 2:
         return isStepComplete(0) && isStepComplete(1)

@@ -1,0 +1,295 @@
+/* Step 3: Analysis in Progress Component Styles */
+
+/* Collaboration Display */
+.collaboration-live {
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .collaboration-title {
+    font-size: var(--font-lg);
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-lg);
+    font-weight: 600;
+  }
+  
+  .agents-workflow {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .agent-workflow-card {
+    background: var(--background);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all 0.3s ease;
+  }
+  
+  .agent-workflow-card.working {
+    border-color: var(--warning-orange);
+    background: #fef3c7;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .agent-workflow-card.complete {
+    border-color: var(--success-green);
+    background: #ecfdf5;
+  }
+  
+  .agent-workflow-card.waiting {
+    border-color: var(--border-medium);
+    opacity: 0.7;
+  }
+  
+  .agent-workflow-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .agent-task {
+    font-size: var(--font-md);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.6;
+  }
+  
+  .agent-learning {
+    background: var(--pale-blue);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    color: var(--accent-blue);
+    margin-top: var(--spacing-sm);
+  }
+  
+  .agent-status {
+    font-size: var(--font-sm);
+    font-weight: 600;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    background: var(--background-light);
+  }
+  
+  .workflow-arrow {
+    text-align: center;
+    font-size: var(--font-xl);
+    color: var(--primary-blue);
+    margin: var(--spacing-sm) 0;
+  }
+  
+  /* Processing Status */
+  .processing-status {
+    text-align: center;
+    padding: var(--spacing-2xl);
+  }
+  
+  .processing-status h4 {
+    font-size: var(--font-lg);
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+  }
+  
+  .processing-status p {
+    font-size: var(--font-md);
+    color: var(--text-secondary);
+  }
+  
+  /* Collaboration Complete */
+  .collaboration-complete {
+    background: var(--background-light);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin-top: var(--spacing-lg);
+  }
+  
+  .collaboration-analysis {
+    margin: var(--spacing-xl) 0;
+  }
+  
+  .success-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .success-header h3 {
+    font-size: var(--font-lg);
+    color: var(--success-green);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+  }
+  
+  .collaboration-results h4,
+  .collaboration-analysis h4 {
+    font-size: var(--font-md);
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+  }
+  
+  .report-preview {
+    background: var(--background);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-blue);
+    font-size: var(--font-md);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .analysis-points {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .analysis-points li {
+    padding: var(--spacing-sm) 0;
+    font-size: var(--font-md);
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-light);
+  }
+  
+  .analysis-points li:last-child {
+    border-bottom: none;
+  }
+  
+  /* Results Ready Section */
+  .results-ready-section {
+    background: var(--background);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-lg) 0;
+    border: 2px solid var(--success-green);
+  }
+  
+  .results-preview {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .results-preview h4 {
+    font-size: var(--font-lg);
+    color: var(--success-green);
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+  }
+  
+  .results-preview-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .results-preview-list li {
+    padding: var(--spacing-xs) 0;
+    font-size: var(--font-md);
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: var(--spacing-lg);
+  }
+  
+  .results-preview-list li::before {
+    content: '✓';
+    color: var(--success-green);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+  
+  .results-cta {
+    text-align: center;
+  }
+  
+  .results-ready-button {
+    background: var(--success-green);
+    color: white;
+    border: none;
+    padding: var(--spacing-lg) var(--spacing-2xl);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-lg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .results-ready-button:hover {
+    background: #047857;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .results-note {
+    font-size: var(--font-sm);
+    color: var(--text-light);
+    margin-top: var(--spacing-sm);
+    font-style: italic;
+  }
+  
+  /* Process Learning (Deep Dive sections) */
+  .process-learning {
+    margin: var(--spacing-xl) 0;
+  }
+  
+  .learning-toggle {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .learning-toggle:hover {
+    background: var(--accent-blue);
+  }
+  
+  .deep-learning-content {
+    background: var(--background-light);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-md);
+  }
+  
+  .deep-learning-content h4 {
+    font-size: var(--font-lg);
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-lg);
+    font-weight: 600;
+  }
+  
+  .learning-concepts {
+    display: grid;
+    gap: var(--spacing-lg);
+  }
+  
+  .learning-concept {
+    background: var(--background);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-blue);
+  }
+  
+  .learning-concept h5 {
+    font-size: var(--font-md);
+    color: var(--accent-blue);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+  }
+  
+  .learning-concept p {
+    font-size: var(--font-md);
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  
