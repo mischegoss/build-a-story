@@ -19,37 +19,39 @@ const Step3AnalysisInProgress = ({
   return (
     <div className='learning-module'>
       <div className='module-header'>
-        <h2 className='module-title'>⚡ AI Business Collaboration Live</h2>
+        <h2 className='module-title'>⚡ AI Automation Analysis Live</h2>
         <p className='module-subtitle'>
-          Watch specialized AI business agents analyze customer experience in
-          real-time
+          Watch specialized AI automation specialists build your business case
+          in real-time
         </p>
       </div>
 
       {/* Business Collaboration Concept */}
       <div className='concept-explanation'>
         <h3 className='concept-title'>
-          What You're Seeing: Enterprise AI Workflow
+          What You're Seeing: Enterprise Automation Analysis Workflow
         </h3>
         <div className='concept-content'>
           <p>
-            The agents work sequentially because business analysis requires
-            layered insights. The Data Analyst must process customer data before
-            the Process Improvement Specialist can identify optimization
-            opportunities.
+            The agents work sequentially because automation business cases
+            require layered analysis. The Process Analysis Specialist must
+            identify automation opportunities before the ROI Calculator can
+            project financial returns.
           </p>
           <div className='concept-highlight'>
-            <strong>Why Sequential in Business?</strong> The Solution Designer
-            can't create recommendations until pain points are identified. The
-            Implementation Strategist needs solutions before creating rollout
-            plans.
+            <strong>Why Sequential for Automation?</strong> The Implementation
+            Planner can't create deployment roadmaps until ROI is calculated.
+            The Risk Assessment Specialist needs implementation plans before
+            evaluating project risks.
           </div>
         </div>
       </div>
 
       {/* Live Agent Collaboration */}
       <div className='collaboration-live'>
-        <h3 className='collaboration-title'>Your AI Business Team in Action</h3>
+        <h3 className='collaboration-title'>
+          Your AI Automation Team in Action
+        </h3>
 
         <div className='agents-workflow'>
           {agentStatuses.map((agent, index) => (
@@ -60,7 +62,7 @@ const Step3AnalysisInProgress = ({
                   <h4 className='agent-name'>{agent.name}</h4>
                   <div className='agent-status'>
                     {agent.status === 'complete' && '✅ Analysis Complete'}
-                    {agent.status === 'working' && '⚡ Analyzing Data'}
+                    {agent.status === 'working' && '⚡ Building Business Case'}
                     {agent.status === 'waiting' && '⏳ Standing By'}
                   </div>
                 </div>
@@ -72,7 +74,7 @@ const Step3AnalysisInProgress = ({
 
               {agent.status === 'complete' && (
                 <div className='agent-learning'>
-                  <strong>💡 Business AI Insight:</strong>{' '}
+                  <strong>💡 Automation AI Insight:</strong>{' '}
                   {agent.learning_moment}
                 </div>
               )}
@@ -88,23 +90,24 @@ const Step3AnalysisInProgress = ({
       {/* Quick Collaboration Summary - Moved from Module 4 */}
       {analysisReady && !loading && (
         <div className='collaboration-analysis'>
-          <h4>🤖 Quick Collaboration Summary:</h4>
+          <h4>🤖 Quick Automation Analysis Summary:</h4>
           <ul className='analysis-points'>
             <li>
-              <strong>Human Direction:</strong> You provided the business
-              context and strategic focus that guided the entire analysis
+              <strong>Human Direction:</strong> You provided the process context
+              and ROI targets that guided the entire automation business case
             </li>
             <li>
               <strong>AI Specialization:</strong> Each agent contributed
-              domain-specific business expertise you couldn't get from single AI
+              automation-specific expertise you couldn't get from single AI
             </li>
             <li>
-              <strong>Quality Assurance:</strong> Multiple agents ensured
-              actionable, measurable, executive-ready recommendations
+              <strong>Financial Rigor:</strong> Multiple agents ensured accurate
+              ROI calculations, realistic timelines, and executive-ready
+              projections
             </li>
             <li>
-              <strong>Business Result:</strong> Enterprise-grade analysis
-              combining your strategic vision with AI analytical power
+              <strong>Business Result:</strong> Professional automation business
+              case combining your process knowledge with AI analytical power
             </li>
           </ul>
         </div>
@@ -113,11 +116,11 @@ const Step3AnalysisInProgress = ({
       {loading && (
         <div className='processing-status'>
           <div className='loading-indicator'></div>
-          <h4>AI Business Team Analyzing...</h4>
+          <h4>AI Automation Team Building Your Business Case...</h4>
           <p>
-            This typically takes 3-4 minutes for comprehensive business
-            analysis. Each agent needs time to provide enterprise-quality
-            insights.
+            This typically takes 3-4 minutes for comprehensive automation
+            analysis. Each specialist needs time to provide enterprise-quality
+            ROI calculations and implementation planning.
           </p>
         </div>
       )}
@@ -127,28 +130,33 @@ const Step3AnalysisInProgress = ({
         <div className='collaboration-complete'>
           <div className='success-header'>
             <div className='success-icon'>🎯</div>
-            <h3>AI Business Analysis Complete!</h3>
+            <h3>AI Automation Business Case Complete!</h3>
             <p>
-              Your AI business team successfully analyzed the customer
-              experience scenario and created comprehensive, actionable
-              recommendations ready for executive review.
+              Your AI automation team successfully analyzed the process
+              opportunity and created a comprehensive, executive-ready business
+              case with ROI projections and implementation roadmap.
             </p>
           </div>
 
           <div className='results-ready-section'>
             <div className='results-preview'>
-              <h4>📋 What's Waiting for You:</h4>
+              <h4>📋 Your Professional Business Case Includes:</h4>
               <ul className='results-preview-list'>
-                <li>Executive Summary of key findings and opportunities</li>
-                <li>Detailed pain point analysis with business impact</li>
                 <li>
-                  Strategic recommendations with implementation priorities
+                  Executive Summary with automation ROI and payback period
                 </li>
-                <li>Phase-by-phase implementation roadmap</li>
-                <li>Success metrics and ROI projections</li>
                 <li>
-                  <strong>BONUS:</strong> Ability to fine-tune recommendations
-                  based on your business insights
+                  Process analysis identifying specific automation opportunities
+                </li>
+                <li>
+                  Financial projections with cost savings and implementation
+                  costs
+                </li>
+                <li>Phase-by-phase implementation roadmap with timelines</li>
+                <li>Risk assessment and success metrics framework</li>
+                <li>
+                  <strong>BONUS:</strong> Ability to refine recommendations
+                  based on your business constraints
                 </li>
               </ul>
             </div>
@@ -158,11 +166,10 @@ const Step3AnalysisInProgress = ({
                 onClick={() => setCurrentStep(3)}
                 className='results-ready-button'
               >
-                🔍 View Your Business Analysis Results
+                🔍 View Your Automation Business Case
               </button>
               <p className='results-note'>
-                Take control of your learning pace - review results when you're
-                ready!
+                Professional business case ready for executive presentation!
               </p>
             </div>
           </div>
@@ -171,10 +178,10 @@ const Step3AnalysisInProgress = ({
 
       {error && (
         <div className='error-status'>
-          <h4>AI Business Analysis Issue</h4>
+          <h4>AI Automation Analysis Issue</h4>
           <p>{error}</p>
           <button onClick={createCXAnalysis} className='retry-button'>
-            Restart AI Business Analysis
+            Restart AI Automation Analysis
           </button>
         </div>
       )}

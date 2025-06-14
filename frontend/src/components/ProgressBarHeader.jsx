@@ -1,28 +1,27 @@
 import React from 'react'
 import '../styles/progress-bar.css'
 
-
 const ProgressBarHeader = ({ currentStep, error, setError }) => {
   const businessSteps = [
     {
-      icon: '🏢',
-      title: 'Choose Business Scenario',
-      desc: 'Select challenge',
+      icon: '🔄',
+      title: 'Choose Automation Process',
+      desc: 'Select opportunity',
     },
     {
-      icon: '👥',
-      title: 'Meet AI Business Team',
-      desc: 'Specialized agents',
+      icon: '🤖',
+      title: 'Meet AI Analysis Team',
+      desc: 'Automation specialists',
     },
     {
-      icon: '⚡',
-      title: 'Watch Analysis',
-      desc: 'Agents collaborating',
+      icon: '📊',
+      title: 'Watch AI Agent Workflow',
+      desc: 'Building your case',
     },
     {
-      icon: '🤝',
-      title: 'Refine & Download',
-      desc: 'Your final report',
+      icon: '📋',
+      title: 'Get Business Case',
+      desc: 'Download & present',
     },
   ]
 
@@ -30,10 +29,10 @@ const ProgressBarHeader = ({ currentStep, error, setError }) => {
     <>
       {/* Header */}
       <div className='lab-header'>
-        <h1 className='lab-title'>Multi-Agent AI Business Lab</h1>
+        <h1 className='lab-title'>AI Automation Business Case Builder</h1>
         <p className='lab-subtitle'>
-          Learn how AI teams solve complex business challenges through customer
-          experience optimization
+          Learn automation opportunities by building a professional business
+          case with AI analysis specialists
         </p>
       </div>
 

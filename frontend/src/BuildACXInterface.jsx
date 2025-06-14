@@ -23,7 +23,7 @@ const BuildACXInterface = ({
   resetApp,
   setError,
   isStepComplete,
-  // AI Business props
+  // AI Automation props
   aiBusinessMode,
   agentWorkflow,
   aiBusinessInsights,
@@ -40,73 +40,74 @@ const BuildACXInterface = ({
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [currentStep])
 
-  // Enhanced agent statuses for business learning
+  // Enhanced agent statuses for automation analysis learning
   const [agentStatuses, setAgentStatuses] = useState([
     {
-      name: 'Customer Journey Analyst',
+      name: 'Process Analysis Specialist',
       technical_name: 'customer_journey_analyst',
+      avatar: '🔍',
+      status: 'waiting',
+      ai_specialty:
+        'Process automation opportunity identification and analysis',
+      what_i_do:
+        'I analyze business processes to identify automation opportunities and calculate potential efficiency gains.',
+      learning_moment:
+        'This shows how AI can analyze complex business processes and identify automation opportunities that humans might overlook.',
+    },
+    {
+      name: 'ROI Calculator',
+      technical_name: 'data_analytics_specialist',
+      avatar: '💰',
+      status: 'waiting',
+      ai_specialty: 'Financial modeling and automation ROI projection',
+      what_i_do:
+        'I calculate cost savings, implementation costs, and ROI projections for automation investments.',
+      learning_moment:
+        'This demonstrates how AI can process financial data to create accurate ROI models and payback period calculations.',
+    },
+    {
+      name: 'Implementation Planner',
+      technical_name: 'process_improvement_specialist',
       avatar: '📋',
       status: 'waiting',
-      ai_specialty: 'Customer experience mapping and journey analysis',
+      ai_specialty: 'Automation deployment strategy and timeline planning',
       what_i_do:
-        'I map customer interactions across touchpoints and identify friction points in the experience.',
+        'I create detailed implementation roadmaps with phases, timelines, and resource requirements.',
       learning_moment:
-        'This shows how AI can analyze complex customer journeys across multiple touchpoints simultaneously.',
+        'This shows how AI can create comprehensive project plans considering technical constraints and organizational readiness.',
     },
     {
-      name: 'Data & Analytics Specialist',
-      technical_name: 'data_analytics_specialist',
-      avatar: '📊',
+      name: 'Risk Assessment Specialist',
+      technical_name: 'solution_designer',
+      avatar: '⚠️',
       status: 'waiting',
-      ai_specialty: 'Customer behavior analysis and metrics interpretation',
+      ai_specialty: 'Automation risk evaluation and mitigation planning',
       what_i_do:
-        'I process customer data to identify patterns, trends, and optimization opportunities.',
+        'I identify implementation risks, change management challenges, and create mitigation strategies.',
       learning_moment:
-        'This demonstrates how AI can process thousands of customer data points to find insights humans might miss.',
+        'This demonstrates AI risk analysis - evaluating technical, operational, and human factors in automation projects.',
     },
     {
-      name: 'Process Improvement Specialist',
-      technical_name: 'process_improvement_specialist',
+      name: 'Technology Integration Specialist',
+      technical_name: 'implementation_strategist',
       avatar: '🔧',
       status: 'waiting',
-      ai_specialty: 'Business process optimization and efficiency analysis',
+      ai_specialty: 'Automation technology assessment and integration planning',
       what_i_do:
-        'I identify bottlenecks and inefficiencies, then recommend process improvements.',
+        'I evaluate automation technologies and create integration plans with existing systems.',
       learning_moment:
-        'This shows how AI can simulate different process changes to predict outcomes before implementation.',
+        'This shows how AI can assess technology compatibility and design integration architectures for automation solutions.',
     },
     {
-      name: 'Solution Designer',
-      technical_name: 'solution_designer',
-      avatar: '🎨',
-      status: 'waiting',
-      ai_specialty: 'Customer experience design and solution architecture',
-      what_i_do:
-        'I create comprehensive solutions that address identified pain points and achieve business objectives.',
-      learning_moment:
-        'This demonstrates AI creativity in business - generating innovative solutions within strategic constraints.',
-    },
-    {
-      name: 'Implementation Strategist',
-      technical_name: 'implementation_strategist',
-      avatar: '🗂️',
-      status: 'waiting',
-      ai_specialty: 'Change management and implementation planning',
-      what_i_do:
-        'I develop realistic implementation roadmaps with timelines, resources, and success metrics.',
-      learning_moment:
-        'This shows how AI can create detailed project plans considering organizational constraints and capabilities.',
-    },
-    {
-      name: 'Success Metrics Specialist',
+      name: 'Business Case Compiler',
       technical_name: 'success_metrics_specialist',
-      avatar: '📈',
+      avatar: '📊',
       status: 'waiting',
-      ai_specialty: 'KPI development and performance measurement',
+      ai_specialty: 'Executive business case development and metrics framework',
       what_i_do:
-        'I establish measurable success criteria and create frameworks for tracking business impact.',
+        'I compile all analysis into executive-ready business cases with success metrics and KPI frameworks.',
       learning_moment:
-        'This demonstrates how AI can translate business objectives into specific, measurable outcomes.',
+        'This demonstrates how AI can synthesize complex analysis into professional business documents tailored for executive decision-making.',
     },
   ])
 
@@ -134,7 +135,7 @@ const BuildACXInterface = ({
     }
   }, [agentWorkflow, generatedReport, loading])
 
-  // Clear proposed changes when starting new session
+  // Clear proposed changes when starting new automation analysis session
   useEffect(() => {
     if (currentStep === 0) {
       setProposedChanges('')
@@ -156,7 +157,7 @@ const BuildACXInterface = ({
     [setCxProjectData],
   )
 
-  // Handle proposed changes
+  // Handle proposed automation refinements
   const handleProposedChangesChange = useCallback(e => {
     setProposedChanges(e.target.value)
   }, [])

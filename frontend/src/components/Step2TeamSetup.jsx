@@ -12,22 +12,22 @@ const Step2TeamSetup = ({
   return (
     <div className='learning-module'>
       <div className='module-header'>
-        <h2 className='module-title'>👥 Meet Your AI Business Team</h2>
+        <h2 className='module-title'>🤖 Meet Your AI Automation Team</h2>
         <p className='module-subtitle'>
-          Discover how specialized AI business agents work together - each with
-          unique expertise
+          Discover how specialized AI automation specialists work together -
+          each with unique expertise in building business cases
         </p>
       </div>
 
       {/* Agent Team Introduction */}
       <div className='agent-team-intro'>
-        <h3 className='team-title'>Your Multi-Agent AI Business Team</h3>
+        <h3 className='team-title'>Your Multi-Agent AI Automation Team</h3>
         <p className='team-description'>
-          Each AI agent functions like a specialized business consultant. The
-          Customer Journey Analyst acts like a McKinsey customer experience
-          expert, while the Data Specialist works like a Deloitte analytics
-          consultant. This multi-agent approach delivers deeper insights than
-          single-AI solutions.
+          Each AI agent functions like a specialized automation consultant. The
+          Process Analysis Specialist works like a McKinsey operations expert,
+          while the ROI Calculator acts like a Deloitte financial analyst. This
+          multi-agent approach delivers comprehensive automation business cases
+          worth $10K-$50K in consulting fees.
         </p>
 
         <div className='agents-grid'>
@@ -47,19 +47,20 @@ const Step2TeamSetup = ({
       {/* Learning Concept */}
       <div className='concept-explanation'>
         <h3 className='concept-title'>
-          Key Concept: AI Business Specialization
+          Key Concept: AI Automation Specialization
         </h3>
         <div className='concept-content'>
           <p>
-            Major corporations use AI agent teams for customer service, supply
-            chain optimization, financial analysis, and strategic planning. Each
-            agent focuses on what it does best, providing enterprise-grade
-            insights.
+            Major corporations use AI specialist teams for automation ROI
+            analysis, process optimization, implementation planning, and risk
+            assessment. Each agent focuses on what it does best, providing
+            enterprise-grade automation business cases.
           </p>
           <div className='concept-highlight'>
-            <strong>Real-World Example:</strong> Amazon uses different AI agents
-            for inventory management, price optimization, recommendation
-            engines, and logistics - each specialized for maximum effectiveness.
+            <strong>Real-World Example:</strong> Tesla uses different AI
+            specialists for manufacturing automation, supply chain optimization,
+            quality control automation, and robotics integration - each
+            specialized for maximum ROI.
           </div>
         </div>
       </div>
@@ -67,12 +68,12 @@ const Step2TeamSetup = ({
       {/* Business Project Customization */}
       <div className='agent-input-section highlighted-input-card'>
         <h3 className='input-title'>
-          Your Turn: Give Your AI Business Team Project Details
+          Your Turn: Give Your AI Automation Team Project Details
         </h3>
         <p className='input-description'>
-          The information you provide will be analyzed by different agents for
-          their specialized tasks. Watch how each agent interprets your input
-          through their business expertise lens.
+          The information you provide will be analyzed by different specialists
+          for their automation expertise. Watch how each agent builds your
+          business case through their specialized lens.
         </p>
 
         <div className='input-grid'>
@@ -82,7 +83,7 @@ const Step2TeamSetup = ({
 
             <div className='input-group'>
               <label className='input-label required'>
-                Who is the intended audience for this report?
+                Who will receive this automation business case?
               </label>
               <select
                 value={cxProjectData.report_audience}
@@ -97,24 +98,24 @@ const Step2TeamSetup = ({
               >
                 <option value=''>Choose audience...</option>
                 <option value='Executive leadership'>
-                  Executive leadership
+                  Executive leadership (C-Suite)
                 </option>
-                <option value='Product team'>Product team</option>
-                <option value='Marketing team'>Marketing team</option>
-                <option value='Customer support'>Customer support</option>
+                <option value='Operations team'>Operations team</option>
+                <option value='IT department'>IT department</option>
+                <option value='Finance department'>Finance department</option>
                 <option value='Cross-functional stakeholders'>
                   Cross-functional stakeholders
                 </option>
               </select>
               <div className='agent-use-note'>
-                <strong>AI agents will use this:</strong> Report tone and depth
-                will be tailored to your audience
+                <strong>AI agents will use this:</strong> Business case language
+                and financial depth will be tailored to your audience
               </div>
             </div>
 
             <div className='input-group'>
               <label className='input-label required'>
-                What is the primary goal of this report?
+                What is the primary goal of this automation analysis?
               </label>
               <select
                 value={cxProjectData.report_goal}
@@ -128,31 +129,31 @@ const Step2TeamSetup = ({
                 required
               >
                 <option value=''>Choose goal...</option>
-                <option value='Identify and fix pain points'>
-                  Identify and fix pain points
+                <option value='Justify automation investment to leadership'>
+                  Justify automation investment to leadership
                 </option>
-                <option value='Justify a product or CX investment'>
-                  Justify a product or CX investment
+                <option value='Calculate ROI and payback period'>
+                  Calculate ROI and payback period
                 </option>
-                <option value='Track progress toward a CX goal'>
-                  Track progress toward a CX goal
+                <option value='Compare automation vendors/solutions'>
+                  Compare automation vendors/solutions
                 </option>
-                <option value='Inform design/feature changes'>
-                  Inform design/feature changes
+                <option value='Plan automation implementation roadmap'>
+                  Plan automation implementation roadmap
                 </option>
-                <option value='Demonstrate AI reporting capability'>
-                  Demonstrate AI reporting capability (demo/test)
+                <option value='Demonstrate automation potential (demo/test)'>
+                  Demonstrate automation potential (demo/test)
                 </option>
               </select>
               <div className='agent-use-note'>
-                <strong>AI agents will use this:</strong> Analysis approach and
-                recommendations will align with your goal
+                <strong>AI agents will use this:</strong> Analysis depth and
+                recommendations will align with your business goal
               </div>
             </div>
 
             <div className='input-group'>
               <label className='input-label'>
-                Is the report focused on a specific customer segment?
+                Which department/process area is the focus?
               </label>
               <select
                 value={cxProjectData.customer_segment}
@@ -164,27 +165,27 @@ const Step2TeamSetup = ({
                 }
                 className='business-input'
               >
-                <option value=''>Choose segment...</option>
-                <option value='Parents'>Parents</option>
-                <option value='New users'>New users</option>
-                <option value='Returning customers'>Returning customers</option>
-                <option value='High-value users'>High-value users</option>
-                <option value='No specific segment'>No specific segment</option>
+                <option value=''>Choose department...</option>
+                <option value='Customer Service'>Customer Service</option>
+                <option value='Finance/Accounting'>Finance/Accounting</option>
+                <option value='Sales/Marketing'>Sales/Marketing</option>
+                <option value='Operations'>Operations</option>
+                <option value='Cross-departmental'>Cross-departmental</option>
               </select>
             </div>
           </div>
 
-          {/* 🎯 KPI Target Section */}
+          {/* 📊 ROI Target Section */}
           <div className='form-section'>
-            <h4 className='section-title'>🎯 KPI Target</h4>
+            <h4 className='section-title'>📊 ROI Target</h4>
 
             <div className='input-group'>
               <label className='input-label required'>
-                What KPI are you trying to move?
+                What automation metric are you trying to improve?
               </label>
               <input
                 type='text'
-                placeholder='e.g., Task Abandonment Rate, NPS, App Rating, Conversion Rate'
+                placeholder='e.g., Processing Time, Cost per Transaction, Error Rate, FTE Hours'
                 value={cxProjectData.target_kpi}
                 onChange={e =>
                   setCxProjectData({
@@ -196,18 +197,18 @@ const Step2TeamSetup = ({
                 required
               />
               <div className='agent-use-note'>
-                <strong>AI agents will use this:</strong> Success Metrics
-                Specialist will focus on this KPI
+                <strong>AI agents will use this:</strong> ROI Calculator will
+                focus calculations on this specific metric
               </div>
             </div>
 
             <div className='input-group'>
               <label className='input-label required'>
-                Describe what success looks like.
+                Describe your automation success target.
               </label>
               <input
                 type='text'
-                placeholder='e.g., Reduce abandonment by 15% in 3 months, Increase NPS from 7.2 to 8.0'
+                placeholder='e.g., Reduce processing time by 70%, Save 2 FTE hours daily, Cut errors by 90%'
                 value={cxProjectData.success_definition}
                 onChange={e =>
                   setCxProjectData({
@@ -220,38 +221,38 @@ const Step2TeamSetup = ({
               />
               <div className='agent-use-note'>
                 <strong>AI agents will use this:</strong> Implementation roadmap
-                will target this specific outcome
+                will target this specific automation outcome
               </div>
             </div>
           </div>
 
-          {/* 📊 Data Sources Section */}
+          {/* 📈 Process Data Section */}
           <div className='form-section'>
-            <h4 className='section-title'>📊 Data Sources</h4>
+            <h4 className='section-title'>📈 Process Data</h4>
 
             <div className='input-group'>
               <label className='input-label required'>
-                Select which data types to use in this report:
+                Select which process data to analyze for automation ROI:
               </label>
               <div className='data-sources'>
                 <label className='data-source-checkbox'>
                   <input
                     type='checkbox'
                     checked={(cxProjectData.dataSourcesList || []).includes(
-                      'Customer Behavior Data',
+                      'Process Volume & Timing Data',
                     )}
                     onChange={e =>
                       handleDataSourceChange(
-                        'Customer Behavior Data',
+                        'Process Volume & Timing Data',
                         e.target.checked,
                       )
                     }
                   />
                   <div className='data-source-option'>
-                    <strong>Customer Behavior Data</strong>
+                    <strong>Process Volume & Timing Data</strong>
                     <p>
-                      Usage analytics, drop-off rates, feature adoption, funnel
-                      metrics
+                      Transaction volumes, processing times, capacity metrics,
+                      throughput analysis
                     </p>
                   </div>
                 </label>
@@ -259,27 +260,27 @@ const Step2TeamSetup = ({
                   <input
                     type='checkbox'
                     checked={(cxProjectData.dataSourcesList || []).includes(
-                      'Voice of Customer Data',
+                      'Cost & Resource Data',
                     )}
                     onChange={e =>
                       handleDataSourceChange(
-                        'Voice of Customer Data',
+                        'Cost & Resource Data',
                         e.target.checked,
                       )
                     }
                   />
                   <div className='data-source-option'>
-                    <strong>Voice of Customer / Feedback Data</strong>
+                    <strong>Cost & Resource Data</strong>
                     <p>
-                      Reviews, survey quotes, support ticket themes, user
-                      feedback
+                      Labor costs, error rates, rework expenses, compliance
+                      costs, operational overhead
                     </p>
                   </div>
                 </label>
               </div>
               <div className='agent-use-note'>
-                <strong>AI agents will use this:</strong> Data Analytics
-                Specialist will focus on your selected data types
+                <strong>AI agents will use this:</strong> ROI Calculator will
+                focus on your selected data types for financial projections
               </div>
             </div>
           </div>
@@ -288,7 +289,7 @@ const Step2TeamSetup = ({
 
       <div className='module-actions'>
         <button onClick={() => setCurrentStep(0)} className='back-button'>
-          ← Back to Scenario Selection
+          ← Back to Automation Selection
         </button>
         <button
           onClick={() => setCurrentStep(2)}
@@ -304,7 +305,7 @@ const Step2TeamSetup = ({
           }
           className='continue-button primary'
         >
-          Watch AI Business Analysis →
+          Watch AI Automation Analysis →
         </button>
       </div>
     </div>
