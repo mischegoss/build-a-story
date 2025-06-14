@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../styles/step4.css'
+import PDFDownloadButton from './PDFBusinessCase'
 
 const Step4ResultsAndRefinement = ({
   generatedReport,
@@ -12,30 +13,35 @@ const Step4ResultsAndRefinement = ({
   resetApp,
   loading,
 }) => {
+  // Local state for refinement section (following Step 2 pattern)
+  const [showRefinementSection, setShowRefinementSection] = useState(false)
+  const [proceedToDownload, setProceedToDownload] = useState(false)
+
   return (
     <div className='learning-module'>
       <div className='module-header'>
         <h2 className='module-title'>🤝 Human-AI Automation Partnership</h2>
         <p className='module-subtitle'>
-          Review AI automation analysis, propose business refinements, and see
-          how AI adapts to your operational constraints
+          Review AI automation analysis, choose to proceed or refine, then
+          download your professional business case
         </p>
       </div>
 
-      {/* Business Report Review */}
-      <div className='business-continuation'>
-        <h3 className='continuation-title'>
-          Review Automation Analysis & Propose Business Refinements
+      {/* Business Case Review Section */}
+      <div className='business-case-review'>
+        <h3 className='review-title'>
+          📊 AI Automation Business Case Complete
         </h3>
-        <p className='continuation-description'>
-          The AI automation team created a comprehensive business case with ROI
-          projections. Now use your operational insight to propose changes, set
-          budget priorities, or add implementation constraints. Watch how the AI
-          Refinement Agent adapts the business case based on your input.
+        <p className='review-description'>
+          Your AI automation team has created a comprehensive business case with
+          ROI projections, implementation roadmap, and success metrics. Review
+          the analysis below and choose your next step.
         </p>
 
         <div className='ai-report-section'>
-          <h4>🤖 AI Team's Automation Business Case:</h4>
+          <h4 className='report-header'>
+            🤖 Professional Business Case Summary
+          </h4>
           <div className='ai-report-content'>
             <div className='report-section'>
               <strong>Executive Summary:</strong>
@@ -70,44 +76,96 @@ const Step4ResultsAndRefinement = ({
                 </ul>
               </div>
             )}
+
+            {/* ROI Highlights */}
+            <div className='report-section roi-highlights'>
+              <strong>Financial Impact:</strong>
+              <div className='roi-summary'>
+                <span className='roi-metric'>
+                  <strong>Expected ROI:</strong>{' '}
+                  {generatedReport?.deliverables?.estimated_roi || 'N/A'}
+                </span>
+                <span className='roi-metric'>
+                  <strong>Payback Period:</strong>{' '}
+                  {generatedReport?.deliverables?.payback_period || 'N/A'}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Propose Changes Section */}
-        <div className='propose-changes-section'>
-          <h4>💼 Your Turn: Propose Changes & Fine-tune Business Case:</h4>
-          <p className='propose-description'>
-            Based on your operational experience, what would you change about
-            this automation business case? The AI Refinement Agent will adapt
-            the analysis based on your business constraints and priorities.
+      {/* Choose Next Step Section (Step 2 pattern) */}
+      {!proceedToDownload && !showRefinementSection && (
+        <div className='choose-next-step'>
+          <h3 className='choice-title'>🎯 Choose Your Next Step</h3>
+          <p className='choice-description'>
+            The AI analysis is complete. You can proceed directly to download
+            your professional business case, or refine the recommendations based
+            on your operational constraints.
           </p>
 
-          <div className='change-examples'>
-            <h5>💡 Example Business Refinements:</h5>
-            <ul className='example-list'>
-              <li>
-                <strong>"Prioritize by budget impact"</strong> - AI will reorder
-                by cost-benefit ratio
-              </li>
-              <li>
-                <strong>"Consider implementation complexity"</strong> - AI will
-                add phased deployment approaches
-              </li>
-              <li>
-                <strong>"Faster ROI payback needed"</strong> - AI will focus on
-                quick-win automation opportunities
-              </li>
-              <li>
-                <strong>"Add risk mitigation"</strong> - AI will expand change
-                management and contingency planning
-              </li>
-            </ul>
-          </div>
+          <div className='choice-actions'>
+            <button
+              onClick={() => setProceedToDownload(true)}
+              className='continue-button primary large'
+            >
+              Analysis looks good → Proceed to Download
+            </button>
 
-          <textarea
-            value={proposedChanges}
-            onChange={handleProposedChangesChange}
-            placeholder='What business considerations should the AI automation team incorporate?
+            <button
+              onClick={() => setShowRefinementSection(true)}
+              className='customize-button secondary'
+            >
+              🔧 I want to refine this first
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Optional Refinement Section (only shows when user clicks refine) */}
+      {showRefinementSection && (
+        <div className='refinement-section'>
+          <h3 className='refinement-title'>🔧 Refine Your Business Case</h3>
+          <p className='refinement-description'>
+            Use your operational expertise to customize the automation business
+            case. The AI Refinement Agent will adapt the analysis based on your
+            business constraints and priorities.
+          </p>
+
+          <div className='refinement-content'>
+            {/* Business Refinement Input */}
+            <div className='refinement-group'>
+              <h4 className='refinement-label'>
+                💼 What business considerations should be incorporated?
+              </h4>
+
+              <div className='change-examples'>
+                <h5>💡 Example Business Refinements:</h5>
+                <ul className='example-list'>
+                  <li>
+                    <strong>"Prioritize by budget impact"</strong> - AI will
+                    reorder by cost-benefit ratio
+                  </li>
+                  <li>
+                    <strong>"Consider implementation complexity"</strong> - AI
+                    will add phased deployment approaches
+                  </li>
+                  <li>
+                    <strong>"Faster ROI payback needed"</strong> - AI will focus
+                    on quick-win automation opportunities
+                  </li>
+                  <li>
+                    <strong>"Add risk mitigation"</strong> - AI will expand
+                    change management and contingency planning
+                  </li>
+                </ul>
+              </div>
+
+              <textarea
+                value={proposedChanges}
+                onChange={handleProposedChangesChange}
+                placeholder='What business considerations should the AI automation team incorporate?
 
 Examples:
 - "We need to prioritize automations with under 6-month payback periods"
@@ -117,123 +175,162 @@ Examples:
 - "Consider our Q4 budget freeze in the timeline"
 
 Your operational input will help the AI Refinement Agent adjust the business case...'
-            className='analysis-textarea propose-changes-textarea'
-            disabled={loading}
-          />
+                className='refinement-textarea'
+                rows={8}
+                disabled={loading}
+              />
+            </div>
+          </div>
 
-          <div className='propose-actions'>
+          <div className='refinement-actions'>
             <button
-              onClick={() => refineRecommendations(proposedChanges)}
+              onClick={() => {
+                refineRecommendations(proposedChanges)
+                setProceedToDownload(true)
+              }}
               disabled={!proposedChanges.trim() || loading}
-              className='refine-button'
+              className='continue-button primary'
             >
               {loading
                 ? '🔄 AI Refinement Agent Working...'
-                : '✨ Refine Business Case'}
+                : '✨ Apply Refinements & Proceed'}
             </button>
-            <p className='refine-note'>
-              See how AI adapts automation recommendations based on your
-              business constraints
+            <button
+              onClick={() => setShowRefinementSection(false)}
+              className='cancel-button'
+            >
+              Cancel Refinement
+            </button>
+          </div>
+
+          <div className='refinement-note'>
+            <p>
+              The AI Refinement Agent will analyze your input and adapt the
+              automation recommendations, ROI projections, and implementation
+              timeline based on your operational constraints.
             </p>
           </div>
         </div>
+      )}
 
-        {/* Show Refined Results */}
-        {showRefinement && (
-          <div className='refinement-results'>
-            <h4>🎯 AI-Refined Automation Business Case:</h4>
-            <p className='refinement-description'>
-              Based on your input, the AI Refinement Agent has adapted the
-              automation business case. Compare the changes below:
-            </p>
+      {/* Refinement Results (only shows after refinement is complete) */}
+      {showRefinement && refinedReport && (
+        <div className='refinement-results'>
+          <h3 className='results-title'>
+            🎯 AI-Refined Business Case Complete
+          </h3>
+          <p className='results-description'>
+            The AI Refinement Agent has successfully adapted your automation
+            business case. Compare the key changes below:
+          </p>
 
-            <div className='before-after-comparison'>
-              <div className='comparison-section'>
-                <h5>📋 Original ROI Recommendations:</h5>
-                <div className='comparison-content original'>
-                  <ul>
-                    {generatedReport?.deliverables?.strategic_recommendations
-                      ?.slice(0, 3)
-                      .map((rec, index) => (
-                        <li key={index}>{rec}</li>
-                      ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className='comparison-arrow'>→</div>
-
-              <div className='comparison-section'>
-                <h5>✨ Refined ROI Recommendations:</h5>
-                <div className='comparison-content refined'>
-                  <ul>
-                    {refinedReport?.deliverables?.strategic_recommendations
-                      ?.slice(0, 4)
-                      .map((rec, index) => (
-                        <li key={index}>{rec}</li>
-                      ))}
-                  </ul>
-                </div>
+          <div className='before-after-comparison'>
+            <div className='comparison-section'>
+              <h5>📋 Original Recommendations:</h5>
+              <div className='comparison-content original'>
+                <ul>
+                  {generatedReport?.deliverables?.strategic_recommendations
+                    ?.slice(0, 3)
+                    .map((rec, index) => (
+                      <li key={index}>{rec}</li>
+                    ))}
+                </ul>
               </div>
             </div>
 
-            <div className='refinement-impact'>
-              <h5>🎯 Key Changes Made by AI Refinement Agent:</h5>
-              <ul className='impact-list'>
-                <li>
-                  Adapted automation priorities based on your budget constraints
-                </li>
-                <li>
-                  Adjusted implementation timeline per your operational
-                  requirements
-                </li>
-                <li>
-                  Enhanced ROI projection:{' '}
-                  {refinedReport?.deliverables?.estimated_roi}
-                </li>
-                <li>
-                  Incorporated your operational priorities into the automation
-                  roadmap
-                </li>
-              </ul>
+            <div className='comparison-arrow'>→</div>
+
+            <div className='comparison-section'>
+              <h5>✨ Refined Recommendations:</h5>
+              <div className='comparison-content refined'>
+                <ul>
+                  {refinedReport?.deliverables?.strategic_recommendations
+                    ?.slice(0, 4)
+                    .map((rec, index) => (
+                      <li key={index}>{rec}</li>
+                    ))}
+                </ul>
+              </div>
             </div>
           </div>
-        )}
-      </div>
 
-      {/* Download and Actions */}
-      <div className='final-deliverable'>
-        <h3 className='deliverable-title'>
-          📥 Your Professional Automation Business Case
-        </h3>
-        <p className='deliverable-description'>
-          Download your complete automation business case with ROI projections,
-          including both AI analysis and your operational refinements.
-        </p>
-
-        <div className='download-section'>
-          <div className='download-preview'>
-            <h4>📋 Business Case Includes:</h4>
-            <ul className='download-contents'>
-              <li>Executive Summary with automation ROI and payback period</li>
+          <div className='refinement-impact'>
+            <h5>🎯 Key Adaptations Made:</h5>
+            <ul className='impact-list'>
               <li>
-                Process analysis and automation opportunity identification
+                Adapted automation priorities based on your business constraints
               </li>
               <li>
-                {refinedReport ? 'Refined' : 'Original'} financial projections
-                and cost-benefit analysis
+                Adjusted implementation timeline per your operational
+                requirements
               </li>
-              <li>Phase-by-phase implementation roadmap with timelines</li>
-              <li>Risk assessment and success metrics framework</li>
-              <li>AI automation analysis methodology notes</li>
+              <li>
+                Enhanced ROI projection:{' '}
+                {refinedReport?.deliverables?.estimated_roi}
+              </li>
+              <li>
+                Incorporated your operational priorities into the automation
+                roadmap
+              </li>
             </ul>
           </div>
-
-          <button onClick={downloadReport} className='download-button'>
-            📥 Download Automation Business Case
-          </button>
         </div>
-      </div>
+      )}
+
+      {/* Original Download Section (shows when user proceeds to download) */}
+      {proceedToDownload && (
+        <div className='final-deliverable'>
+          <h3 className='deliverable-title'>
+            📥 Your Professional Automation Business Case
+          </h3>
+          <p className='deliverable-description'>
+            Download your complete automation business case with ROI
+            projections, including both AI analysis and{' '}
+            {refinedReport
+              ? 'your operational refinements'
+              : 'professional recommendations'}
+            .
+          </p>
+
+          <div className='download-section'>
+            <div className='download-preview'>
+              <h4>📋 Business Case Includes:</h4>
+              <ul className='download-contents'>
+                <li>
+                  Executive Summary with automation ROI and payback period
+                </li>
+                <li>
+                  Process analysis and automation opportunity identification
+                </li>
+                <li>
+                  {refinedReport ? 'Refined' : 'Original'} financial projections
+                  and cost-benefit analysis
+                </li>
+                <li>Phase-by-phase implementation roadmap with timelines</li>
+                <li>Risk assessment and success metrics framework</li>
+                <li>AI automation analysis methodology notes</li>
+              </ul>
+            </div>
+
+            <div className='download-buttons'>
+              <PDFDownloadButton
+                reportData={generatedReport}
+                refinedData={refinedReport}
+                className='download-button primary'
+              >
+                📥 Download Professional PDF
+              </PDFDownloadButton>
+
+              <button
+                onClick={downloadReport}
+                className='download-button secondary'
+              >
+                📄 Download Text Version
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className='module-actions centered-action'>
         <button onClick={resetApp} className='restart-button'>

@@ -3,6 +3,7 @@ import {
   mockAutomationProcessData,
   automationROIInsights,
 } from '../mockdata/automationProcessData.js'
+import { automationBenchmarks } from '../mockdata/automationBenchmarks.js'
 
 // Generate audience-appropriate tone and business case depth
 const getAudienceStyle = audience => {
@@ -76,10 +77,177 @@ const getAutomationGoalFocus = (goal, scenario, audienceStyle) => {
   )
 }
 
+// Smart benchmark selection based on user input
+const selectRelevantBenchmarks = businessScenario => {
+  if (businessScenario.includes('Customer Service')) {
+    return automationBenchmarks.industry_standards.customer_service
+  }
+  if (
+    businessScenario.includes('Invoice') ||
+    businessScenario.includes('Finance')
+  ) {
+    return automationBenchmarks.industry_standards.finance_operations
+  }
+  if (businessScenario.includes('Sales')) {
+    return automationBenchmarks.industry_standards.sales_operations
+  }
+  // Default fallback
+  return automationBenchmarks.industry_standards.customer_service
+}
+
+// Calculate realistic ROI using benchmark formulas
+const calculateRealisticROI = (benchmarkData, userInputs) => {
+  const efficiency =
+    automationBenchmarks.roi_calculation_models.automation_efficiency_rates
+
+  // Get most relevant process from benchmarks
+  const relevantProcess =
+    benchmarkData.common_processes.find(
+      p => p.automation_complexity === 'medium', // Default to medium complexity
+    ) || benchmarkData.common_processes[0]
+
+  // Extract volume from user input (or use benchmark range)
+  const monthlyVolume = extractVolumeFromInput(userInputs) || 500
+  const timePerProcess = relevantProcess.manual_time_minutes || 30
+  const hourlyRate = relevantProcess.labor_cost_per_hour || 60
+  const automationRate = efficiency.medium_complexity
+
+  // Calculate using real formulas
+  const currentMonthlyTime = monthlyVolume * timePerProcess
+  const automatedMonthlyTime = currentMonthlyTime * (1 - automationRate)
+  const timeSavedMonthly = currentMonthlyTime - automatedMonthlyTime
+  const currentMonthlyCost = (currentMonthlyTime / 60) * hourlyRate
+  const automatedMonthlyCost = (automatedMonthlyTime / 60) * hourlyRate
+  const monthlySavings = currentMonthlyCost - automatedMonthlyCost
+  const annualSavings = monthlySavings * 12
+
+  // Calculate ROI percentage
+  const implementationCost = annualSavings * 0.3 // Assume 30% of annual savings
+  const roiPercentage =
+    ((annualSavings - implementationCost) / implementationCost) * 100
+
+  return {
+    monthly_savings: Math.round(monthlySavings),
+    annual_savings: Math.round(annualSavings),
+    implementation_cost: Math.round(implementationCost),
+    roi_percentage: Math.round(roiPercentage),
+    payback_months: Math.round(implementationCost / monthlySavings),
+    time_reduction_percentage: Math.round(automationRate * 100),
+    hours_saved_monthly: Math.round(timeSavedMonthly / 60),
+  }
+}
+
+// Generate realistic executive summary using benchmark template
+const generateBenchmarkExecutiveSummary = (
+  automationData,
+  benchmarkData,
+  roiCalculation,
+) => {
+  const scenario = automationData.business_scenario
+  const department = automationData.customer_segment || 'Operations'
+
+  return `Executive Summary: Industry benchmark analysis of ${scenario.toLowerCase()} reveals significant automation ROI opportunities. Current ${
+    automationData.target_kpi || 'operational efficiency'
+  } can be improved by ${
+    roiCalculation.time_reduction_percentage
+  }% through strategic automation deployment in ${department}. Based on ${
+    benchmarkData.typical_automation_rate
+  } industry automation rates, recommended investment of $${roiCalculation.implementation_cost.toLocaleString()} will deliver $${roiCalculation.annual_savings.toLocaleString()} annual savings with ${
+    roiCalculation.payback_months
+  }-month payback period, achieving ${Math.round(
+    roiCalculation.roi_percentage,
+  )}% ROI within ${benchmarkData.roi_timeline}.`
+}
+
+// Generate process-specific insights using real benchmark data
+const generateBenchmarkAutomationInsights = (
+  benchmarkData,
+  dataSources,
+  roiCalculation,
+) => {
+  const insights = []
+
+  if (dataSources.includes('Process Volume & Timing Data')) {
+    const process = benchmarkData.common_processes[0]
+    insights.push(
+      `Process Analysis: Industry benchmarks show ${
+        process.process
+      } automation typically reduces processing time from ${
+        process.manual_time_minutes || process.manual_time_hours * 60
+      } minutes to ${
+        process.automated_time_minutes || process.automated_time_hours * 60
+      } minutes per transaction. Current monthly volume analysis indicates ${
+        roiCalculation.hours_saved_monthly
+      } hours monthly savings potential.`,
+    )
+  }
+
+  if (dataSources.includes('Cost & Resource Data')) {
+    insights.push(
+      `Cost Analysis: Benchmark labor costs of $${
+        benchmarkData.common_processes[0].labor_cost_per_hour
+      }/hour combined with ${
+        benchmarkData.error_reduction
+      } error reduction rates project annual operational cost savings of $${roiCalculation.annual_savings.toLocaleString()} through automation implementation.`,
+    )
+  }
+
+  return insights.join(' ')
+}
+
+// Generate recommendations based on process complexity
+const generateComplexityBasedRecommendations = (
+  automationData,
+  benchmarkData,
+) => {
+  // Assess complexity based on user inputs (simplified)
+  const complexity = assessProcessComplexity(automationData)
+  const complexityData =
+    automationBenchmarks.process_complexity_indicators[complexity]
+
+  const baseRecommendations = [
+    'Implement intelligent document processing automation',
+    'Deploy workflow automation for approval processes',
+    'Integrate AI-powered data validation systems',
+    'Establish automated reporting dashboards',
+  ]
+
+  return baseRecommendations.map(
+    rec =>
+      `${
+        complexity.charAt(0).toUpperCase() + complexity.slice(1)
+      } Complexity Automation: ${rec} (${
+        complexityData.implementation_timeline
+      } timeline, ${complexityData.success_rate} success rate)`,
+  )
+}
+
+// Assess process complexity based on user inputs
+const assessProcessComplexity = automationData => {
+  // Simple heuristic based on scenario type
+  if (automationData.business_scenario.includes('Invoice'))
+    return 'medium_complexity'
+  if (automationData.business_scenario.includes('Sales'))
+    return 'high_complexity'
+  return 'low_complexity'
+}
+
+// Extract volume from user input text
+const extractVolumeFromInput = userInputs => {
+  // Try to extract numbers from success definition or target KPI
+  const text = (
+    userInputs.target_kpi +
+    ' ' +
+    userInputs.success_definition
+  ).toLowerCase()
+  const numberMatch = text.match(/(\d+)/)
+  return numberMatch ? parseInt(numberMatch[1]) : null
+}
+
 // Mock generated automation business case report
 export const generateMockAutomationReport = automationData => {
   const scenario =
-    automationData.business_scenario.split(' - ')[0] || 'the automation process'
+    automationData.business_scenario.split(' - ')[0] || 'Automation Process'
   const audienceStyle = getAudienceStyle(automationData.report_audience)
   const goalFocus = getAutomationGoalFocus(
     automationData.report_goal,
@@ -89,213 +257,32 @@ export const generateMockAutomationReport = automationData => {
   const department = automationData.customer_segment || 'Operations'
   const dataSources = automationData.dataSourcesList || []
 
-  // Get relevant automation mock data
-  const processData = mockAutomationProcessData[scenario] || {}
+  // Get real benchmark data for this scenario
+  const benchmarkData = selectRelevantBenchmarks(scenario)
 
-  // Extract automation metric insights
-  const metricType =
-    automationData.target_kpi?.toLowerCase().replace(/\s+/g, '_') ||
-    'processing_time'
-  const metricData =
-    automationROIInsights[metricType] ||
-    automationROIInsights['processing_time']
+  // Calculate realistic ROI using benchmark formulas
+  const roiCalculation = calculateRealisticROI(benchmarkData, automationData)
 
-  // Generate audience-appropriate executive summary
-  const generateExecutiveSummary = () => {
-    if (audienceStyle.tone === 'strategic') {
-      return `Executive Summary: Our comprehensive automation analysis of ${scenario.toLowerCase()} reveals significant ROI opportunities through intelligent process automation. Current ${
-        automationData.target_kpi || 'operational metrics'
-      } can be improved by ${
-        metricData.improvement_potential || '70%'
-      } through strategic automation deployment in ${department}. Recommended investment of $${
-        metricData.investment_range || '75K-150K'
-      } will deliver ${
-        automationData.success_definition ||
-        'substantial cost savings and efficiency gains'
-      } with ${metricData.payback_period || '8-12 month'} payback period.`
-    } else if (audienceStyle.tone === 'operational') {
-      return `Automation Analysis: Detailed process evaluation for ${scenario.toLowerCase()} identifies specific automation opportunities to achieve ${
-        automationData.success_definition || 'operational efficiency targets'
-      }. Key optimization areas include ${
-        metricData.key_processes?.join(', ') ||
-        'data processing, workflow automation, and quality control'
-      }. Implementation roadmap prioritizes high-impact, low-risk automations for rapid ${
-        automationData.target_kpi || 'process improvement'
-      } results.`
-    } else if (audienceStyle.tone === 'financial') {
-      return `Financial Analysis: ROI modeling for ${scenario.toLowerCase()} automation demonstrates ${
-        metricData.roi_percentage || '285%'
-      } return on investment with ${
-        metricData.annual_savings || '$420K'
-      } projected annual savings. Cost-benefit analysis shows ${
-        metricData.payback_period || '9-month'
-      } payback period and ${
-        metricData.net_present_value || '$1.2M'
-      } net present value over 3 years. Financial projections include comprehensive risk assessment and sensitivity analysis.`
-    } else {
-      return `Automation Opportunity Assessment: Multi-departmental analysis across ${scenario.toLowerCase()} reveals critical automation opportunities for ${department} operations. Current ${
-        automationData.target_kpi || 'process efficiency metrics'
-      } indicate potential for significant improvement through systematic automation deployment. Cross-functional implementation approach will deliver ${
-        automationData.success_definition ||
-        'measurable operational improvements and cost reductions'
-      }.`
-    }
-  }
+  // Generate realistic content using benchmarks
+  const executiveSummary = generateBenchmarkExecutiveSummary(
+    automationData,
+    benchmarkData,
+    roiCalculation,
+  )
+  const automationInsights = generateBenchmarkAutomationInsights(
+    benchmarkData,
+    dataSources,
+    roiCalculation,
+  )
+  const recommendations = generateComplexityBasedRecommendations(
+    automationData,
+    benchmarkData,
+  )
 
-  // Generate data-source specific insights
-  const generateAutomationInsights = () => {
-    const insights = []
-
-    if (dataSources.includes('Process Volume & Timing Data')) {
-      const volumeData = processData.volume_metrics || {}
-      insights.push(
-        `Process Analysis: Current ${scenario.toLowerCase()} processes ${
-          volumeData.monthly_volume || '2,500'
-        } transactions monthly with ${
-          volumeData.avg_processing_time || '45 minutes'
-        } average processing time and ${
-          volumeData.manual_effort_hours || '120 FTE hours'
-        } manual effort weekly.`,
-      )
-    }
-
-    if (dataSources.includes('Cost & Resource Data')) {
-      const costData = processData.cost_metrics || {}
-      insights.push(
-        `Cost Analysis: Annual operational costs total ${
-          costData.annual_cost || '$280K'
-        } including ${costData.labor_cost || '$180K'} labor costs and ${
-          costData.error_cost || '$45K'
-        } error remediation expenses with ${
-          costData.error_rate || '12%'
-        } current error rate.`,
-      )
-    }
-
-    return insights.join(' ')
-  }
-
-  // Generate audience-specific recommendations
-  const generateAutomationRecommendations = () => {
-    const baseRecommendations = metricData.automation_solutions || [
-      'Implement intelligent document processing automation',
-      'Deploy workflow automation for approval processes',
-      'Integrate AI-powered data validation and quality control',
-      'Establish automated reporting and dashboard systems',
-    ]
-
-    if (audienceStyle.tone === 'strategic') {
-      return baseRecommendations.map(
-        rec =>
-          `Strategic Automation Initiative: ${rec} to drive competitive advantage and operational excellence`,
-      )
-    } else if (audienceStyle.tone === 'operational') {
-      return baseRecommendations.map(
-        rec =>
-          `Process Optimization: ${rec} through systematic automation deployment and change management`,
-      )
-    } else if (audienceStyle.tone === 'financial') {
-      return baseRecommendations.map(
-        rec =>
-          `ROI-Focused Implementation: ${rec} with detailed cost-benefit analysis and financial tracking`,
-      )
-    } else {
-      return baseRecommendations.map(
-        rec =>
-          `Cross-Functional Automation: ${rec} requiring coordinated implementation across departments`,
-      )
-    }
-  }
-
-  // Generate goal-specific implementation phases
-  const generateImplementationRoadmap = () => {
-    if (goalFocus.approach === 'investment_justification') {
-      return {
-        phase_1: {
-          title: 'Business Case Foundation (Weeks 1-3)',
-          actions: [
-            'Establish baseline process metrics and cost analysis',
-            'Implement pilot automation proof-of-concept',
-            'Create executive stakeholder presentation materials',
-          ],
-          expected_impact: `${
-            metricData.phase1_improvement || '25%'
-          } improvement in ${
-            automationData.target_kpi || 'key process metrics'
-          } to demonstrate automation value`,
-        },
-        phase_2: {
-          title: 'Strategic Automation Deployment (Months 1-3)',
-          actions: [
-            'Deploy core automation solutions across identified processes',
-            'Implement change management and staff training programs',
-            'Establish automated monitoring and reporting systems',
-          ],
-          expected_impact: `${
-            metricData.phase2_improvement || '60%'
-          } progress toward ${
-            automationData.success_definition || 'automation targets'
-          } with measurable ROI demonstration`,
-        },
-        phase_3: {
-          title: 'Scale and Optimization (Months 4-8)',
-          actions: [
-            'Expand automation to additional process areas',
-            'Implement advanced AI and machine learning capabilities',
-            'Establish continuous improvement and optimization framework',
-          ],
-          expected_impact: `Full achievement of ${
-            automationData.success_definition || 'automation objectives'
-          } with sustainable ${
-            metricData.ongoing_savings || '$50K monthly'
-          } cost savings`,
-        },
-      }
-    } else {
-      return {
-        phase_1: {
-          title: 'Automation Quick Wins (Weeks 1-2)',
-          actions: [
-            'Implement simple workflow automations with immediate impact',
-            'Deploy automated data entry and validation systems',
-            'Establish basic process monitoring and alerts',
-          ],
-          expected_impact: `${metricData.quick_wins || '30%'} reduction in ${
-            automationData.target_kpi || 'manual processing time'
-          } through immediate automation`,
-        },
-        phase_2: {
-          title: 'Core Process Automation (Months 1-2)',
-          actions: [
-            'Deploy intelligent document processing systems',
-            'Implement automated approval and routing workflows',
-            'Integrate systems for seamless data flow automation',
-          ],
-          expected_impact: `${
-            metricData.core_improvement || '70%'
-          } achievement of ${
-            automationData.success_definition || 'automation efficiency goals'
-          } with sustained productivity gains`,
-        },
-        phase_3: {
-          title: 'Advanced Automation & AI (Months 3-6)',
-          actions: [
-            'Deploy machine learning for predictive process optimization',
-            'Implement advanced analytics and automated decision-making',
-            'Establish enterprise-wide automation governance framework',
-          ],
-          expected_impact: `Complete realization of ${
-            automationData.success_definition ||
-            'automation transformation objectives'
-          } with ongoing optimization capability delivering ${
-            metricData.annual_value || '$500K annual value'
-          }`,
-        },
-      }
-    }
-  }
-
-  const roadmap = generateImplementationRoadmap()
+  // Get complexity assessment
+  const complexityLevel = assessProcessComplexity(automationData)
+  const complexityData =
+    automationBenchmarks.process_complexity_indicators[complexityLevel]
 
   return {
     project_id: `AUTO-${new Date()
@@ -309,73 +296,92 @@ export const generateMockAutomationReport = automationData => {
       roi_analysis_validated: true,
       implementation_feasibility_confirmed: true,
       risk_assessment_completed: true,
+      benchmark_verified: true,
     },
     deliverables: {
-      executive_summary: generateExecutiveSummary(),
-      automation_insights: generateAutomationInsights(),
+      executive_summary: executiveSummary,
+      automation_insights: automationInsights,
       automation_opportunities: [
-        `${
-          automationData.target_kpi || 'Process efficiency metrics'
-        } currently ${
-          metricData.current_performance || 'below optimal'
-        } vs industry automation benchmark of ${
-          metricData.industry_benchmark || '85% automated'
+        `Process efficiency currently ${
+          100 - roiCalculation.time_reduction_percentage
+        }% manual vs industry automation benchmark of ${
+          benchmarkData.typical_automation_rate
         }`,
-        `${department} department experiencing manual bottlenecks in ${
-          metricData.key_processes?.[0] || 'data processing workflows'
-        } leading to ${
-          metricData.key_processes?.[1] || 'capacity constraints and errors'
-        }`,
-        `Analysis reveals ${
-          metricData.key_processes?.[2] || 'repetitive task inefficiencies'
-        } consuming ${
-          metricData.manual_hours || '40+ hours weekly'
-        } of manual effort`,
-        `Integration opportunities exist to automate ${
-          metricData.integration_potential || 'cross-system data flows'
-        } and eliminate ${
-          metricData.error_reduction || '90% of manual errors'
-        }`,
+        `${department} department manual bottlenecks consuming ${roiCalculation.hours_saved_monthly}+ hours monthly of manual effort`,
+        `Error reduction potential of ${benchmarkData.error_reduction} through automated validation and quality control`,
+        `Integration opportunities exist to achieve ${roiCalculation.time_reduction_percentage}% time reduction and $${roiCalculation.monthly_savings}/month cost savings`,
       ],
-      strategic_recommendations: generateAutomationRecommendations(),
-      implementation_roadmap: roadmap,
+      strategic_recommendations: recommendations,
+      implementation_roadmap: {
+        phase_1: {
+          title: `${complexityLevel
+            .replace('_', ' ')
+            .replace(/\b\w/g, l => l.toUpperCase())} Quick Wins (Weeks 1-4)`,
+          actions: [
+            'Establish baseline metrics using industry benchmark methodology',
+            'Implement pilot automation proof-of-concept',
+            'Validate benchmark assumptions with actual process data',
+          ],
+          expected_impact: `${Math.round(
+            roiCalculation.time_reduction_percentage * 0.3,
+          )}% initial improvement in ${
+            automationData.target_kpi || 'process efficiency'
+          } to demonstrate automation value`,
+        },
+        phase_2: {
+          title: `Core Implementation (${
+            complexityData.implementation_timeline.split('-')[0]
+          } weeks)`,
+          actions: [
+            'Deploy automation solutions based on complexity assessment',
+            'Implement change management per benchmark success factors',
+            'Establish monitoring aligned with industry KPIs',
+          ],
+          expected_impact: `${Math.round(
+            roiCalculation.time_reduction_percentage * 0.7,
+          )}% achievement of automation targets with $${Math.round(
+            roiCalculation.monthly_savings * 0.7,
+          )}/month savings`,
+        },
+        phase_3: {
+          title: `Optimization & Scale (Months 3-6)`,
+          actions: [
+            'Expand automation to additional process areas',
+            'Implement advanced features for maximum ROI',
+            'Establish continuous improvement framework',
+          ],
+          expected_impact: `Full ${roiCalculation.time_reduction_percentage}% automation achievement with sustained $${roiCalculation.monthly_savings}/month cost savings`,
+        },
+      },
       success_metrics: [
         {
           metric: automationData.target_kpi || 'Process Efficiency Score',
-          target: automationData.success_definition || '+70% improvement',
-          timeframe: '6 months',
-          measurement: 'Automated tracking with real-time dashboards',
+          target: `+${roiCalculation.time_reduction_percentage}% improvement`,
+          timeframe: complexityData.implementation_timeline,
+          measurement: 'Automated tracking with industry benchmark comparison',
         },
         {
-          metric:
-            audienceStyle.metrics_emphasis === 'financial_returns'
-              ? 'Cost Savings Achievement'
-              : 'Operational Efficiency',
-          target:
-            audienceStyle.metrics_emphasis === 'financial_returns'
-              ? '+$420K annual savings'
-              : '+85% process automation',
+          metric: 'Cost Savings Achievement',
+          target: `$${roiCalculation.annual_savings.toLocaleString()} annual savings`,
           timeframe: '12 months',
-          measurement: 'Monthly financial and operational review',
+          measurement: 'Monthly financial tracking with benchmark validation',
         },
         {
-          metric: 'Automation Implementation Progress',
-          target: '100% roadmap milestone completion',
-          timeframe: 'Ongoing',
-          measurement: 'Weekly automation team updates',
+          metric: 'Implementation Success Rate',
+          target: complexityData.success_rate,
+          timeframe: 'Project completion',
+          measurement: 'Milestone achievement tracking',
         },
       ],
-      estimated_roi:
-        audienceStyle.tone === 'strategic'
-          ? `${metricData.roi_percentage || '285%'} ROI within 18 months`
-          : `${
-              metricData.efficiency_gain || '300%'
-            } improvement in process efficiency metrics`,
-      payback_period: metricData.payback_period || '8-12 months',
-      risk_assessment:
-        goalFocus.approach === 'investment_justification'
-          ? 'Low implementation risk with high ROI potential and strong executive sponsorship alignment'
-          : 'Medium technical complexity with high operational impact and manageable change management requirements',
+      estimated_roi: `${roiCalculation.roi_percentage}% ROI within ${benchmarkData.roi_timeline}`,
+      payback_period: `${roiCalculation.payback_months} months`,
+      risk_assessment: `${complexityLevel
+        .replace('_', ' ')
+        .replace(/\b\w/g, l => l.toUpperCase())} implementation with ${
+        complexityData.success_rate
+      } industry success rate and ${
+        benchmarkData.roi_timeline
+      } proven payback timeline`,
     },
     automation_analysis_details: {
       scenario_analyzed: scenario,
@@ -385,12 +391,10 @@ export const generateMockAutomationReport = automationData => {
       data_sources_used: dataSources,
       automation_metric_focus: automationData.target_kpi,
       success_definition: automationData.success_definition,
-      confidence_score: '96%',
-      methodology: `Multi-source automation analysis combining ${dataSources
-        .join(' and ')
-        .toLowerCase()} with ${
-        audienceStyle.detail_level
-      } business case development for ${audienceStyle.tone} decision-making`,
+      confidence_score: '97%',
+      benchmark_source:
+        'Industry automation standards and ROI calculation models',
+      methodology: `Benchmark-driven analysis using ${benchmarkData.typical_automation_rate} industry automation rates and proven ROI calculation formulas`,
     },
   }
 }
@@ -498,4 +502,3 @@ export const generateRefinedAutomationRecommendations = (
 
   return refinedReport
 }
-
