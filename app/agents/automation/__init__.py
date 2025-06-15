@@ -1,2 +1,2 @@
-# app/agents/__init__.py
-"""Multi-agent system for BUILD-A-STORY educational platform."""
+# app/agents/automation/__init__.py
+# Keep this file empty or minimal - don't import anything that could cause cycles

@@ -1,3 +1,2 @@
-from app.agent import root_agent
-
-__all__ = ["root_agent"]
+# app/__init__.py
+# Empty file - ADK will find root_agent automatically
