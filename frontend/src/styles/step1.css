@@ -1,141 +1,612 @@
-/* Step 1: Scenario Selection Component Styles */
+/* Step 1: Scenario Selection Component - Corporate Professional Styles */
 
-/* Concept Explanations */
+/* Corporate Concept Explanations - Compact Supporting Content */
 .concept-explanation {
-    background: var(--background-light);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    margin-bottom: var(--spacing-xl);
-    border-left: 4px solid var(--primary-blue);
+  background: linear-gradient(
+      135deg,
+      var(--background-light) 0%,
+      var(--background-accent) 100%
+  );
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  margin-bottom: var(--spacing-xl);
+  border-left: 6px solid var(--accent-gold);
+  box-shadow: var(--elevation-1);
+  border: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sophisticated background pattern */
+.concept-explanation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+      circle,
+      rgba(139, 98, 18, 0.05) 0%,
+      transparent 70%
+  );
+  pointer-events: none;
+}
+
+.concept-title {
+  font-size: var(--font-lg);
+  color: var(--primary-blue);
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  text-shadow: 0 1px 2px rgba(15, 33, 67, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+/* Professional title underline */
+.concept-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+  border-radius: 2px;
+}
+
+.concept-content p {
+  font-size: var(--font-md);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.7;
+  font-weight: 400;
+  position: relative;
+  z-index: 1;
+}
+
+/* Professional highlight boxes */
+.concept-highlight {
+  background: linear-gradient(
+      135deg,
+      var(--accent-gold-light) 0%,
+      rgba(245, 230, 184, 0.8) 100%
+  );
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  margin-top: var(--spacing-lg);
+  font-size: var(--font-md);
+  color: var(--accent-gold-dark);
+  font-weight: 600;
+  border: 1px solid rgba(139, 98, 18, 0.2);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Removed lightbulb icon to prevent overlapping */
+
+.concept-highlight strong {
+  color: var(--accent-gold-dark);
+  font-weight: 700;
+}
+
+/* Compact corporate concept grid - 3 across */
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.concept-card {
+  background: var(--background);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: auto;
+}
+
+/* Subtle hover effects for compact cards */
+.concept-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--elevation-2);
+  border-color: var(--accent-gold);
+}
+
+.concept-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--pacific-blue) 100%);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.concept-card:hover::before {
+  transform: scaleX(1);
+}
+
+.concept-icon {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-sm);
+  filter: drop-shadow(0 2px 4px rgba(15, 33, 67, 0.1));
+  transition: all 0.3s ease;
+}
+
+.concept-card:hover .concept-icon {
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 8px rgba(15, 33, 67, 0.15));
+}
+
+.concept-card h4 {
+  font-size: var(--font-md);
+  color: var(--primary-blue);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  line-height: 1.3;
+}
+
+.concept-card p {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Professional project setup */
+.project-setup {
+  margin-bottom: var(--spacing-2xl);
+  background: var(--background);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--elevation-2);
+  border: 1px solid var(--border-light);
+  position: relative;
+}
+
+.project-setup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-gold) 50%, transparent 100%);
+}
+
+.setup-title {
+  font-size: var(--font-xl);
+  color: var(--primary-blue);
+  margin-bottom: var(--spacing-md);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-shadow: 0 1px 2px rgba(15, 33, 67, 0.1);
+}
+
+.setup-description {
+  font-size: var(--font-md);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-2xl);
+  line-height: 1.7;
+  font-weight: 400;
+  max-width: 800px;
+}
+
+/* Corporate scenario selection */
+.scenario-selection {
+  margin-bottom: var(--spacing-2xl);
+  position: relative;
+}
+
+.scenario-selection .input-label {
+  font-size: var(--font-lg);
+  color: var(--primary-blue);
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  letter-spacing: 0.025em;
+}
+
+.business-select {
+  width: 100%;
+  padding: var(--spacing-xl);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-md);
+  background: var(--background);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  position: relative;
+}
+
+.business-select:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  box-shadow: 
+      0 0 0 3px rgba(139, 98, 18, 0.1),
+      var(--shadow-md);
+  background: var(--background);
+  transform: translateY(-2px);
+}
+
+.business-select:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.business-select option {
+  padding: var(--spacing-md);
+  font-size: var(--font-base);
+  color: var(--text-primary);
+  background: var(--background);
+}
+
+/* Professional selection confirmation */
+.selection-confirmation {
+  background: linear-gradient(
+      135deg,
+      var(--success-light) 0%,
+      rgba(232, 237, 218, 0.9) 100%
+  );
+  padding: var(--spacing-3xl);
+  border-radius: var(--radius-xl);
+  margin-top: var(--spacing-2xl);
+  border: 2px solid var(--success-green);
+  box-shadow: var(--elevation-2);
+  position: relative;
+  overflow: hidden;
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+      opacity: 0;
+      transform: translateY(30px);
   }
-  
-  .concept-title {
-    font-size: var(--font-lg);
-    color: var(--accent-blue);
-    margin-bottom: var(--spacing-md);
-    font-weight: 600;
+  to {
+      opacity: 1;
+      transform: translateY(0);
   }
-  
-  .concept-content p {
-    font-size: var(--font-md);
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-md);
-    line-height: 1.7;
+}
+
+/* Success accent line */
+.selection-confirmation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--success-green) 0%, var(--success-dark) 100%);
+}
+
+/* Success icon */
+.selection-confirmation::after {
+  content: '✓';
+  position: absolute;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  width: 40px;
+  height: 40px;
+  background: var(--success-green);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-lg);
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+  animation: successBounce 0.6s ease-out 0.3s both;
+}
+
+@keyframes successBounce {
+  0% {
+      transform: scale(0);
+      opacity: 0;
   }
-  
-  .concept-highlight {
-    background: var(--pale-blue);
-    padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    margin-top: var(--spacing-md);
-    font-size: var(--font-md);
-    color: var(--accent-blue);
+  50% {
+      transform: scale(1.2);
+      opacity: 1;
   }
-  
+  100% {
+      transform: scale(1);
+      opacity: 1;
+  }
+}
+
+.confirmation-header h4 {
+  font-size: var(--font-xl);
+  color: var(--success-green);
+  margin-bottom: var(--spacing-md);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.confirmation-header p {
+  font-size: var(--font-md);
+  color: var(--success-dark);
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 500;
+  padding-right: var(--spacing-4xl); /* Space for success icon */
+}
+
+.confirmation-header strong {
+  color: var(--success-green);
+  font-weight: 700;
+}
+
+.next-preview {
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid rgba(67, 87, 46, 0.2);
+}
+
+.next-preview h5 {
+  font-size: var(--font-lg);
+  color: var(--success-green);
+  margin: 0 0 var(--spacing-lg);
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+.preview-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-2xl);
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.preview-list li {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-base);
+  color: var(--success-dark);
+  position: relative;
+  padding-left: var(--spacing-3xl);
+  line-height: 1.5;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(67, 87, 46, 0.1);
+  transition: all 0.3s ease;
+}
+
+.preview-list li:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateX(4px);
+}
+
+.preview-list li::before {
+  content: '▶';
+  color: var(--success-green);
+  position: absolute;
+  left: var(--spacing-lg);
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 700;
+  font-size: var(--font-md);
+}
+
+/* Corporate continue button enhancement */
+.selection-confirmation .continue-button.primary {
+  background: linear-gradient(135deg, var(--success-green) 0%, var(--success-dark) 100%);
+  color: white;
+  border: none;
+  padding: var(--spacing-xl) var(--spacing-3xl);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-lg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--elevation-2);
+  text-transform: none;
+  letter-spacing: 0.025em;
+  min-width: 280px;
+  position: relative;
+  overflow: hidden;
+}
+
+.selection-confirmation .continue-button.primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.selection-confirmation .continue-button.primary:hover {
+  background: linear-gradient(135deg, var(--success-dark) 0%, #1F2B15 100%);
+  transform: translateY(-3px);
+  box-shadow: var(--elevation-3);
+}
+
+.selection-confirmation .continue-button.primary:hover::before {
+  left: 100%;
+}
+
+.selection-confirmation .continue-button.primary:active {
+  transform: translateY(-1px);
+  box-shadow: var(--elevation-2);
+}
+
+/* Responsive Design for Step 1 */
+@media (max-width: 1024px) {
   .concept-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-lg);
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
   }
-  
-  .concept-card {
-    background: var(--background);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-light);
-  }
-  
-  .concept-icon {
-    font-size: 2.5rem;
-    margin-bottom: var(--spacing-md);
-  }
-  
-  .concept-card h4 {
-    font-size: var(--font-lg);
-    color: var(--primary-blue);
-    margin-bottom: var(--spacing-sm);
-    font-weight: 600;
-  }
-  
-  .concept-card p {
-    font-size: var(--font-md);
-    color: var(--text-secondary);
-    line-height: 1.6;
-  }
-  
-  /* Project Setup */
+
+  .concept-explanation,
   .project-setup {
-    margin-bottom: var(--spacing-xl);
+      padding: var(--spacing-2xl);
   }
-  
-  .setup-title {
-    font-size: var(--font-lg);
-    color: var(--primary-blue);
-    margin-bottom: var(--spacing-sm);
-    font-weight: 600;
-  }
-  
-  .setup-description {
-    font-size: var(--font-md);
-    color: var(--text-secondary);
-    margin-bottom: var(--spacing-lg);
-    line-height: 1.7;
-  }
-  
-  .scenario-selection {
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  /* Selection Confirmation */
-  .selection-confirmation {
-    background: var(--pale-blue);
-    padding: var(--spacing-xl);
-    border-radius: var(--radius-lg);
-    margin-top: var(--spacing-lg);
-  }
-  
-  .confirmation-header h4 {
-    font-size: var(--font-lg);
-    color: var(--primary-blue);
-    margin-bottom: var(--spacing-sm);
-    font-weight: 600;
-  }
-  
-  .next-preview h5 {
-    font-size: var(--font-md);
-    color: var(--accent-blue);
-    margin: var(--spacing-lg) 0 var(--spacing-sm);
-    font-weight: 600;
-  }
-  
-  .preview-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .preview-list li {
-    padding: var(--spacing-xs) 0;
-    font-size: var(--font-md);
-    color: var(--text-secondary);
-    position: relative;
-    padding-left: var(--spacing-lg);
-  }
-  
-  .preview-list li::before {
-    content: '→';
-    color: var(--primary-blue);
-    position: absolute;
-    left: 0;
-    font-weight: bold;
-  }
-  
-  /* Responsive Design for Step 1 */
-  @media (max-width: 768px) {
-    .concept-grid {
+}
+
+@media (max-width: 768px) {
+  .concept-grid {
       grid-template-columns: 1fr;
-    }
+      gap: var(--spacing-md);
   }
-  
+
+  .concept-card {
+      padding: var(--spacing-md);
+  }
+
+  .concept-card h4 {
+      font-size: var(--font-sm);
+  }
+
+  .concept-card p {
+      font-size: var(--font-xs);
+  }
+
+  .concept-explanation,
+  .project-setup,
+  .selection-confirmation {
+      padding: var(--spacing-xl);
+  }
+
+  .concept-title,
+  .setup-title {
+      font-size: var(--font-lg);
+  }
+
+  .confirmation-header h4 {
+      font-size: var(--font-lg);
+  }
+
+  .preview-list li {
+      padding: var(--spacing-sm) var(--spacing-md);
+      padding-left: var(--spacing-2xl);
+      font-size: var(--font-sm);
+  }
+
+  .selection-confirmation .continue-button.primary {
+      width: 100%;
+      padding: var(--spacing-lg) var(--spacing-xl);
+      font-size: var(--font-base);
+      min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .concept-explanation,
+  .project-setup,
+  .selection-confirmation {
+      padding: var(--spacing-lg);
+  }
+
+  .concept-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-md);
+  }
+
+  .concept-card {
+      padding: var(--spacing-lg);
+  }
+
+  .business-select {
+      padding: var(--spacing-lg);
+      font-size: var(--font-sm);
+  }
+
+  .confirmation-header p {
+      padding-right: var(--spacing-2xl);
+  }
+
+  .selection-confirmation::after {
+      width: 32px;
+      height: 32px;
+      font-size: var(--font-base);
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+  }
+}
+
+/* Enhanced accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .concept-card,
+  .selection-confirmation,
+  .preview-list li {
+      transition: none;
+      animation: none;
+  }
+
+  .concept-card:hover {
+      transform: none;
+  }
+
+  .selection-confirmation::after {
+      animation: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.concept-card:focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+.business-select:focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+/* High contrast mode enhancements */
+@media (prefers-contrast: high) {
+  .concept-card {
+      border-width: 2px;
+  }
+
+  .concept-highlight {
+      border-width: 2px;
+      background: var(--accent-gold-light);
+  }
+
+  .selection-confirmation {
+      border-width: 3px;
+      background: var(--success-light);
+  }
+
+  .business-select {
+      border-width: 3px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .concept-card,
+  .selection-confirmation {
+      box-shadow: none;
+      border: 1px solid var(--border-medium);
+  }
+
+  .continue-button {
+      display: none;
+  }
+
+  .concept-card:hover {
+      transform: none;
+  }
+}

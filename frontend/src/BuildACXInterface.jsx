@@ -26,6 +26,8 @@ const BuildACXInterface = ({
   // AI Automation props
   aiBusinessMode,
   agentWorkflow,
+  currentAgent,
+  chatMessages, // Server-generated chat messages
   aiBusinessInsights,
   setAiBusinessMode,
   analysisReady,
@@ -40,7 +42,7 @@ const BuildACXInterface = ({
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [currentStep])
 
-  // Enhanced agent statuses for automation analysis learning
+  // SIMPLIFIED: Agent statuses now only for UI display, not chat generation
   const [agentStatuses, setAgentStatuses] = useState([
     {
       name: 'Process Analysis Specialist',
@@ -111,20 +113,27 @@ const BuildACXInterface = ({
     },
   ])
 
-  // Update agent statuses based on workflow
+  // SIMPLIFIED: Update agent statuses based on server data only
   useEffect(() => {
     if (agentWorkflow && agentWorkflow.length > 0) {
       setAgentStatuses(prev =>
         prev.map(agent => {
           const isCompleted = agentWorkflow.includes(agent.technical_name)
+          const isWorking = currentAgent === agent.technical_name
+
           return {
             ...agent,
-            status: isCompleted ? 'complete' : agent.status,
+            status: isCompleted
+              ? 'complete'
+              : isWorking
+              ? 'working'
+              : 'waiting',
           }
         }),
       )
     }
 
+    // Mark all complete when analysis is done
     if (generatedReport && !loading) {
       setAgentStatuses(prev =>
         prev.map(agent => ({
@@ -133,9 +142,9 @@ const BuildACXInterface = ({
         })),
       )
     }
-  }, [agentWorkflow, generatedReport, loading])
+  }, [agentWorkflow, currentAgent, generatedReport, loading])
 
-  // Clear proposed changes when starting new automation analysis session
+  // Clear proposed changes when starting new analysis
   useEffect(() => {
     if (currentStep === 0) {
       setProposedChanges('')
@@ -157,7 +166,6 @@ const BuildACXInterface = ({
     [setCxProjectData],
   )
 
-  // Handle proposed automation refinements
   const handleProposedChangesChange = useCallback(e => {
     setProposedChanges(e.target.value)
   }, [])
@@ -195,6 +203,9 @@ const BuildACXInterface = ({
             setCurrentStep={setCurrentStep}
             createCXAnalysis={createCXAnalysis}
             analysisReady={analysisReady}
+            cxProjectData={cxProjectData}
+            currentAgent={currentAgent}
+            chatMessages={chatMessages} // Pass server-generated chat messages
           />
         )
       case 3:

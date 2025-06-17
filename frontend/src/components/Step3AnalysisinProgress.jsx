@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../styles/step3.css'
+import AgentChatInterface from './AgentChatInterface'
 
 const Step3AnalysisInProgress = ({
   loading,
@@ -7,14 +8,49 @@ const Step3AnalysisInProgress = ({
   error,
   agentStatuses,
   setCurrentStep,
-  createCXAnalysis,
+  createCXAnalysis, // This is now the bulletproof triggerAnalysis function
   analysisReady,
+  cxProjectData,
+  currentAgent,
+  chatMessages,
 }) => {
-  useEffect(() => {
-    if (!loading && !generatedReport && !analysisReady) {
-      createCXAnalysis()
+  const [showChat, setShowChat] = useState(true)
+  const [buttonClicked, setButtonClicked] = useState(false)
+
+  // BULLETPROOF: Single button click handler with debouncing
+  const handleStartAnalysis = () => {
+    if (buttonClicked || loading || generatedReport || analysisReady) {
+      console.log(
+        '🛑 Button click blocked - analysis already started or complete',
+      )
+      return
     }
-  }, [loading, generatedReport, analysisReady, createCXAnalysis])
+
+    console.log('🎯 User clicked start analysis button')
+    setButtonClicked(true)
+    createCXAnalysis() // Call the bulletproof trigger function
+  }
+
+  // Reset button state when component unmounts or analysis completes
+  useEffect(() => {
+    if (analysisReady || error) {
+      setButtonClicked(false)
+    }
+  }, [analysisReady, error])
+
+  // Reset button state when user navigates away and back (new session)
+  useEffect(() => {
+    if (!loading && !generatedReport && !analysisReady && !buttonClicked) {
+      setButtonClicked(false)
+    }
+  }, [loading, generatedReport, analysisReady, buttonClicked])
+
+  // Determine if we should show the start button
+  const showStartButton =
+    !buttonClicked && !loading && !generatedReport && !analysisReady && !error
+
+  // Determine if analysis is active (started but not complete)
+  const analysisActive = buttonClicked || loading || chatMessages.length > 0
 
   return (
     <div className='learning-module'>
@@ -47,47 +83,109 @@ const Step3AnalysisInProgress = ({
         </div>
       </div>
 
-      {/* Live Agent Collaboration */}
-      <div className='collaboration-live'>
-        <h3 className='collaboration-title'>
-          Your AI Automation Team in Action
-        </h3>
-
-        <div className='agents-workflow'>
-          {agentStatuses.map((agent, index) => (
-            <div key={index} className={`agent-workflow-card ${agent.status}`}>
-              <div className='agent-workflow-header'>
-                <div className='agent-avatar'>{agent.avatar}</div>
-                <div className='agent-info'>
-                  <h4 className='agent-name'>{agent.name}</h4>
-                  <div className='agent-status'>
-                    {agent.status === 'complete' && '✅ Analysis Complete'}
-                    {agent.status === 'working' && '⚡ Building Business Case'}
-                    {agent.status === 'waiting' && '⏳ Standing By'}
-                  </div>
-                </div>
-              </div>
-
-              <div className='agent-task'>
-                <strong>Current Analysis:</strong> {agent.what_i_do}
-              </div>
-
-              {agent.status === 'complete' && (
-                <div className='agent-learning'>
-                  <strong>💡 Automation AI Insight:</strong>{' '}
-                  {agent.learning_moment}
-                </div>
-              )}
-
-              {index < agentStatuses.length - 1 && (
-                <div className='workflow-arrow'>↓</div>
-              )}
+      {/* BULLETPROOF: Single Start Button - Only show when appropriate */}
+      {showStartButton && (
+        <div className='start-analysis-section'>
+          <div className='start-analysis-card'>
+            <h3>Ready to Start AI Automation Analysis</h3>
+            <p>
+              Your 6 AI automation specialists are ready to collaborate on
+              building your comprehensive business case. This typically takes
+              2-3 minutes.
+            </p>
+            <button
+              onClick={handleStartAnalysis}
+              className='start-analysis-button'
+              disabled={buttonClicked || loading}
+            >
+              {buttonClicked || loading
+                ? '🔄 Starting...'
+                : '🚀 Start AI Collaboration'}
+            </button>
+            <div className='start-info'>
+              <small>
+                ✨ One click starts your complete automation business case
+                analysis
+              </small>
             </div>
-          ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Quick Collaboration Summary - Moved from Module 4 */}
+      {/* Analysis Status - Only show when analysis is active */}
+      {analysisActive && !analysisReady && (
+        <div className='analysis-status-section'>
+          <div className='analysis-status-card'>
+            <h3>🤖 AI Automation Team Working</h3>
+            <p>
+              Your automation specialists are collaborating to build your
+              business case...
+            </p>
+            {chatMessages.length > 0 && (
+              <div className='progress-indicator'>
+                <span>💬 {chatMessages.length} collaboration messages</span>
+                <span>
+                  ⚡ {agentStatuses.filter(a => a.status === 'complete').length}
+                  /6 agents complete
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Live Agent Collaboration - Only show when analysis is active */}
+      {analysisActive && (
+        <div className='collaboration-live'>
+          <h3 className='collaboration-title'>
+            Your AI Automation Team in Action
+          </h3>
+
+          {/* REMOVED: Redundant agent workflow cards - now handled by AgentChatInterface */}
+
+          {/* Agent Chat Interface - Show the workflow cards */}
+          <AgentChatInterface
+            agentStatuses={agentStatuses}
+            currentAgent={currentAgent}
+            cxProjectData={cxProjectData}
+            loading={loading}
+            chatMessages={chatMessages}
+          />
+        </div>
+      )}
+
+      {/* Chat Toggle - Only show when we have messages and want to show additional chat features */}
+      {(chatMessages.length > 0 || loading) && (
+        <div className='chat-section'>
+          <div className='chat-toggle'>
+            <button
+              onClick={() => setShowChat(!showChat)}
+              className={`chat-toggle-btn ${showChat ? 'active' : ''}`}
+            >
+              {showChat ? '👁️ Hide' : '👀 Show'} Detailed Messages
+            </button>
+            <span className='chat-description'>
+              View raw collaboration messages between agents
+            </span>
+          </div>
+
+          {/* Optional: Could show a different view here like raw chat messages */}
+          {showChat && chatMessages.length > 0 && (
+            <div className='raw-messages'>
+              <h4>Raw Agent Messages:</h4>
+              <div className='message-list'>
+                {chatMessages.map((msg, index) => (
+                  <div key={index} className='raw-message'>
+                    <strong>{msg.from_agent}:</strong> {msg.message}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Quick Collaboration Summary - Only show when complete */}
       {analysisReady && !loading && (
         <div className='collaboration-analysis'>
           <h4>🤖 Quick Automation Analysis Summary:</h4>
@@ -113,19 +211,27 @@ const Step3AnalysisInProgress = ({
         </div>
       )}
 
+      {/* Processing Status - Only show during active loading */}
       {loading && (
         <div className='processing-status'>
           <div className='loading-indicator'></div>
           <h4>AI Automation Team Building Your Business Case...</h4>
           <p>
-            This typically takes 3-4 minutes for comprehensive automation
+            This typically takes 2-3 minutes for comprehensive automation
             analysis. Each specialist needs time to provide enterprise-quality
             ROI calculations and implementation planning.
           </p>
+          {chatMessages.length > 0 && (
+            <div className='live-chat-indicator'>
+              <span>
+                💬 {chatMessages.length} collaboration messages generated
+              </span>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Results Ready Section */}
+      {/* Results Ready Section - REDESIGNED with professional light blue styling */}
       {analysisReady && !loading && (
         <div className='collaboration-complete'>
           <div className='success-header'>
@@ -155,8 +261,8 @@ const Step3AnalysisInProgress = ({
                 <li>Phase-by-phase implementation roadmap with timelines</li>
                 <li>Risk assessment and success metrics framework</li>
                 <li>
-                  <strong>BONUS:</strong> Ability to refine recommendations
-                  based on your business constraints
+                  <strong>BONUS:</strong> Real-time agent collaboration insights
+                  showing how AI specialists worked together
                 </li>
               </ul>
             </div>
@@ -176,12 +282,19 @@ const Step3AnalysisInProgress = ({
         </div>
       )}
 
+      {/* Error Status - Only show on error */}
       {error && (
         <div className='error-status'>
           <h4>AI Automation Analysis Issue</h4>
           <p>{error}</p>
-          <button onClick={createCXAnalysis} className='retry-button'>
-            Restart AI Automation Analysis
+          <button
+            onClick={() => {
+              setButtonClicked(false)
+              // Error handling is managed by parent component
+            }}
+            className='retry-button'
+          >
+            Try Again
           </button>
         </div>
       )}

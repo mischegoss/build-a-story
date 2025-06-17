@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import BuildACXInterface from './BuildACXInterface'
+import analysisManager from './analysis-manager.js' // Global singleton protection
 
 // Import mock data and services
 import { mockBusinessScenarios } from './mockdata/mockBusinessScenarios'
@@ -8,13 +9,12 @@ import { generateRefinedAutomationRecommendations } from './services/mockAutomat
 
 const API_BASE =
   process.env.NODE_ENV === 'production'
-    ? 'https://your-production-api-url.com' // Update this later for production
+    ? 'https://your-production-api-url.com'
     : 'http://localhost:8000'
 
 // Helper function to ensure required fields for API
 const ensureRequiredFields = cxProjectData => {
   return {
-    // Map frontend form fields to API expected fields
     business_challenge:
       cxProjectData.business_challenge ||
       cxProjectData.target_kpi ||
@@ -32,14 +32,10 @@ const ensureRequiredFields = cxProjectData => {
     people_involved: parseInt(cxProjectData.people_involved) || 3,
     manual_percentage: parseInt(cxProjectData.manual_percentage) || 75,
     business_scenario: cxProjectData.business_scenario || 'Process Automation',
-
-    // Optional fields
     business_context: cxProjectData.business_context || '',
     cx_objective: cxProjectData.cx_objective || cxProjectData.report_goal || '',
     decision_makers: cxProjectData.decision_makers || [],
     affected_departments: cxProjectData.affected_departments || [],
-
-    // Legacy compatibility
     personasList: cxProjectData.personasList || [],
     cxToolsList: cxProjectData.cxToolsList || [],
   }
@@ -51,14 +47,12 @@ function App() {
   const [currentStep, setCurrentStep] = useState(0)
   const [cxProjectData, setCxProjectData] = useState({
     business_scenario: '',
-    // Automation business case focused fields
     report_audience: '',
     report_goal: '',
-    customer_segment: '', // Now represents department/process area
-    target_kpi: '', // Now automation metric
-    success_definition: '', // Now automation ROI target
-    dataSourcesList: [], // Now process data types
-    // Additional required fields for API
+    customer_segment: '',
+    target_kpi: '',
+    success_definition: '',
+    dataSourcesList: [],
     business_challenge: '',
     current_state: '',
     process_frequency: '',
@@ -68,11 +62,10 @@ function App() {
     decision_makers: [],
     affected_departments: [],
     business_context: '',
-    // Legacy fields (may be used by other parts)
     tone: '',
     industry: '',
     special_requirements: '',
-    enable_ai_business_mode: true, // Always enabled for automation analysis
+    enable_ai_business_mode: true,
   })
 
   // AI Automation Analysis state
@@ -80,31 +73,39 @@ function App() {
   const [refinedReport, setRefinedReport] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [aiBusinessMode, setAiBusinessMode] = useState(true) // Always on
+  const [aiBusinessMode, setAiBusinessMode] = useState(true)
   const [agentWorkflow, setAgentWorkflow] = useState([])
   const [currentAgent, setCurrentAgent] = useState(null)
+  const [chatMessages, setChatMessages] = useState([])
   const [aiBusinessInsights, setAiBusinessInsights] = useState(null)
   const [showProcessLearning, setShowProcessLearning] = useState(false)
   const [projectId, setProjectId] = useState(null)
-  const [sessionId, setSessionId] = useState(null) // Add this for tracking the real session ID
+  const [sessionId, setSessionId] = useState(null)
   const [analysisReady, setAnalysisReady] = useState(false)
   const [showRefinement, setShowRefinement] = useState(false)
+
+  // Ref for polling cleanup
+  const pollingRef = useRef(null)
 
   // Load initial mock data when app starts
   useEffect(() => {
     fetchInitialData()
+
+    // Check if there's an active analysis on mount
+    const status = analysisManager.getStatus()
+    if (status.isAnalysisActive && status.activeSessionId) {
+      console.log('📱 Found active analysis on mount:', status.activeSessionId)
+      setSessionId(status.activeSessionId)
+      setLoading(true)
+      pollAnalysisStatus(status.activeSessionId)
+    }
   }, [])
 
-  // Mock API call to get automation scenarios
   const fetchInitialData = async () => {
     try {
       console.log('🤖 Loading AI Automation Business Case Builder data...')
-
-      // Simulate loading delay
       await new Promise(resolve => setTimeout(resolve, 1000))
-
       setBusinessScenarios(mockBusinessScenarios.scenarios)
-
       console.log('✅ Automation analysis data loaded successfully')
     } catch (error) {
       console.error('Error loading automation analysis data:', error)
@@ -114,18 +115,29 @@ function App() {
     }
   }
 
-  // Real API polling function
-  const pollAnalysisStatus = async sessionIdParam => {
-    const maxAttempts = 80 // 4 minutes max (3 second intervals)
+  // ULTIMATE polling function with global singleton protection
+  const pollAnalysisStatus = useCallback(async sessionIdParam => {
+    // Clear any existing polling
+    if (pollingRef.current) {
+      clearTimeout(pollingRef.current)
+      pollingRef.current = null
+    }
+
+    const maxAttempts = 60
     let attempts = 0
 
-    // Store the session ID for later use in refinement
     setSessionId(sessionIdParam)
-
     console.log(`🔄 Starting status polling for session: ${sessionIdParam}`)
 
     const poll = async () => {
       try {
+        // Check if this session is still valid globally
+        const globalStatus = analysisManager.getStatus()
+        if (globalStatus.activeSessionId !== sessionIdParam) {
+          console.log('🛑 Session no longer active globally, stopping polling')
+          return
+        }
+
         attempts++
         console.log(`📡 Polling attempt ${attempts}/${maxAttempts}`)
 
@@ -140,7 +152,7 @@ function App() {
         const statusData = await response.json()
         console.log(`📊 Status update:`, statusData)
 
-        // Update frontend with real progress
+        // Update agent workflow from server
         if (
           statusData.completed_agents &&
           statusData.completed_agents.length > 0
@@ -151,29 +163,42 @@ function App() {
           )
         }
 
+        // Update current agent from server
         if (statusData.current_agent) {
           setCurrentAgent(statusData.current_agent)
           console.log(`🤖 Current agent: ${statusData.current_agent}`)
+        } else {
+          setCurrentAgent(null)
+        }
+
+        // Update chat messages from server
+        if (statusData.chat_messages && statusData.chat_messages.length > 0) {
+          setChatMessages(statusData.chat_messages)
+          console.log(`💬 Chat messages: ${statusData.chat_messages.length}`)
         }
 
         // Check if analysis is complete
         if (statusData.status === 'complete' && statusData.result) {
           console.log('🎉 Analysis complete! Processing results...')
 
-          // Set the generated report
+          // Clear polling
+          if (pollingRef.current) {
+            clearTimeout(pollingRef.current)
+            pollingRef.current = null
+          }
+
+          // Mark as complete globally
+          analysisManager.completeAnalysis()
+
           setGeneratedReport(statusData.result)
           setProjectId(statusData.result.project_id || sessionIdParam)
-          setAiBusinessInsights(mockAIBusinessInsights) // Keep mock insights for now
+          setAiBusinessInsights(mockAIBusinessInsights)
           setAnalysisReady(true)
+          setCurrentAgent(null)
+          setLoading(false)
 
           console.log('✅ Results processed successfully')
-          console.log(`📋 Session ID stored: ${sessionIdParam}`)
-          console.log(
-            `📋 Project ID set: ${
-              statusData.result.project_id || sessionIdParam
-            }`,
-          )
-          return // Exit polling
+          return
         }
 
         // Check for errors
@@ -184,41 +209,71 @@ function App() {
         // Continue polling if still processing
         if (statusData.status === 'processing' && attempts < maxAttempts) {
           console.log(
-            `⏳ Still processing... (${
-              statusData.estimated_completion || 'calculating time remaining'
-            })`,
+            `⏳ Still processing... (attempt ${attempts}/${maxAttempts})`,
           )
-          setTimeout(poll, 3000) // Poll every 3 seconds
+          pollingRef.current = setTimeout(poll, 5000)
         } else if (attempts >= maxAttempts) {
           throw new Error('Analysis timeout - please try again')
         }
       } catch (error) {
         console.error('❌ Polling error:', error)
         setError(`Analysis failed: ${error.message}`)
+        setCurrentAgent(null)
+        setLoading(false)
+
+        // Mark as error globally
+        analysisManager.errorAnalysis()
+
+        if (pollingRef.current) {
+          clearTimeout(pollingRef.current)
+          pollingRef.current = null
+        }
       }
     }
 
-    // Start polling immediately
     poll()
-  }
+  }, [])
 
-  // Real API call for AI automation analysis
+  // ULTIMATE single request function with global singleton protection
   const createCXAnalysis = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    setAgentWorkflow([])
-    setCurrentAgent(null)
-    setAiBusinessInsights(null)
-    setAnalysisReady(false)
+    console.log('🎯 createCXAnalysis called')
+    console.log('🔍 Global manager status:', analysisManager.getStatus())
+
+    // ULTIMATE GUARD: Global singleton check
+    if (!analysisManager.canStartAnalysis()) {
+      console.log('🛑 ULTIMATE GUARD: Global manager blocked request')
+      return
+    }
+
+    // Additional local guards for extra safety
+    if (loading || generatedReport || analysisReady) {
+      console.log('🛑 LOCAL GUARD: Component state blocked request')
+      return
+    }
 
     try {
+      console.log('🚀 ULTIMATE: Starting single request with global protection')
+
+      // Generate session ID first
+      const tempSessionId = `temp-${Date.now()}`
+
+      // Register with global manager BEFORE making request
+      analysisManager.startAnalysis(tempSessionId)
+
+      // Set local loading state
+      setLoading(true)
+      setError(null)
+      setAgentWorkflow([])
+      setCurrentAgent(null)
+      setChatMessages([])
+      setAiBusinessInsights(null)
+      setAnalysisReady(false)
+
       console.log('🤖 Starting REAL AI automation analysis...')
 
-      // Ensure all required fields are present
       const apiData = ensureRequiredFields(cxProjectData)
       console.log('📊 Sending data to API:', apiData)
 
-      // Call real API to create analysis
       const response = await fetch(`${API_BASE}/api/v1/cx-analysis/create`, {
         method: 'POST',
         headers: {
@@ -235,9 +290,12 @@ function App() {
       const data = await response.json()
       const sessionIdFromAPI = data.session_id
 
-      // Store the session ID immediately for later use
+      // Update global manager with real session ID
+      analysisManager.activeSessionId = sessionIdFromAPI
+      analysisManager.saveState()
+
       setSessionId(sessionIdFromAPI)
-      setProjectId(sessionIdFromAPI) // Keep for compatibility
+      setProjectId(sessionIdFromAPI)
 
       console.log(`📋 Analysis session started: ${sessionIdFromAPI}`)
       console.log(`🎯 ${data.message}`)
@@ -250,11 +308,39 @@ function App() {
         error.message ||
           'AI automation analysis failed. Please check your inputs and try again.',
       )
-    } finally {
+
+      // Reset global manager on error
+      analysisManager.errorAnalysis()
       setLoading(false)
       setCurrentAgent(null)
     }
-  }, [cxProjectData])
+  }, [cxProjectData, pollAnalysisStatus])
+
+  // ULTIMATE manual trigger function with all protections
+  const triggerAnalysis = useCallback(() => {
+    console.log('🎯 Manual trigger called')
+
+    const globalStatus = analysisManager.getStatus()
+    console.log('🔍 Global status:', globalStatus)
+    console.log('🔍 Local loading:', loading)
+    console.log('🔍 Has results:', !!generatedReport)
+
+    // Check both global and local state
+    if (
+      !analysisManager.canStartAnalysis() ||
+      loading ||
+      generatedReport ||
+      analysisReady
+    ) {
+      console.log(
+        '🛑 ULTIMATE GUARD: Request blocked by global or local guards',
+      )
+      return
+    }
+
+    console.log('✅ All guards clear, proceeding with analysis')
+    createCXAnalysis()
+  }, [createCXAnalysis, loading, generatedReport, analysisReady])
 
   // Real API function to refine automation recommendations
   const refineRecommendations = async userInput => {
@@ -309,7 +395,7 @@ function App() {
           'Error refining automation recommendations. Please try again.',
       )
 
-      // Fallback to mock refinement if API fails
+      // Fallback to mock refinement
       try {
         console.log('🔄 Falling back to mock refinement...')
         const refined = generateRefinedAutomationRecommendations(
@@ -318,7 +404,7 @@ function App() {
         )
         setRefinedReport(refined)
         console.log('✨ Mock refinement completed')
-        setError(null) // Clear the error since fallback worked
+        setError(null)
       } catch (fallbackError) {
         console.error('❌ Fallback refinement also failed:', fallbackError)
       }
@@ -356,39 +442,6 @@ ${reportToDownload.deliverables.strategic_recommendations
   .map((rec, i) => `${i + 1}. ${rec}`)
   .join('\n')}
 
-IMPLEMENTATION ROADMAP
-Phase 1: ${reportToDownload.deliverables.implementation_roadmap.phase_1.title}
-- ${reportToDownload.deliverables.implementation_roadmap.phase_1.actions.join(
-      '\n- ',
-    )}
-Expected ROI Impact: ${
-      reportToDownload.deliverables.implementation_roadmap.phase_1
-        .expected_impact
-    }
-
-Phase 2: ${reportToDownload.deliverables.implementation_roadmap.phase_2.title}
-- ${reportToDownload.deliverables.implementation_roadmap.phase_2.actions.join(
-      '\n- ',
-    )}
-Expected ROI Impact: ${
-      reportToDownload.deliverables.implementation_roadmap.phase_2
-        .expected_impact
-    }
-
-Phase 3: ${reportToDownload.deliverables.implementation_roadmap.phase_3.title}
-- ${reportToDownload.deliverables.implementation_roadmap.phase_3.actions.join(
-      '\n- ',
-    )}
-Expected ROI Impact: ${
-      reportToDownload.deliverables.implementation_roadmap.phase_3
-        .expected_impact
-    }
-
-SUCCESS METRICS & ROI FRAMEWORK
-${reportToDownload.deliverables.success_metrics
-  .map(metric => `${metric.metric}: ${metric.target} (${metric.timeframe})`)
-  .join('\n')}
-
 ESTIMATED ROI: ${reportToDownload.deliverables.estimated_roi}
 PAYBACK PERIOD: ${reportToDownload.deliverables.payback_period || '8-12 months'}
 ANNUAL SAVINGS: ${
@@ -396,13 +449,8 @@ ANNUAL SAVINGS: ${
       'Significant cost reduction'
     }
 
-RISK ASSESSMENT: ${reportToDownload.deliverables.risk_assessment}
-
 ---
 Generated by AI Automation Business Case Builder
-Confidence Score: ${
-      reportToDownload.automation_analysis_details?.confidence_score || '95%'
-    }
 Session ID: ${sessionId || 'N/A'}
     `
 
@@ -431,27 +479,45 @@ Session ID: ${sessionId || 'N/A'}
     }
   }
 
-  // Mock regenerate automation business case with same parameters
+  // Regenerate automation business case with complete reset
   const regenerateReport = async () => {
-    setLoading(true)
-    setError(null)
+    console.log('🔄 Regenerating automation business case...')
 
-    try {
-      console.log('🔄 Regenerating automation business case...')
+    // COMPLETE GLOBAL RESET
+    analysisManager.resetAnalysis()
 
-      // Try to call the real API again
-      await createCXAnalysis()
-    } catch (error) {
-      console.error('Error regenerating automation business case:', error)
-      setError('Error regenerating automation business case. Please try again.')
-    } finally {
-      setLoading(false)
+    if (pollingRef.current) {
+      clearTimeout(pollingRef.current)
+      pollingRef.current = null
     }
+
+    setLoading(false)
+    setError(null)
+    setGeneratedReport(null)
+    setAnalysisReady(false)
+    setAgentWorkflow([])
+    setCurrentAgent(null)
+    setChatMessages([])
+
+    // Small delay to ensure state is reset
+    setTimeout(() => {
+      console.log('🚀 Triggering regeneration after complete reset')
+      triggerAnalysis()
+    }, 100)
   }
 
-  // Reset the automation analysis for a new session
+  // COMPLETE RESET function with global cleanup
   const resetApp = () => {
     console.log('🔄 Resetting AI Automation Business Case Builder...')
+
+    // Clear polling
+    if (pollingRef.current) {
+      clearTimeout(pollingRef.current)
+      pollingRef.current = null
+    }
+
+    // COMPLETE GLOBAL RESET
+    analysisManager.resetAnalysis()
 
     setCxProjectData({
       business_scenario: '',
@@ -482,35 +548,34 @@ Session ID: ${sessionId || 'N/A'}
     setError(null)
     setAgentWorkflow([])
     setCurrentAgent(null)
+    setChatMessages([])
     setAiBusinessInsights(null)
     setProjectId(null)
-    setSessionId(null) // Clear the session ID
+    setSessionId(null)
     setShowProcessLearning(false)
     setAnalysisReady(false)
     setShowRefinement(false)
+    setLoading(false)
 
-    console.log('✅ Automation analysis reset complete')
+    console.log('✅ Complete reset finished - all guards cleared globally')
   }
 
-  // Step validation logic for automation analysis
+  // Step validation logic
   const isStepComplete = step => {
     switch (step) {
       case 0:
         return cxProjectData.business_scenario !== ''
       case 1:
-        // Check for the new required fields
         const hasBasicFields = !!(
           (cxProjectData.business_challenge || cxProjectData.target_kpi) &&
           (cxProjectData.success_definition || cxProjectData.report_goal) &&
           (cxProjectData.current_state || cxProjectData.business_scenario)
         )
-
         const hasMetrics = !!(
           cxProjectData.process_frequency &&
           cxProjectData.monthly_volume &&
           cxProjectData.people_involved
         )
-
         return hasBasicFields && hasMetrics
       case 2:
         return isStepComplete(0) && isStepComplete(1)
@@ -560,10 +625,22 @@ Session ID: ${sessionId || 'N/A'}
     setLoading(false)
     setAgentWorkflow([])
     setCurrentAgent(null)
-    // Don't reset form data - let user try again
+    setChatMessages([])
+
+    // Reset global manager
+    analysisManager.errorAnalysis()
   }
 
-  // Main render - pass everything to the automation interface
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) {
+        clearTimeout(pollingRef.current)
+      }
+      // Note: Don't reset global manager on unmount - let it persist
+    }
+  }, [])
+
   return (
     <BuildACXInterface
       // Current state
@@ -578,10 +655,11 @@ Session ID: ${sessionId || 'N/A'}
       aiBusinessMode={aiBusinessMode}
       agentWorkflow={agentWorkflow}
       currentAgent={currentAgent}
+      chatMessages={chatMessages}
       aiBusinessInsights={aiBusinessInsights}
       showProcessLearning={showProcessLearning}
       projectId={projectId}
-      sessionId={sessionId} // Pass session ID to child components if needed
+      sessionId={sessionId}
       analysisReady={analysisReady}
       showRefinement={showRefinement}
       // State setters
@@ -591,8 +669,8 @@ Session ID: ${sessionId || 'N/A'}
       // AI Automation Analysis setters
       setAiBusinessMode={toggleAiBusinessMode}
       setShowProcessLearning={setShowProcessLearning}
-      // Real API actions
-      createCXAnalysis={createCXAnalysis}
+      // ULTIMATE API actions with global protection
+      createCXAnalysis={triggerAnalysis}
       regenerateReport={regenerateReport}
       resetApp={resetApp}
       fetchBusinessInsights={fetchBusinessInsights}

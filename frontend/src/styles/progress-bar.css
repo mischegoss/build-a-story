@@ -1,119 +1,511 @@
-/* Progress Bar Header Component Styles */
+/* Progress Bar Header Component - Corporate Professional Styles */
 
-/* Header */
+/* Corporate Header Styling */
 .lab-header {
-    text-align: center;
-    margin-bottom: var(--spacing-2xl);
-    padding: var(--spacing-xl);
-    background: var(--background);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-md);
+  text-align: center;
+  margin-bottom: var(--spacing-3xl);
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  background: linear-gradient(
+      135deg,
+      var(--primary-blue) 0%,
+      var(--accent-blue) 50%,
+      var(--pacific-blue) 100%
+  );
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--elevation-3);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Corporate header background pattern */
+.lab-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+      radial-gradient(circle at 20% 20%, rgba(139, 98, 18, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(67, 87, 46, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, rgba(53, 78, 86, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Professional accent line */
+.lab-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+      90deg,
+      var(--accent-gold) 0%,
+      var(--accent-gold-light) 50%,
+      var(--accent-gold) 100%
+  );
+}
+
+.lab-title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: white;
+  margin-bottom: var(--spacing-md);
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.lab-subtitle {
+  font-size: var(--font-lg);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Corporate Progress Tracker */
+.learning-progress {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  background: var(--background);
+  padding: var(--spacing-2xl);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--elevation-2);
+  gap: var(--spacing-lg);
+  border: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background pattern for progress container */
+.progress-steps::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+      135deg,
+      transparent 0%,
+      rgba(15, 33, 67, 0.02) 50%,
+      transparent 100%
+  );
+  pointer-events: none;
+}
+
+.progress-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  min-height: 120px;
+  justify-content: center;
+}
+
+/* Professional connection lines between steps */
+.progress-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: calc(-1 * var(--spacing-lg) / 2);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--spacing-lg);
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-medium) 50%, transparent 100%);
+  z-index: 0;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced connection line for completed steps */
+.progress-step.completed:not(:last-child)::after {
+  background: linear-gradient(90deg, transparent 0%, var(--success-green) 50%, transparent 100%);
+  height: 3px;
+}
+
+/* Completed step styling */
+.progress-step.completed {
+  background: linear-gradient(
+      135deg,
+      var(--success-light) 0%,
+      rgba(232, 237, 218, 0.8) 100%
+  );
+  color: var(--success-green);
+  border: 2px solid var(--success-green);
+  box-shadow: 
+      var(--elevation-1),
+      0 0 0 1px rgba(67, 87, 46, 0.1);
+  transform: translateY(-2px);
+}
+
+.progress-step.completed:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+      var(--elevation-2),
+      0 0 0 1px rgba(67, 87, 46, 0.2);
+}
+
+/* Active step styling */
+.progress-step.active {
+  background: linear-gradient(
+      135deg,
+      var(--accent-gold-light) 0%,
+      rgba(245, 230, 184, 0.9) 100%
+  );
+  color: var(--accent-gold-dark);
+  border: 2px solid var(--accent-gold);
+  box-shadow: 
+      var(--elevation-2),
+      0 0 0 1px rgba(139, 98, 18, 0.1),
+      0 0 20px rgba(139, 98, 18, 0.15);
+  transform: translateY(-3px);
+  animation: activeStepPulse 2s ease-in-out infinite;
+}
+
+@keyframes activeStepPulse {
+  0%, 100% {
+      box-shadow: 
+          var(--elevation-2),
+          0 0 0 1px rgba(139, 98, 18, 0.1),
+          0 0 20px rgba(139, 98, 18, 0.15);
   }
-  
+  50% {
+      box-shadow: 
+          var(--elevation-3),
+          0 0 0 2px rgba(139, 98, 18, 0.2),
+          0 0 30px rgba(139, 98, 18, 0.25);
+  }
+}
+
+/* Upcoming step styling */
+.progress-step.upcoming {
+  background: var(--background-secondary);
+  color: var(--text-light);
+  border: 2px solid var(--border-light);
+  transition: all 0.3s ease;
+}
+
+.progress-step.upcoming:hover {
+  background: var(--background-accent);
+  color: var(--text-secondary);
+  border-color: var(--border-medium);
+  transform: translateY(-1px);
+  box-shadow: var(--elevation-1);
+}
+
+/* Professional step icons */
+.step-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
+  line-height: 1;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.progress-step.completed .step-icon {
+  filter: drop-shadow(0 2px 4px rgba(67, 87, 46, 0.2));
+  animation: completedBounce 0.6s ease-out;
+}
+
+@keyframes completedBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.progress-step.active .step-icon {
+  filter: drop-shadow(0 2px 4px rgba(139, 98, 18, 0.3));
+  animation: activeGlow 2s ease-in-out infinite;
+}
+
+@keyframes activeGlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Step information styling */
+.step-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.step-title {
+  font-size: var(--font-md);
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  letter-spacing: 0.025em;
+  line-height: 1.3;
+}
+
+.progress-step.completed .step-title {
+  font-weight: 700;
+}
+
+.progress-step.active .step-title {
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(139, 98, 18, 0.1);
+}
+
+.step-desc {
+  font-size: var(--font-sm);
+  opacity: 0.85;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.progress-step.completed .step-desc {
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.progress-step.active .step-desc {
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+/* Progress indicator for completed steps */
+.progress-step.completed::before {
+  content: '✓';
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  width: 24px;
+  height: 24px;
+  background: var(--success-green);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Active indicator for current step */
+.progress-step.active::before {
+  content: '';
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  width: 12px;
+  height: 12px;
+  background: var(--accent-gold);
+  border: 2px solid var(--accent-gold-dark);
+  border-radius: 50%;
+  animation: activePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes activePulse {
+  0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+  }
+  50% {
+      transform: scale(1.2);
+      opacity: 0.8;
+  }
+}
+
+/* Error state styling */
+.progress-step.error {
+  background: linear-gradient(
+      135deg,
+      rgba(254, 242, 242, 0.9) 0%,
+      rgba(254, 226, 226, 0.8) 100%
+  );
+  color: var(--error-red);
+  border: 2px solid var(--error-red);
+  box-shadow: 
+      var(--elevation-1),
+      0 0 0 1px rgba(204, 41, 54, 0.1);
+}
+
+.progress-step.error::before {
+  content: '⚠';
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  width: 24px;
+  height: 24px;
+  background: var(--error-red);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Responsive Design for Progress Bar */
+@media (max-width: 1024px) {
   .lab-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--primary-blue);
-    margin-bottom: var(--spacing-sm);
+      font-size: calc(var(--font-2xl) * 0.9);
   }
-  
-  .lab-subtitle {
-    font-size: var(--font-lg);
-    color: var(--text-secondary);
-    font-weight: 400;
-  }
-  
-  /* Progress Tracker */
-  .learning-progress {
-    margin-bottom: var(--spacing-2xl);
-  }
-  
+
   .progress-steps {
-    display: flex;
-    justify-content: space-between;
-    background: var(--background);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    gap: var(--spacing-md);
+      padding: var(--spacing-xl);
   }
-  
+
   .progress-step {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    transition: all 0.3s ease;
-    position: relative;
+      padding: var(--spacing-lg);
+      min-height: 100px;
   }
-  
-  .progress-step:not(:last-child)::after {
-    content: '→';
-    position: absolute;
-    right: -15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-light);
-    font-size: var(--font-lg);
-    font-weight: bold;
-  }
-  
-  .progress-step.completed {
-    background: var(--pale-blue);
-    color: var(--accent-blue);
-  }
-  
-  .progress-step.active {
-    background: var(--primary-blue);
-    color: white;
-    box-shadow: var(--shadow-md);
-  }
-  
-  .progress-step.upcoming {
-    background: var(--background-light);
-    color: var(--text-light);
-  }
-  
+
   .step-icon {
-    font-size: 2rem;
-    margin-bottom: var(--spacing-xs);
+      font-size: 2.2rem;
   }
-  
-  .step-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+}
+
+@media (max-width: 768px) {
+  .lab-header {
+      padding: var(--spacing-2xl) var(--spacing-xl);
   }
-  
-  .step-title {
-    font-size: var(--font-md);
-    font-weight: 600;
-    margin-bottom: var(--spacing-xs);
+
+  .lab-title {
+      font-size: var(--font-xl);
   }
-  
-  .step-desc {
-    font-size: var(--font-sm);
-    opacity: 0.8;
+
+  .lab-subtitle {
+      font-size: var(--font-base);
   }
-  
-  /* Responsive Design for Progress Bar */
-  @media (max-width: 768px) {
-    .lab-title {
-      font-size: 2rem;
-    }
-  
-    .progress-steps {
+
+  .progress-steps {
       flex-direction: column;
-      gap: var(--spacing-sm);
-    }
-  
-    .progress-step:not(:last-child)::after {
-      content: '↓';
-      position: static;
-      transform: none;
-      margin: var(--spacing-xs) 0;
-    }
+      gap: var(--spacing-md);
+      padding: var(--spacing-xl);
   }
+
+  .progress-step {
+      min-height: auto;
+      padding: var(--spacing-lg);
+  }
+
+  /* Vertical connection lines for mobile */
+  .progress-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      bottom: calc(-1 * var(--spacing-md) / 2);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: var(--spacing-md);
+      background: linear-gradient(180deg, transparent 0%, var(--border-medium) 50%, transparent 100%);
+  }
+
+  .progress-step.completed:not(:last-child)::after {
+      background: linear-gradient(180deg, transparent 0%, var(--success-green) 50%, transparent 100%);
+      width: 3px;
+  }
+
+  .step-icon {
+      font-size: 2rem;
+      margin-bottom: var(--spacing-sm);
+  }
+
+  .step-title {
+      font-size: var(--font-base);
+  }
+
+  .step-desc {
+      font-size: var(--font-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .lab-header {
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-2xl);
+  }
+
+  .lab-title {
+      font-size: var(--font-lg);
+      margin-bottom: var(--spacing-sm);
+  }
+
+  .lab-subtitle {
+      font-size: var(--font-sm);
+  }
+
+  .progress-steps {
+      padding: var(--spacing-lg);
+  }
+
+  .progress-step {
+      padding: var(--spacing-md);
+  }
+
+  .step-icon {
+      font-size: 1.8rem;
+  }
+}
+
+/* Enhanced accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .progress-step,
+  .step-icon {
+      transition: none;
+      animation: none;
+  }
+
+  .progress-step.active {
+      animation: none;
+  }
+
+  .progress-step.completed .step-icon {
+      animation: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.progress-step:focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
+}
+
+/* High contrast mode enhancements */
+@media (prefers-contrast: high) {
+  .progress-step {
+      border-width: 3px;
+  }
+
+  .progress-step.completed {
+      background: var(--success-light);
+      border-color: var(--success-green);
+  }
+
+  .progress-step.active {
+      background: var(--accent-gold-light);
+      border-color: var(--accent-gold);
+  }
+
+  .progress-step.upcoming {
+      background: var(--background);
+      border-color: var(--text-secondary);
+  }
+}
