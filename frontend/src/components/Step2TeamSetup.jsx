@@ -501,107 +501,96 @@ const Step2TeamSetup = ({
           </p>
 
           <div className='customization-content'>
-            {/* Target Audience Override */}
+            {/* Target Audience Override - FIXED: Changed to text input */}
             <div className='customization-group'>
               <h4 className='customization-label'>
                 ❓ Different target audience for this business case?
               </h4>
-              <select
-                value={
-                  cxProjectData.report_audience || smartDefaults.report_audience
-                }
+              <input
+                type='text'
+                value={cxProjectData.report_audience || ''}
                 onChange={e =>
                   setCxProjectData({
                     ...cxProjectData,
                     report_audience: e.target.value,
                   })
                 }
+                placeholder={smartDefaults.report_audience}
                 className='business-input-small'
-              >
-                <option value='Executive leadership (C-Suite)'>
-                  Executive leadership (C-Suite)
-                </option>
-                <option value='Operations team'>Operations team</option>
-                <option value='IT department'>IT department</option>
-                <option value='Finance department'>Finance department</option>
-                <option value='Cross-functional stakeholders'>
-                  Cross-functional stakeholders
-                </option>
-              </select>
+              />
+              <div className='helper-text'>
+                Examples: Executive Leadership Team, CFO and Finance Directors,
+                Operations VP and Regional Managers
+              </div>
             </div>
 
-            {/* Analysis Goal Override */}
+            {/* Analysis Goal Override - FIXED: Changed to text input */}
             <div className='customization-group'>
               <h4 className='customization-label'>
                 ❓ Different analysis goal than estimated?
               </h4>
-              <select
-                value={cxProjectData.report_goal || smartDefaults.report_goal}
+              <input
+                type='text'
+                value={cxProjectData.report_goal || ''}
                 onChange={e =>
                   setCxProjectData({
                     ...cxProjectData,
                     report_goal: e.target.value,
                   })
                 }
+                placeholder={smartDefaults.report_goal}
                 className='business-input-small'
-              >
-                <option value='Justify automation investment to leadership'>
-                  Justify automation investment to leadership
-                </option>
-                <option value='Calculate ROI and payback period'>
-                  Calculate ROI and payback period
-                </option>
-                <option value='Compare automation vendors/solutions'>
-                  Compare automation vendors/solutions
-                </option>
-                <option value='Plan automation implementation roadmap'>
-                  Plan automation implementation roadmap
-                </option>
-                <option value='Demonstrate automation potential (demo/test)'>
-                  Demonstrate automation potential (demo/test)
-                </option>
-              </select>
+              />
+              <div className='helper-text'>
+                Examples: Justify automation investment to leadership, Calculate
+                ROI and payback period, Compare automation vendors/solutions
+              </div>
             </div>
 
-            {/* Department Focus Override */}
+            {/* Department Focus Override - FIXED: Proper placeholder */}
             <div className='customization-group'>
               <h4 className='customization-label'>
                 ❓ Different department or process area focus?
               </h4>
               <input
                 type='text'
-                value={
-                  cxProjectData.customer_segment ||
-                  smartDefaults.customer_segment
-                }
+                value={cxProjectData.customer_segment || ''}
                 onChange={e =>
                   setCxProjectData({
                     ...cxProjectData,
                     customer_segment: e.target.value,
                   })
                 }
-                placeholder='e.g., Finance & Accounting Department'
+                placeholder={smartDefaults.customer_segment}
                 className='business-input-small'
               />
+              <div className='helper-text'>
+                Which department or functional area will benefit from this
+                automation?
+              </div>
             </div>
 
-            {/* Key Metric Override */}
+            {/* Key Metric Override - FIXED: Proper placeholder */}
             <div className='customization-group'>
               <h4 className='customization-label'>
                 ❓ Different key automation metric to focus on?
               </h4>
               <input
                 type='text'
-                value={cxProjectData.target_kpi || smartDefaults.target_kpi}
+                value={cxProjectData.target_kpi || ''}
                 onChange={e =>
                   setCxProjectData({
                     ...cxProjectData,
                     target_kpi: e.target.value,
                   })
                 }
-                placeholder='e.g., Processing time reduction'
+                placeholder={smartDefaults.target_kpi}
                 className='business-input-small'
               />
+              <div className='helper-text'>
+                Examples: Processing time reduction, Error rate improvement,
+                Cost per transaction reduction
+              </div>
             </div>
 
             {/* Process Data Sources Override */}
@@ -637,26 +626,26 @@ const Step2TeamSetup = ({
               </div>
             </div>
 
-            {/* Success Definition Override */}
+            {/* Success Definition Override - FIXED: Proper placeholder */}
             <div className='customization-group'>
               <h4 className='customization-label'>
                 ❓ Different success definition than projected?
               </h4>
               <textarea
-                value={
-                  cxProjectData.success_definition ||
-                  smartDefaults.success_definition
-                }
+                value={cxProjectData.success_definition || ''}
                 onChange={e =>
                   setCxProjectData({
                     ...cxProjectData,
                     success_definition: e.target.value,
                   })
                 }
-                placeholder='Describe your specific automation success criteria'
+                placeholder={smartDefaults.success_definition}
                 className='business-textarea-small'
                 rows={3}
               />
+              <div className='helper-text'>
+                Be specific with measurable outcomes and timeframes
+              </div>
             </div>
           </div>
 

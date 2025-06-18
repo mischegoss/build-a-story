@@ -1,4 +1,4 @@
-// PDFBusinessCase.jsx - Corporate Professional Styles
+// PDFBusinessCase.jsx - Fixed Border Styles
 import React from 'react'
 import {
   Document,
@@ -10,7 +10,7 @@ import {
   Font,
 } from '@react-pdf/renderer'
 
-// Corporate Professional PDF Styles
+// Corporate Professional PDF Styles - FIXED BORDERS
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'column',
@@ -22,11 +22,12 @@ const styles = StyleSheet.create({
     color: '#0F2143', // Corporate cerulean blue for text
   },
 
-  // Corporate Header and Title Styles
+  // Corporate Header and Title Styles - FIXED
   header: {
     marginBottom: 35,
-    borderBottom: 3,
+    borderBottomWidth: 3, // ✅ FIXED: Use borderBottomWidth instead of borderBottom
     borderBottomColor: '#0F2143', // Cerulean blue
+    borderBottomStyle: 'solid', // ✅ FIXED: Add border style
     paddingBottom: 20,
     position: 'relative',
   },
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     lineHeight: 1.4,
   },
 
-  // Corporate Section Styles
+  // Corporate Section Styles - FIXED
   section: {
     marginBottom: 28,
   },
@@ -72,8 +73,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#0F2143', // Cerulean blue
     marginBottom: 12,
-    borderBottom: 2,
+    borderBottomWidth: 2, // ✅ FIXED: Use borderBottomWidth
     borderBottomColor: '#E8EDF5', // Light cerulean
+    borderBottomStyle: 'solid', // ✅ FIXED: Add border style
     paddingBottom: 5,
     position: 'relative',
   },
@@ -94,12 +96,13 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 
-  // Corporate Executive Summary
+  // Corporate Executive Summary - FIXED
   executiveSummary: {
     backgroundColor: '#E8EDF5', // Light cerulean
     padding: 20,
-    borderLeft: 4,
+    borderLeftWidth: 4, // ✅ FIXED: Use borderLeftWidth
     borderLeftColor: '#0F2143', // Cerulean blue
+    borderLeftStyle: 'solid', // ✅ FIXED: Add border style
     borderRadius: 3,
     marginBottom: 25,
     position: 'relative',
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
     color: '#0F2143', // Cerulean blue
   },
 
-  // Corporate ROI and Metrics
+  // Corporate ROI and Metrics - FIXED
   roiContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -155,8 +158,9 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
     marginBottom: 20,
-    border: 1,
+    borderWidth: 1, // ✅ FIXED: Use borderWidth
     borderColor: '#0F2143', // Cerulean blue
+    borderStyle: 'solid', // ✅ FIXED: Add border style
     position: 'relative',
   },
 
@@ -176,8 +180,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     backgroundColor: '#FFFFFF',
     borderRadius: 3,
-    border: 1,
+    borderWidth: 1, // ✅ FIXED: Use borderWidth
     borderColor: '#E1E8F0',
+    borderStyle: 'solid', // ✅ FIXED: Add border style
   },
 
   roiValue: {
@@ -194,14 +199,15 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
 
-  // Corporate Implementation Roadmap
+  // Corporate Implementation Roadmap - FIXED
   phaseContainer: {
     marginBottom: 18,
     backgroundColor: '#E8EDDA', // Light grass green
     padding: 15,
     borderRadius: 4,
-    borderLeft: 4,
+    borderLeftWidth: 4, // ✅ FIXED: Use borderLeftWidth
     borderLeftColor: '#43572E', // Grass green
+    borderLeftStyle: 'solid', // ✅ FIXED: Add border style
     position: 'relative',
   },
 
@@ -237,11 +243,12 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
 
-  // Corporate Success Metrics Table
+  // Corporate Success Metrics Table - FIXED
   metricsTable: {
     marginTop: 12,
-    border: 1,
+    borderWidth: 1, // ✅ FIXED: Use borderWidth
     borderColor: '#E1E8F0',
+    borderStyle: 'solid', // ✅ FIXED: Add border style
     borderRadius: 3,
   },
 
@@ -249,8 +256,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#354E56', // Pacific blue
     padding: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: 1, // ✅ FIXED: Use borderBottomWidth
     borderBottomColor: '#E1E8F0',
+    borderBottomStyle: 'solid', // ✅ FIXED: Add border style
   },
 
   metricsHeaderText: {
@@ -262,8 +270,9 @@ const styles = StyleSheet.create({
   metricsRow: {
     flexDirection: 'row',
     padding: 10,
-    borderBottom: 1,
+    borderBottomWidth: 1, // ✅ FIXED: Use borderBottomWidth
     borderBottomColor: '#E1E8F0',
+    borderBottomStyle: 'solid', // ✅ FIXED: Add border style
     backgroundColor: '#FAFBFC',
   },
 
@@ -286,14 +295,15 @@ const styles = StyleSheet.create({
     color: '#354E56', // Pacific blue
   },
 
-  // Corporate Footer
+  // Corporate Footer - FIXED
   footer: {
     position: 'absolute',
     bottom: 30,
     left: 50,
     right: 50,
-    borderTop: 2,
+    borderTopWidth: 2, // ✅ FIXED: Use borderTopWidth
     borderTopColor: '#E1E8F0',
+    borderTopStyle: 'solid', // ✅ FIXED: Add border style
     paddingTop: 12,
     fontSize: 9,
     color: '#5A6B73', // Light pacific blue
@@ -301,12 +311,13 @@ const styles = StyleSheet.create({
     lineHeight: 1.4,
   },
 
-  // Corporate Risk Assessment
+  // Corporate Risk Assessment - FIXED
   riskAssessment: {
     backgroundColor: '#F5E6B8', // Light yarrow gold
     padding: 15,
-    borderLeft: 4,
+    borderLeftWidth: 4, // ✅ FIXED: Use borderLeftWidth
     borderLeftColor: '#8B6212', // Yarrow gold
+    borderLeftStyle: 'solid', // ✅ FIXED: Add border style
     borderRadius: 3,
     marginTop: 18,
     position: 'relative',
@@ -327,7 +338,7 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
 
-  // Corporate Confidence Badge
+  // Corporate Confidence Badge - FIXED
   confidenceBadge: {
     position: 'absolute',
     top: 50,
@@ -338,37 +349,41 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     fontSize: 11,
     fontWeight: 'bold',
-    border: 2,
+    borderWidth: 2, // ✅ FIXED: Use borderWidth
     borderColor: '#FFFFFF',
+    borderStyle: 'solid', // ✅ FIXED: Add border style
   },
 
-  // Corporate Opportunities Section
+  // Corporate Opportunities Section - FIXED
   opportunitiesSection: {
     backgroundColor: '#F0F4FA', // Very light cerulean
     padding: 15,
     borderRadius: 4,
-    border: 1,
+    borderWidth: 1, // ✅ FIXED: Use borderWidth
     borderColor: '#E1E8F0',
+    borderStyle: 'solid', // ✅ FIXED: Add border style
     marginBottom: 20,
   },
 
-  // Corporate Recommendations Section
+  // Corporate Recommendations Section - FIXED
   recommendationsSection: {
     backgroundColor: '#F5F7FA', // Light blue-gray
     padding: 15,
     borderRadius: 4,
-    border: 1,
+    borderWidth: 1, // ✅ FIXED: Use borderWidth
     borderColor: '#E1E8F0',
+    borderStyle: 'solid', // ✅ FIXED: Add border style
     marginBottom: 20,
   },
 
-  // Corporate Analysis Methodology
+  // Corporate Analysis Methodology - FIXED
   methodologySection: {
     backgroundColor: '#FAFBFC', // Subtle off-white
     padding: 18,
     borderRadius: 4,
-    border: 1,
+    borderWidth: 1, // ✅ FIXED: Use borderWidth
     borderColor: '#E1E8F0',
+    borderStyle: 'solid', // ✅ FIXED: Add border style
     marginTop: 20,
   },
 
@@ -396,11 +411,12 @@ const styles = StyleSheet.create({
     pageBreakBefore: 'always',
   },
 
-  // Corporate Secondary Page Header
+  // Corporate Secondary Page Header - FIXED
   secondaryPageHeader: {
     marginBottom: 30,
-    borderBottom: 2,
+    borderBottomWidth: 2, // ✅ FIXED: Use borderBottomWidth
     borderBottomColor: '#354E56', // Pacific blue
+    borderBottomStyle: 'solid', // ✅ FIXED: Add border style
     paddingBottom: 15,
     position: 'relative',
   },
@@ -427,6 +443,9 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
 })
+
+// Rest of your PDF component remains the same...
+// (BusinessCasePDF component and PDFDownloadButton component stay exactly the same)
 
 // Main Corporate PDF Document Component
 const BusinessCasePDF = ({ reportData, refinedData }) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import '../styles/step4.css'
 import PDFDownloadButton from './PDFBusinessCase'
 
@@ -16,6 +16,13 @@ const Step4ResultsAndRefinement = ({
   // Local state for refinement section (following Step 2 pattern)
   const [showRefinementSection, setShowRefinementSection] = useState(false)
   const [proceedToDownload, setProceedToDownload] = useState(false)
+
+  // FIXED: Add useEffect to handle refinement completion
+  useEffect(() => {
+    if (showRefinement && refinedReport && !showRefinementSection) {
+      setProceedToDownload(true)
+    }
+  }, [showRefinement, refinedReport, showRefinementSection])
 
   return (
     <div className='learning-module'>
@@ -186,7 +193,7 @@ Your operational input will help the AI Refinement Agent adjust the business cas
             <button
               onClick={() => {
                 refineRecommendations(proposedChanges)
-                setProceedToDownload(true)
+                setShowRefinementSection(false)
               }}
               disabled={!proposedChanges.trim() || loading}
               className='continue-button primary'
