@@ -7,10 +7,7 @@ import { mockBusinessScenarios } from './mockdata/mockBusinessScenarios'
 import { mockAIBusinessInsights } from './mockdata/aiBusinessInsights.js'
 import { generateRefinedAutomationRecommendations } from './services/mockAutomationReportGenerator'
 
-const API_BASE =
-  process.env.NODE_ENV === 'production'
-    ? 'https://your-production-api-url.com'
-    : 'http://localhost:8000'
+const API_BASE = 'https://automation-backend-197823714710.us-east1.run.app'
 
 // Helper function to ensure required fields for API
 const ensureRequiredFields = cxProjectData => {
@@ -87,6 +84,8 @@ function App() {
   // Ref for polling cleanup
   const pollingRef = useRef(null)
 
+  // 🔧 FIXED: Move ALL useEffect hooks to the top, before any conditional logic
+
   // Load initial mock data when app starts
   useEffect(() => {
     fetchInitialData()
@@ -98,6 +97,16 @@ function App() {
       setSessionId(status.activeSessionId)
       setLoading(true)
       pollAnalysisStatus(status.activeSessionId)
+    }
+  }, [])
+
+  // Cleanup on unmount - MOVED TO TOP
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) {
+        clearTimeout(pollingRef.current)
+      }
+      // Note: Don't reset global manager on unmount - let it persist
     }
   }, [])
 
@@ -604,6 +613,19 @@ Session ID: ${sessionId || 'N/A'}
     console.log('🎯 AI Automation mode toggled:', !aiBusinessMode)
   }
 
+  // Handle retry for analysis errors
+  const handleRetry = () => {
+    setError(null)
+    setLoading(false)
+    setAgentWorkflow([])
+    setCurrentAgent(null)
+    setChatMessages([])
+
+    // Reset global manager
+    analysisManager.errorAnalysis()
+  }
+
+  // 🔧 FIXED: Move error boundary AFTER all hooks
   // Error boundary for initial data loading failures
   if (error && businessScenarios.length === 0) {
     return (
@@ -618,28 +640,6 @@ Session ID: ${sessionId || 'N/A'}
       </div>
     )
   }
-
-  // Handle retry for analysis errors
-  const handleRetry = () => {
-    setError(null)
-    setLoading(false)
-    setAgentWorkflow([])
-    setCurrentAgent(null)
-    setChatMessages([])
-
-    // Reset global manager
-    analysisManager.errorAnalysis()
-  }
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (pollingRef.current) {
-        clearTimeout(pollingRef.current)
-      }
-      // Note: Don't reset global manager on unmount - let it persist
-    }
-  }, [])
 
   return (
     <BuildACXInterface
